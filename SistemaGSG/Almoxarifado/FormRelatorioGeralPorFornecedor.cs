@@ -305,7 +305,6 @@ namespace SistemaGSG.Almoxarifado
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGP_BUKRS")).Text = "USGA";
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGSO_PERI-LOW")).Text = this.calendarioMes.SelectionStart.ToString("dd.MM.yyyy");
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGSO_PERI-HIGH")).Text = this.calendarioMes.SelectionEnd.ToString("dd.MM.yyyy");
-            MessageBox.Show("Continuar?");
             ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
             ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[33]")).Press();
             ((GuiComboBox)Session.FindById("wnd[1]/usr/ssubD0500_SUBSCREEN:SAPLSLVC_DIALOG:0501/cmbG51_USPEC_LBOX")).Key = "X";
@@ -338,10 +337,6 @@ namespace SistemaGSG.Almoxarifado
                 try
                 {
                     docNumeroMiro = ((GuiGridView)Session.FindById("wnd[0]/usr/cntlGRID1/shellcont/shell")).GetCellValue(linha, "BELNR");
-                    if(docNumeroMiro == "5105641011")
-                    {
-                        linha1 = 0;
-                    }
                 }
                 catch (Exception)
                 {
@@ -365,12 +360,19 @@ namespace SistemaGSG.Almoxarifado
                     int rowD = 0;
                     int rowE = 0;
                     int v = 0;
+                    int position = 1;
                     Array.Clear(pedidoCompra, 0, pedidoCompra.Length);
                     Array.Clear(materialSAPCodVer, 0, materialSAPCodVer.Length);
                     while (rowT == true)
                     {
                         try
                         {
+                            if(rowD == 16)
+                            {
+                                ((GuiTableControl)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M")).VerticalScrollbar.Position = position;
+                                rowD--;
+                                position++;
+                            }
                             pedidoCompra[v] = ((GuiTextField)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M/txtDRSEG-EBELN[5," + rowD + "]")).Text;
                             materialSAPCod = ((GuiTextField)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M/ctxtDRSEG-MATNR[72," + rowD + "]")).Text;
                             if (pedidoCompra[v] == "__________")
