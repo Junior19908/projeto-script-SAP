@@ -20,7 +20,6 @@ namespace SistemaGSG.Almoxarifado
     public partial class FormRelatorioGeralPorFornecedor : MetroFramework.Forms.MetroForm
     {
         DataTable table = new DataTable();
-        MySqlConnection connection = new MySqlConnection(@"server=localhost;database=sistemagsgalmoxarifado;Uid=energia;Pwd=02984646#Lua;SslMode=none;");
 
         public FormRelatorioGeralPorFornecedor()
         {
@@ -106,7 +105,6 @@ namespace SistemaGSG.Almoxarifado
         {
             try
             {
-                connection.Open();
                 if (string.IsNullOrEmpty(codigoFornecedor))
                 {
 
@@ -125,7 +123,7 @@ namespace SistemaGSG.Almoxarifado
                             {
                                 MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_relatorioentradafornecedor (col_codigoFornecedor, col_descricaoFornecedor, col_materialCodigoSAP, col_textoBreveMaterial, col_numeroNotaFiscal, col_quantidade, col_unidadeMedida, col_valorMaterialSAP, col_documentoMiroSAP, col_pedido, col_requisicao,col_posicao,col_dataImportacao) " +
                                     "VALUES " +
-                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','"+ posicao + "', NOW())", connection);
+                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','"+ posicao + "', NOW())", ConexaoDados.GetConnectionAlmoxarifado());
                                 cmd.ExecuteNonQuery();
                                 cmd.Connection.Close();
                                 prompt.Connection.Close();
@@ -155,7 +153,7 @@ namespace SistemaGSG.Almoxarifado
                                 }
                                 MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_relatorioentradafornecedor (col_codigoFornecedor, col_descricaoFornecedor, col_materialCodigoSAP, col_textoBreveMaterial, col_numeroNotaFiscal, col_quantidade, col_unidadeMedida, col_valorMaterialSAP, col_documentoMiroSAP, col_pedido, col_requisicao,col_posicao,col_dataImportacao) " +
                                     "VALUES " +
-                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP.Replace("'","") + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','" + posicao + "', NOW())", connection);
+                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP.Replace("'","") + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','" + posicao + "', NOW())", ConexaoDados.GetConnectionAlmoxarifado());
                                 cmd.ExecuteNonQuery();
                                 cmd.Connection.Close();
                                 MyCommand.Connection.Close();
@@ -252,8 +250,7 @@ namespace SistemaGSG.Almoxarifado
                 }
                 else
                 {
-                    connection.Open();
-                    MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM `tb_materiais` WHERE col_codigoMaterial='" + codigoFornecedor + "'", connection);
+                    MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM `tb_materiais` WHERE col_codigoMaterial='" + codigoFornecedor + "'", ConexaoDados.GetConnectionAlmoxarifado());
                     prompt.ExecuteNonQuery();
                     int consultDB = Convert.ToInt32(prompt.ExecuteScalar());
                     if (consultDB == 0)
@@ -279,13 +276,15 @@ namespace SistemaGSG.Almoxarifado
                         }
                     }
                     prompt.Connection.Close();
-                    connection.Close();
-                    ConexaoDados.GetConnectionAlmoxarifado().Close();
                 }
             }
             catch (Exception Err)
             {
                 MessageBox.Show(Err.Message);
+            }
+            finally
+            {
+                ConexaoDados.GetConnectionAlmoxarifado().Close();
             }
         }
         private void RelatorioZMM039()
