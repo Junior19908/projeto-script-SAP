@@ -366,10 +366,10 @@
     <Compile Include="FormRelacao.Designer.cs">
       <DependentUpon>FormRelacao.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRelat.cs">
+    <Compile Include="lFaturamento\FormRelat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRelat.Designer.cs">
+    <Compile Include="lFaturamento\FormRelat.Designer.cs">
       <DependentUpon>FormRelat.cs</DependentUpon>
     </Compile>
     <Compile Include="Almoxarifado\FormSolicitacao.cs">
@@ -390,10 +390,10 @@
     <Compile Include="frmOrdemCarreg.Designer.cs">
       <DependentUpon>frmOrdemCarreg.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPosicaoSemana.cs">
+    <Compile Include="lFaturamento\frmPosicaoSemana.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmPosicaoSemana.Designer.cs">
+    <Compile Include="lFaturamento\frmPosicaoSemana.Designer.cs">
       <DependentUpon>frmPosicaoSemana.cs</DependentUpon>
     </Compile>
     <Compile Include="frmXML.cs">
@@ -547,7 +547,7 @@
     <EmbeddedResource Include="FormRelacao.resx">
       <DependentUpon>FormRelacao.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRelat.resx">
+    <EmbeddedResource Include="lFaturamento\FormRelat.resx">
       <DependentUpon>FormRelat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Almoxarifado\FormSolicitacao.resx">
@@ -559,7 +559,7 @@
     <EmbeddedResource Include="frmOrdemCarreg.resx">
       <DependentUpon>frmOrdemCarreg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPosicaoSemana.resx">
+    <EmbeddedResource Include="lFaturamento\frmPosicaoSemana.resx">
       <DependentUpon>frmPosicaoSemana.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmXML.resx">
