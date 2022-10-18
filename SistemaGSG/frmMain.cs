@@ -141,7 +141,16 @@ namespace SistemaGSG
 
         private void baixaEmRequisiçõesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (dados.nivel == 1)
+            {
+                FormSolicitacao AbrirForm = new FormSolicitacao();
+                AbrirForm.Show();
+                this.Visible = false;
+            }
+            else
+            {
+                MessageBox.Show("Sem Autorização!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void fornecedorDeCanaToolStripMenuItem_Click(object sender, EventArgs e)

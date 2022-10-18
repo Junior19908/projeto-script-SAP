@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -304,7 +305,6 @@ namespace SistemaGSG.Almoxarifado
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGP_BUKRS")).Text = "USGA";
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGSO_PERI-LOW")).Text = this.calendarioMes.SelectionStart.ToString("dd.MM.yyyy");
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGSO_PERI-HIGH")).Text = this.calendarioMes.SelectionEnd.ToString("dd.MM.yyyy");
-            MessageBox.Show("Continuar?");
             ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
             ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[33]")).Press();
             ((GuiComboBox)Session.FindById("wnd[1]/usr/ssubD0500_SUBSCREEN:SAPLSLVC_DIALOG:0501/cmbG51_USPEC_LBOX")).Key = "X";
@@ -337,10 +337,6 @@ namespace SistemaGSG.Almoxarifado
                 try
                 {
                     docNumeroMiro = ((GuiGridView)Session.FindById("wnd[0]/usr/cntlGRID1/shellcont/shell")).GetCellValue(linha, "BELNR");
-                    if(docNumeroMiro == "5105641011")
-                    {
-                        linha1 = 0;
-                    }
                 }
                 catch (Exception)
                 {
@@ -364,12 +360,19 @@ namespace SistemaGSG.Almoxarifado
                     int rowD = 0;
                     int rowE = 0;
                     int v = 0;
+                    int position = 1;
                     Array.Clear(pedidoCompra, 0, pedidoCompra.Length);
                     Array.Clear(materialSAPCodVer, 0, materialSAPCodVer.Length);
                     while (rowT == true)
                     {
                         try
                         {
+                            if(rowD == 16)
+                            {
+                                ((GuiTableControl)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M")).VerticalScrollbar.Position = position;
+                                rowD--;
+                                position++;
+                            }
                             pedidoCompra[v] = ((GuiTextField)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M/txtDRSEG-EBELN[5," + rowD + "]")).Text;
                             materialSAPCod = ((GuiTextField)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M/ctxtDRSEG-MATNR[72," + rowD + "]")).Text;
                             if (pedidoCompra[v] == "__________")
@@ -495,11 +498,18 @@ namespace SistemaGSG.Almoxarifado
                     }
                 }
             }
-            MessageBox.Show("Processo Finalizado!","SAP for Windows 7.70 - ZMM039",MessageBoxButtons.OK,MessageBoxIcon.Information);
         }
         private void btnRelatorio_Click(object sender, EventArgs e)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             RelatorioZMM039();
+            VerificaPedido();
+            VerificarRequisicao();
+
+            sw.Stop();
+            MessageBox.Show("Tempo Decorrido... " + sw.Elapsed.ToString(@"hh\:mm\:ss"), "SAP for Windows 7.70 - Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         private void VerificaPedido()
         {
@@ -554,18 +564,39 @@ namespace SistemaGSG.Almoxarifado
                 {
 
                 }
+                int rowD = 0;
+                int position = 1;
                 while (LigarWhile == true)
                 {
                     int TelaSAP = 1;
+                    int TelaSAP2 = 1;
                     try
                     {
-                        while(TelaSAP < 99)
+                        if (rowD == 10)
+                        {
+                            while(TelaSAP2 < 99)
+                            {
+                                try
+                                {
+                                    TelaSAP2++;
+                                    ((GuiTableControl)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP2 + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211")).VerticalScrollbar.Position = position;
+                                    break;
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            rowD--;
+                            position++;
+                        }
+
+                        while (TelaSAP < 99)
                         {
                             try
                             {
                                 TelaSAP++;
-                                materialSAPCodVer[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/ctxtMEPO1211-EMATN[4," + i + "]")).Text;
-                                requisicaoCompra[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/ctxtMEPO1211-BANFN[28," + i + "]")).Text;
+                                materialSAPCodVer[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/ctxtMEPO1211-EMATN[4," + rowD + "]")).Text;
+                                requisicaoCompra[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/ctxtMEPO1211-BANFN[28," + rowD + "]")).Text;
                                 break;
                             }
                             catch
@@ -587,6 +618,7 @@ namespace SistemaGSG.Almoxarifado
                             mySqlCommand.Connection.Close();
                         }
                         i++;
+                        rowD++;
                     }
                     catch
                     {

@@ -53,6 +53,7 @@
             this.baixarXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.consultarNotasEmitidasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.relaçãoDeNotasFiscaisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
@@ -70,7 +71,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -181,8 +181,8 @@
             // baixaEmRequisiçõesToolStripMenuItem
             // 
             this.baixaEmRequisiçõesToolStripMenuItem.Name = "baixaEmRequisiçõesToolStripMenuItem";
-            this.baixaEmRequisiçõesToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.baixaEmRequisiçõesToolStripMenuItem.Text = "Baixa em Requisições";
+            this.baixaEmRequisiçõesToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.baixaEmRequisiçõesToolStripMenuItem.Text = "Baixas em Requisições";
             this.baixaEmRequisiçõesToolStripMenuItem.Click += new System.EventHandler(this.baixaEmRequisiçõesToolStripMenuItem_Click);
             // 
             // arquivosToolStripMenuItem
@@ -270,6 +270,13 @@
             this.relaçãoDeNotasFiscaisToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
             this.relaçãoDeNotasFiscaisToolStripMenuItem.Text = "Relação de Notas Fiscais Baixadas";
             this.relaçãoDeNotasFiscaisToolStripMenuItem.Click += new System.EventHandler(this.relaçãoDeNotasFiscaisToolStripMenuItem_Click);
+            // 
+            // notasFiscaisConfirmaçãoSefazToolStripMenuItem
+            // 
+            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem.Name = "notasFiscaisConfirmaçãoSefazToolStripMenuItem";
+            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem.Text = "Notas Fiscais Confirmação Sefaz";
+            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem.Click += new System.EventHandler(this.notasFiscaisConfirmaçãoSefazToolStripMenuItem_Click);
             // 
             // testeToolStripMenuItem
             // 
@@ -432,13 +439,6 @@
             // 
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick_1);
-            // 
-            // notasFiscaisConfirmaçãoSefazToolStripMenuItem
-            // 
-            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem.Name = "notasFiscaisConfirmaçãoSefazToolStripMenuItem";
-            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
-            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem.Text = "Notas Fiscais Confirmação Sefaz";
-            this.notasFiscaisConfirmaçãoSefazToolStripMenuItem.Click += new System.EventHandler(this.notasFiscaisConfirmaçãoSefazToolStripMenuItem_Click);
             // 
             // frm_Main
             // 

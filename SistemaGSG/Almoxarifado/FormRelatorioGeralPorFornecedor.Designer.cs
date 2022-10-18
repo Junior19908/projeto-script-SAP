@@ -44,14 +44,14 @@
             this.ZMM039.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ZMM039.Location = new System.Drawing.Point(12, 211);
             this.ZMM039.Name = "ZMM039";
-            this.ZMM039.Size = new System.Drawing.Size(232, 0);
+            this.ZMM039.Size = new System.Drawing.Size(232, 25);
             this.ZMM039.TabIndex = 0;
             this.ZMM039.Visible = false;
             // 
             // btnRelatorio
             // 
             this.btnRelatorio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRelatorio.Location = new System.Drawing.Point(169, 184);
+            this.btnRelatorio.Location = new System.Drawing.Point(169, 209);
             this.btnRelatorio.Name = "btnRelatorio";
             this.btnRelatorio.Size = new System.Drawing.Size(75, 23);
             this.btnRelatorio.TabIndex = 1;
@@ -63,27 +63,27 @@
             // 
             this.calendarioMes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.calendarioMes.Location = new System.Drawing.Point(18, 18);
+            this.calendarioMes.Location = new System.Drawing.Point(17, 35);
             this.calendarioMes.Name = "calendarioMes";
             this.calendarioMes.TabIndex = 0;
             // 
             // btnRC
             // 
             this.btnRC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRC.Location = new System.Drawing.Point(88, 184);
+            this.btnRC.Location = new System.Drawing.Point(88, 209);
             this.btnRC.Name = "btnRC";
             this.btnRC.Size = new System.Drawing.Size(75, 23);
             this.btnRC.TabIndex = 2;
             this.btnRC.Text = "&Correções";
             this.btnRC.UseVisualStyleBackColor = true;
+            this.btnRC.Visible = false;
             this.btnRC.Click += new System.EventHandler(this.btnRC_Click);
             // 
             // FormRelatorioGeralPorFornecedor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(256, 218);
-            this.ControlBox = false;
+            this.ClientSize = new System.Drawing.Size(256, 243);
             this.Controls.Add(this.btnRC);
             this.Controls.Add(this.calendarioMes);
             this.Controls.Add(this.btnRelatorio);
