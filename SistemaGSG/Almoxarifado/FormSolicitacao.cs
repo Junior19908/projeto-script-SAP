@@ -22,7 +22,6 @@ namespace SistemaGSG
         {
             InitializeComponent();
         }
-        MySqlConnection connection = new MySqlConnection(@"server=localhost;database=sistemagsgposto;Uid=energia;Pwd=02984646#Lua;SslMode=none;");
         DataTable table = new DataTable();
 
         private void atualizahora()
@@ -60,19 +59,17 @@ namespace SistemaGSG
         }
         private void DataGridBaixaSAP()
         {
-            connection.Open();
-            MySqlDataAdapter BaixaSAP = new MySqlDataAdapter("SELECT * FROM  tb_almox_reserva WHERE TPNEC = 0", connection);
+            MySqlDataAdapter BaixaSAP = new MySqlDataAdapter("SELECT * FROM  tb_almox_reserva WHERE TPNEC = 0", ConexaoDados.GetConnectionAlmoxarifado());
             DataTable Baixa = new DataTable();
             BaixaSAP.Fill(Baixa);
             dataGridViewBaixaSAP.DataSource = Baixa;
-            connection.Close();
+            ConexaoDados.GetConnectionAlmoxarifado().Close();
         }
         private void CarregarDataGrid()
         {
             try
             {
-                connection.Open();
-                MySqlDataAdapter Solicitacao = new MySqlDataAdapter("SELECT * FROM  tb_almox_solicitacao WHERE FINALIZADO != 1", connection);
+                MySqlDataAdapter Solicitacao = new MySqlDataAdapter("SELECT * FROM  tb_almox_solicitacao WHERE FINALIZADO != 1", ConexaoDados.GetConnectionAlmoxarifado());
                 DataTable Solict = new DataTable();
                 Solicitacao.Fill(Solict);
                 dataGridViewSolc.DataSource = Solict;
@@ -100,7 +97,10 @@ namespace SistemaGSG
             {
                 lblConexao.Visible = true;
             }
-            connection.Close();
+            finally
+            {
+                ConexaoDados.GetConnectionAlmoxarifado().Close();
+            }
             int countg = dataGridViewSolc.RowCount;
             if (countg == 0)
             {
@@ -123,7 +123,7 @@ namespace SistemaGSG
             }
         }
         private void SolicitacaoSAP()
-        {               
+        {
             try
             {
                 //Pega a tela de execução do Windows
@@ -190,14 +190,13 @@ namespace SistemaGSG
         }
         private void UpdateStatusFinalizado()
         {
-            connection.Open();
-            if (connection.State == ConnectionState.Open)
+            if (ConexaoDados.GetConnectionAlmoxarifado().State == ConnectionState.Open)
             {
-                MySqlCommand cmd = new MySqlCommand("UPDATE tb_almox_solicitacao SET FINALIZADO='1' WHERE ID_TB='" + dataGridViewSolc.Rows[0].Cells[0].Value.ToString() + "'", connection);
+                MySqlCommand cmd = new MySqlCommand("UPDATE tb_almox_solicitacao SET FINALIZADO='1' WHERE ID_TB='" + dataGridViewSolc.Rows[0].Cells[0].Value.ToString() + "'", ConexaoDados.GetConnectionAlmoxarifado());
                 cmd.ExecuteNonQuery();
                 ProgBar.Value = 0;
             }
-            connection.Close();
+            ConexaoDados.GetConnectionAlmoxarifado().Close();
             table.Rows.Clear();
         }
         private void ExecTemp_Tick(object sender, EventArgs e)
@@ -262,27 +261,31 @@ namespace SistemaGSG
         {
             try
             {
-                connection.Open();
-                    if (string.IsNullOrEmpty(txtReserva.Text))
-                    {
+                if (string.IsNullOrEmpty(txtReserva.Text))
+                {
 
-                    }
-                    else
-                    {
-                        MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_almox_reserva (RESERVA, ITEM, DATA, TPMOVIMETNO, MATERIAL, QTDPEDIDA, QDTSOLICITADA, UMB, CUSTO, DEPOSITO, TPNEC, RECEBEDOR, USUARIOSAP) " +
-                            "VALUES " +
-                            "('" + txtReserva.Text + "','" + txtItemReserva.Text + "','" + this.dataReserva2.Text + "','" + txtTpMovimento.Text + "','" + txtMaterial.Text + "','" + txtQuantPedida.Text + "','0' ,'" + txtUMB.Text + "','" + txtCentroCusto.Text + "','" + txtDeposito.Text + "','0','" + txtRecebedor.Text + "','" + txtUsuarioSAP.Text + "')", connection);
-                        cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_almox_reserva (RESERVA, ITEM, DATA, TPMOVIMETNO, MATERIAL, QTDPEDIDA, QDTSOLICITADA, UMB, CUSTO, DEPOSITO, TPNEC, RECEBEDOR, USUARIOSAP) " +
+                        "VALUES " +
+                        "('" + txtReserva.Text + "','" + txtItemReserva.Text + "','" + this.dataReserva2.Text + "','" + txtTpMovimento.Text + "','" + txtMaterial.Text + "','" + txtQuantPedida.Text + "','0' ,'" + txtUMB.Text + "','" + txtCentroCusto.Text + "','" + txtDeposito.Text + "','0','" + txtRecebedor.Text + "','" + txtUsuarioSAP.Text + "')", ConexaoDados.GetConnectionAlmoxarifado());
+                    cmd.ExecuteNonQuery();
+                    cmd.Connection.Close();
                     MySqlCommand commando = new MySqlCommand("INSERT INTO tb_almox_solicitacao (RESERVA, DATARESERVA, USERSOLIC, FINALIZADO, STATUS) " +
                         "VALUES " +
-                        "('" + txtReserva.Text + "','" + this.dataReserva2.Text + "','17', '1','4')", connection);
+                        "('" + txtReserva.Text + "','" + this.dataReserva2.Text + "','17', '1','4')", ConexaoDados.GetConnectionAlmoxarifado());
                     commando.ExecuteNonQuery();
+                    commando.Connection.Close();
                 }
-                connection.Close();
             }
             catch (Exception Err)
             {
                 MessageBox.Show(Err.Message);
+            }
+            finally
+            {
+                ConexaoDados.GetConnectionAlmoxarifado().Close();
             }
         }
         private void gerarRelatórioToolStripMenuItem_Click(object sender, EventArgs e)
