@@ -19,7 +19,7 @@ namespace SistemaGSG
         {
             InitializeComponent();
         }
-
+        //Salvar
         private void GerarRelatorio()
         {
             DataTable dt = new DataTable();

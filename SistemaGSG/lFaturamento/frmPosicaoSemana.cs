@@ -21,6 +21,9 @@ namespace SistemaGSG
             InitializeComponent();
             OvAlter = 0;
         }
+
+        //Salvar
+
         int OvAlter = 0;
         int idAutoIncrement;
         DataTable table = new DataTable();
