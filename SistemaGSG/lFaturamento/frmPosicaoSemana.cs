@@ -344,7 +344,7 @@ namespace SistemaGSG
 
             string[] lines = File.ReadAllLines(@"C:\ArquivosSAP\OVACUCAR.txt", Encoding.UTF7);
             string[] values;
-            for (int i = 6; i < lines.Length; i++)
+            for (int i = 5; i < lines.Length; i++)
             {
                 values = lines[i].ToString().Split('|');
                 string[] row = new string[values.Length];
@@ -362,7 +362,7 @@ namespace SistemaGSG
 
             string[] lines = File.ReadAllLines(@"C:\ArquivosSAP\CONTRATOACUCAR.txt", Encoding.UTF7);
             string[] values;
-            for (int i = 6; i < lines.Length; i++)
+            for (int i = 5; i < lines.Length; i++)
             {
                 values = lines[i].ToString().Split('|');
                 string[] row = new string[values.Length];
@@ -415,7 +415,7 @@ namespace SistemaGSG
         string PLACA = null;
         string MOTORISTA = null;
         int SAFRA;
-        int DEPOSITO;
+        string DEPOSITO;
         string TIPOPEMBALAGEM = null;
         int QUANTEMBALAGEM;
 
@@ -454,7 +454,7 @@ namespace SistemaGSG
                     EMISSMERC = (UInt32)Convert.ToUInt32(DT_SAP.Rows[numero].Cells[11].Value.ToString().Trim());
                     CODRECEB = DT_SAP.Rows[numero].Cells[12].Value.ToString().Trim();
                     CNPJRECEB = DT_SAP.Rows[numero].Cells[13].Value.ToString().Trim().Replace("/", "").Replace("-", "");
-                    CIDADEDEST= DT_SAP.Rows[numero].Cells[14].Value.ToString().Trim();
+                    CIDADEDEST = DT_SAP.Rows[numero].Cells[14].Value.ToString().Trim();
                     ESTADODEST = DT_SAP.Rows[numero].Cells[15].Value.ToString().Trim();
                     CFOPDEST = DT_SAP.Rows[numero].Cells[16].Value.ToString().Trim();
                     CFOPDESC = DT_SAP.Rows[numero].Cells[17].Value.ToString().Trim();
@@ -522,59 +522,42 @@ namespace SistemaGSG
                     {
                         SAFRA = 11;
                     }
+                    else if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2016/17")
+                    {
+                        SAFRA = 1;
+                    }
+                    else if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2017/18")
+                    {
+                        SAFRA = 2;
+                    }
+                    else if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2018/19")
+                    {
+                        SAFRA = 3;
+                    }
+                    else if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2019/20")
+                    {
+                        SAFRA = 4;
+                    }
+                    else if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2020/21")
+                    {
+                        SAFRA = 5;
+                    }
+                    else if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2021/22")
+                    {
+                        SAFRA = 6;
+                    }
                     else
                     {
-                        if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2016/17")
+                        OleDbCommand oleDbCommand = new OleDbCommand("SELECT col_codigo FROM DBSGSG_Safra WHERE col_status=1", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
+                        OleDbDataReader oleDbDataReader = oleDbCommand.ExecuteReader();
+                        while (oleDbDataReader.Read())
                         {
-                            SAFRA = 1;
+                            SAFRA = Convert.ToInt16(oleDbDataReader["col_codigo"].ToString());
+                            break;
                         }
-                        else
-                        {
-                            if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2017/18")
-                            {
-                                SAFRA = 2;
-                            }
-                            else
-                            {
-                                if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2018/19")
-                                {
-                                    SAFRA = 3;
-                                }
-                                else
-                                {
-                                    if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2019/20")
-                                    {
-                                        SAFRA = 4;
-                                    }
-                                    else
-                                    {
-                                        if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2020/21")
-                                        {
-                                            SAFRA = 5;
-                                        }
-                                        else
-                                        {
-                                            if (DT_SAP.Rows[numero].Cells[57].Value.ToString().Trim() == "2021/22")
-                                            {
-                                                SAFRA = 6;
-                                            }
-                                            else
-                                            {
-                                                OleDbCommand oleDbCommand = new OleDbCommand("SELECT col_codigo FROM DBSGSG_Safra WHERE col_status=1", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
-                                                OleDbDataReader oleDbDataReader = oleDbCommand.ExecuteReader();
-                                                while (oleDbDataReader.Read())
-                                                {
-                                                    SAFRA = Convert.ToInt16(oleDbDataReader["col_codigo"].ToString());
-                                                    break;
-                                                }
-                                                oleDbCommand.Connection.Close();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        oleDbCommand.Connection.Close();
                     }
+
                     LOTE = DT_SAP.Rows[numero].Cells[58].Value.ToString().Trim();
                     _59.Text = DT_SAP.Rows[numero].Cells[59].Value.ToString().Trim();
                     _60.Text = DT_SAP.Rows[numero].Cells[60].Value.ToString().Trim();
@@ -587,11 +570,11 @@ namespace SistemaGSG
                     _67.Text = DT_SAP.Rows[numero].Cells[67].Value.ToString().Trim();
                     if (string.IsNullOrEmpty(DT_SAP.Rows[numero].Cells[68].Value.ToString().Trim()))
                     {
-                        DEPOSITO = 0;
+                        DEPOSITO = "0";
                     }
                     else
                     {
-                        DEPOSITO = Convert.ToInt32(DT_SAP.Rows[numero].Cells[68].Value.ToString().Trim());
+                        DEPOSITO = DT_SAP.Rows[numero].Cells[68].Value.ToString().Trim();
                     }
                     TIPOPEMBALAGEM = DT_SAP.Rows[numero].Cells[69].Value.ToString().Trim();
                     if (string.IsNullOrEmpty(DT_SAP.Rows[numero].Cells[70].Value.ToString().Trim()))
@@ -753,8 +736,42 @@ namespace SistemaGSG
                                     "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
                                     cmd.ExecuteNonQuery();
                                     cmd.CommandTimeout = 120; //default 30 segundos
-                                }
-                                if (MATERIAL == "100001")
+                                }else if (MATERIAL == "100001")
+                                {
+                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
+                                    "VALUES " +
+                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
+                                    cmd.ExecuteNonQuery();
+                                    cmd.CommandTimeout = 120; //default 30 segundos
+                                }else if (MATERIAL == "100141")
+                                {
+                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
+                                    "VALUES " +
+                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
+                                    cmd.ExecuteNonQuery();
+                                    cmd.CommandTimeout = 120; //default 30 segundos
+                                }else if (MATERIAL == "100002")
+                                {
+                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
+                                    "VALUES " +
+                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
+                                    cmd.ExecuteNonQuery();
+                                    cmd.CommandTimeout = 120; //default 30 segundos
+                                }else if (MATERIAL == "100035")
+                                {
+                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
+                                    "VALUES " +
+                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
+                                    cmd.ExecuteNonQuery();
+                                    cmd.CommandTimeout = 120; //default 30 segundos
+                                }else if (MATERIAL == "100145")
+                                {
+                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
+                                    "VALUES " +
+                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
+                                    cmd.ExecuteNonQuery();
+                                    cmd.CommandTimeout = 120; //default 30 segundos
+                                }else if (MATERIAL == "100180")
                                 {
                                     MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
                                     "VALUES " +
@@ -762,49 +779,7 @@ namespace SistemaGSG
                                     cmd.ExecuteNonQuery();
                                     cmd.CommandTimeout = 120; //default 30 segundos
                                 }
-                                if (MATERIAL == "100141")
-                                {
-                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
-                                    "VALUES " +
-                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
-                                    cmd.ExecuteNonQuery();
-                                    cmd.CommandTimeout = 120; //default 30 segundos
-                                }
-                                if (MATERIAL == "100002")
-                                {
-                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
-                                    "VALUES " +
-                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
-                                    cmd.ExecuteNonQuery();
-                                    cmd.CommandTimeout = 120; //default 30 segundos
-                                }
-                                if (MATERIAL == "100035")
-                                {
-                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
-                                    "VALUES " +
-                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
-                                    cmd.ExecuteNonQuery();
-                                    cmd.CommandTimeout = 120; //default 30 segundos
-                                }
-                                if (MATERIAL == "100145")
-                                {
-                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
-                                    "VALUES " +
-                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
-                                    cmd.ExecuteNonQuery();
-                                    cmd.CommandTimeout = 120; //default 30 segundos
-                                }
-                                if (MATERIAL == "100180")
-                                {
-                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
-                                    "VALUES " +
-                                    "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '1', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, NULL, NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
-                                    cmd.ExecuteNonQuery();
-                                    cmd.CommandTimeout = 120; //default 30 segundos
-                                }
-                            }
-                            if (ItemOV == 1)
-                            {
+                            }else if (ItemOV == 1){
                                 if (Div == "2")
                                 {
                                     if (MATERIAL == "100000")
@@ -814,48 +789,42 @@ namespace SistemaGSG
                                         "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "', '2', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, '4', NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
                                         cmd.ExecuteNonQuery();
                                         cmd.CommandTimeout = 120; //default 30 segundos
-                                    }
-                                    if (MATERIAL == "100001")
+                                    }else if (MATERIAL == "100001")
                                     {
                                         MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
                                         "VALUES " +
                                         "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "',  '2', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, '4', NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
                                         cmd.ExecuteNonQuery();
                                         cmd.CommandTimeout = 120; //default 30 segundos
-                                    }
-                                    if (MATERIAL == "100141")
+                                    }else if (MATERIAL == "100141")
                                     {
                                         MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
                                         "VALUES " +
                                         "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "',  '2', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, '4', NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
                                         cmd.ExecuteNonQuery();
                                         cmd.CommandTimeout = 120; //default 30 segundos
-                                    }
-                                    if (MATERIAL == "100002")
+                                    }else if (MATERIAL == "100002")
                                     {
                                         MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
                                         "VALUES " +
                                         "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "',  '2', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, '4', NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
                                         cmd.ExecuteNonQuery();
                                         cmd.CommandTimeout = 120; //default 30 segundos
-                                    }
-                                    if (MATERIAL == "100035")
+                                    }else if (MATERIAL == "100035")
                                     {
                                         MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
                                         "VALUES " +
                                         "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "',  '2', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, '4', NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
                                         cmd.ExecuteNonQuery();
                                         cmd.CommandTimeout = 120; //default 30 segundos
-                                    }
-                                    if (MATERIAL == "100145")
+                                    }else if (MATERIAL == "100145")
                                     {
                                         MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
                                         "VALUES " +
                                         "('" + DocOrdem + "','" + Itm + "','" + Div + "','" + Denominacao + "','" + TpDv + "','" + _28.Text + "','" + QtdConf.Replace(".", "").Replace(",", ".") + "','" + Pedido + "',  '2', NULL, NULL,  '" + UMB + "', '" + DesCliente + "', NULL,NULL, '4', NULL,'" + MATERIAL + "')", ConexaoDados.GetConnectionFaturameto());
                                         cmd.ExecuteNonQuery();
                                         cmd.CommandTimeout = 120; //default 30 segundos
-                                    }
-                                    if (MATERIAL == "100180")
+                                    }else if (MATERIAL == "100180")
                                     {
                                         MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_ordem_venda (`Doc_SD`, `Itm`, `Div_ITEM`, `Denominacao`, `TpDV`, `Data_doc`, `Qtd_conf`, `N_pedido`, `Criado_a`, `Qtd_ordem`, `Dep`, `UMB`, `Nome_1`, `Preco_liq`, `safra`, `UM`, `Val_liq`, `MATERIAL`) " +
                                         "VALUES " +
@@ -903,13 +872,11 @@ namespace SistemaGSG
                         "(`col_doc`,`col_org`,`col_canal`,`col_setor`,`col_userSAP`,`col_centro`,`col_codEmpr`,`col_nomeEmpr`,`col_cnpjEmpr`,`col_recMerc`,`col_emissorMer`,`col_codReceb`,`col_cnpjReceb`,`col_cidadeDest`,`col_estadoDest`,`col_cfopDest`,`col_descCfop`,`col_pedido`,`col_ordem`,`col_tipoOrdem`,`col_fatura`,`col_tipoFat`,`col_nfeNum`,`col_nf`" +
                         ",`col_serie`,`col_tipo`,`col_cancelada`,`col_dataEmissao`,`col_grupoMerc`,`col_material`,`col_descMaterial`,`col_lote`,`col_unidade`,`col_quantidade`,`col_vlLiquido`,`col_vlBruto`,`col_codRep`,`col_representante`,`col_transportadoraMotorista`,`col_acesso`,`col_laudo`,`col_safra`,`col_loteManual`,`col_deposito`,`col_tipoEmb`,`col_qtdEmb`,`col_dataEmissaoFim`,`col_status`,`col_UserImport`) " +
                         "VALUES" +
-                        " ('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','"+ CIDADEDEST +"','"+ ESTADODEST +"','"+ CFOPDEST +"','"+ CFOPDESC +"','"+ PEDIDO +"','"+ ORDEM +"','"+ TIPORDEM +"','"+ FATURA + "','" + TIPOFATURA + "','" + NFENUM +"','"+ NF +"'," +
-                        "'"+ SERIENFE +"','"+ TPNF +"','"+ CANCELADA +"','"+ _28.Text +"','"+ GRUPOMERC +"','"+ MATERIAL +"','"+ DESCMATERIAL +"','"+ LOTE +"','"+ UNIDADE +"','"+ _34.Text +"','"+ _35.Text + "','" + _46.Text + "','"+ CODREP +"','"+ REPRESENTANTE +"','"+ TRANSPMOTORISTA +"','"+ ACESSO +"','"+ LAUDO +"','"+ SAFRA +"','"+ LOTE +"','"+ DEPOSITO + "','"+ TIPOPEMBALAGEM +"','"+ QUANTEMBALAGEM +"','"+ this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
+                        " ('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "'," +
+                        "'" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text + "','" + _35.Text + "','" + _46.Text + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
                         cmd.ExecuteNonQuery();
                         cmd.Connection.Close();
-                    }
-                    if (MATERIAL == 100001)
-                    {
+                    }else if (MATERIAL == 100001){
                         //MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO tb_saida_semana (`DOC`, `ORG`, `CANAL`, `SETOR`, `USER_SAP`, `CENTRO`, `COD_EMPR`, `NOME`, `CNPJ`, `REC_MERC`, `EMISSO_MER`, `COD_RECEB`, `CNPJ_RECEB`, `CIDADE`, `ESTADO`, `CFOP`, `DESCRICAO`, `PEDIDO`, `ORDEM`, `TIPO_ORDEM`, `FATURA`, `TIPO_FAT`, `NFE_NUM`, `NF`, `SERIE`, `TIPO`, `CANCELADA`, `DATA_EMISS`, `GRUPO_MERC`, `MATERIAL`, `DESCRICAO_MAT`, `LOTE`, `UNIDADE`, `QUANTIDADE`, `VL_LIQUIDO`, `VL_BRUTO`, `COD_REP`, `REPRESENTANTE`, `TRANSPORTADORA`, `ACESSO`, `LAUDO`, `SAFRA`, `LOTE_MANUAL`, `DEPOSITO`, `TIPO_EMB`, `QTD_EMB`, `DATA_EMISS_FIM`, `col_status`) " +
                         //"VALUES " +
                         //"('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "','" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text.Replace(".", "").Replace(",", ".") + "','" + _35.Text.Replace(".", "").Replace(",", ".") + "','" + _46.Text.Replace(".", "").Replace(",", ".") + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0')", ConexaoDados.GetConnectionFaturameto());
@@ -923,9 +890,7 @@ namespace SistemaGSG
                         "'" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text + "','" + _35.Text + "','" + _46.Text + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
                         cmd.ExecuteNonQuery();
                         cmd.Connection.Close();
-                    }
-                    if (_30.Text == "100002")
-                    {
+                    }else if (MATERIAL == 100002){
                         //MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO tb_saida_semana (`DOC`, `ORG`, `CANAL`, `SETOR`, `USER_SAP`, `CENTRO`, `COD_EMPR`, `NOME`, `CNPJ`, `REC_MERC`, `EMISSO_MER`, `COD_RECEB`, `CNPJ_RECEB`, `CIDADE`, `ESTADO`, `CFOP`, `DESCRICAO`, `PEDIDO`, `ORDEM`, `TIPO_ORDEM`, `FATURA`, `TIPO_FAT`, `NFE_NUM`, `NF`, `SERIE`, `TIPO`, `CANCELADA`, `DATA_EMISS`, `GRUPO_MERC`, `MATERIAL`, `DESCRICAO_MAT`, `LOTE`, `UNIDADE`, `QUANTIDADE`, `VL_LIQUIDO`, `VL_BRUTO`, `COD_REP`, `REPRESENTANTE`, `TRANSPORTADORA`, `ACESSO`, `LAUDO`, `SAFRA`, `LOTE_MANUAL`, `DEPOSITO`, `TIPO_EMB`, `QTD_EMB`, `DATA_EMISS_FIM`, `col_status`) " +
                         //"VALUES " +
                         //"('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "','" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text.Replace(".", "").Replace(",", ".") + "','" + _35.Text.Replace(".", "").Replace(",", ".") + "','" + _46.Text.Replace(".", "").Replace(",", ".") + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0')", ConexaoDados.GetConnectionFaturameto());
@@ -939,9 +904,7 @@ namespace SistemaGSG
                         "'" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text + "','" + _35.Text + "','" + _46.Text + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
                         cmd.ExecuteNonQuery();
                         cmd.Connection.Close();
-                    }
-                    if (_30.Text == "100014")
-                    {
+                    }else if (MATERIAL == 100014){
                         //MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO tb_saida_semana (`DOC`, `ORG`, `CANAL`, `SETOR`, `USER_SAP`, `CENTRO`, `COD_EMPR`, `NOME`, `CNPJ`, `REC_MERC`, `EMISSO_MER`, `COD_RECEB`, `CNPJ_RECEB`, `CIDADE`, `ESTADO`, `CFOP`, `DESCRICAO`, `PEDIDO`, `ORDEM`, `TIPO_ORDEM`, `FATURA`, `TIPO_FAT`, `NFE_NUM`, `NF`, `SERIE`, `TIPO`, `CANCELADA`, `DATA_EMISS`, `GRUPO_MERC`, `MATERIAL`, `DESCRICAO_MAT`, `LOTE`, `UNIDADE`, `QUANTIDADE`, `VL_LIQUIDO`, `VL_BRUTO`, `COD_REP`, `REPRESENTANTE`, `TRANSPORTADORA`, `ACESSO`, `LAUDO`, `SAFRA`, `LOTE_MANUAL`, `DEPOSITO`, `TIPO_EMB`, `QTD_EMB`, `DATA_EMISS_FIM`, `col_status`) " +
                         //"VALUES " +
                         //"('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "','" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text.Replace(".", "").Replace(",", ".") + "','" + _35.Text.Replace(".", "").Replace(",", ".") + "','" + _46.Text.Replace(".", "").Replace(",", ".") + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0')", ConexaoDados.GetConnectionFaturameto());
@@ -955,9 +918,7 @@ namespace SistemaGSG
                         "'" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text + "','" + _35.Text + "','" + _46.Text + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
                         cmd.ExecuteNonQuery();
                         cmd.Connection.Close();
-                    }
-                    if (_30.Text == "100015")
-                    {
+                    }else if (MATERIAL == 100015){
                         //MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO tb_saida_semana (`DOC`, `ORG`, `CANAL`, `SETOR`, `USER_SAP`, `CENTRO`, `COD_EMPR`, `NOME`, `CNPJ`, `REC_MERC`, `EMISSO_MER`, `COD_RECEB`, `CNPJ_RECEB`, `CIDADE`, `ESTADO`, `CFOP`, `DESCRICAO`, `PEDIDO`, `ORDEM`, `TIPO_ORDEM`, `FATURA`, `TIPO_FAT`, `NFE_NUM`, `NF`, `SERIE`, `TIPO`, `CANCELADA`, `DATA_EMISS`, `GRUPO_MERC`, `MATERIAL`, `DESCRICAO_MAT`, `LOTE`, `UNIDADE`, `QUANTIDADE`, `VL_LIQUIDO`, `VL_BRUTO`, `COD_REP`, `REPRESENTANTE`, `TRANSPORTADORA`, `ACESSO`, `LAUDO`, `SAFRA`, `LOTE_MANUAL`, `DEPOSITO`, `TIPO_EMB`, `QTD_EMB`, `DATA_EMISS_FIM`, `col_status`) " +
                         //"VALUES " +
                         //"('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "','" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text.Replace(".", "").Replace(",", ".") + "','" + _35.Text.Replace(".", "").Replace(",", ".") + "','" + _46.Text.Replace(".", "").Replace(",", ".") + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0')", ConexaoDados.GetConnectionFaturameto());
@@ -971,9 +932,7 @@ namespace SistemaGSG
                         "'" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text + "','" + _35.Text + "','" + _46.Text + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
                         cmd.ExecuteNonQuery();
                         cmd.Connection.Close();
-                    }
-                    if (_30.Text == "100035")
-                    {
+                    }else if (MATERIAL == 100035){
                         //MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO tb_saida_semana (`DOC`, `ORG`, `CANAL`, `SETOR`, `USER_SAP`, `CENTRO`, `COD_EMPR`, `NOME`, `CNPJ`, `REC_MERC`, `EMISSO_MER`, `COD_RECEB`, `CNPJ_RECEB`, `CIDADE`, `ESTADO`, `CFOP`, `DESCRICAO`, `PEDIDO`, `ORDEM`, `TIPO_ORDEM`, `FATURA`, `TIPO_FAT`, `NFE_NUM`, `NF`, `SERIE`, `TIPO`, `CANCELADA`, `DATA_EMISS`, `GRUPO_MERC`, `MATERIAL`, `DESCRICAO_MAT`, `LOTE`, `UNIDADE`, `QUANTIDADE`, `VL_LIQUIDO`, `VL_BRUTO`, `COD_REP`, `REPRESENTANTE`, `TRANSPORTADORA`, `ACESSO`, `LAUDO`, `SAFRA`, `LOTE_MANUAL`, `DEPOSITO`, `TIPO_EMB`, `QTD_EMB`, `DATA_EMISS_FIM`, `col_status`) " +
                         //"VALUES " +
                         //"('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "','" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text.Replace(".", "").Replace(",", ".") + "','" + _35.Text.Replace(".", "").Replace(",", ".") + "','" + _46.Text.Replace(".", "").Replace(",", ".") + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0')", ConexaoDados.GetConnectionFaturameto());
@@ -987,9 +946,7 @@ namespace SistemaGSG
                         "'" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text + "','" + _35.Text + "','" + _46.Text + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
                         cmd.ExecuteNonQuery();
                         cmd.Connection.Close();
-                    }
-                    if (_30.Text == "100141")
-                    {
+                    }else if (MATERIAL == 100141){
                         //MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO tb_saida_semana (`DOC`, `ORG`, `CANAL`, `SETOR`, `USER_SAP`, `CENTRO`, `COD_EMPR`, `NOME`, `CNPJ`, `REC_MERC`, `EMISSO_MER`, `COD_RECEB`, `CNPJ_RECEB`, `CIDADE`, `ESTADO`, `CFOP`, `DESCRICAO`, `PEDIDO`, `ORDEM`, `TIPO_ORDEM`, `FATURA`, `TIPO_FAT`, `NFE_NUM`, `NF`, `SERIE`, `TIPO`, `CANCELADA`, `DATA_EMISS`, `GRUPO_MERC`, `MATERIAL`, `DESCRICAO_MAT`, `LOTE`, `UNIDADE`, `QUANTIDADE`, `VL_LIQUIDO`, `VL_BRUTO`, `COD_REP`, `REPRESENTANTE`, `TRANSPORTADORA`, `ACESSO`, `LAUDO`, `SAFRA`, `LOTE_MANUAL`, `DEPOSITO`, `TIPO_EMB`, `QTD_EMB`, `DATA_EMISS_FIM`, `col_status`) " +
                         //"VALUES " +
                         //"('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "','" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text.Replace(".", "").Replace(",", ".") + "','" + _35.Text.Replace(".", "").Replace(",", ".") + "','" + _46.Text.Replace(".", "").Replace(",", ".") + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0')", ConexaoDados.GetConnectionFaturameto());
@@ -1003,9 +960,7 @@ namespace SistemaGSG
                         "'" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text + "','" + _35.Text + "','" + _46.Text + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
                         cmd.ExecuteNonQuery();
                         cmd.Connection.Close();
-                    }
-                    if (_30.Text == "100145")
-                    {
+                    }else if (MATERIAL == 100145){
                         //MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO tb_saida_semana (`DOC`, `ORG`, `CANAL`, `SETOR`, `USER_SAP`, `CENTRO`, `COD_EMPR`, `NOME`, `CNPJ`, `REC_MERC`, `EMISSO_MER`, `COD_RECEB`, `CNPJ_RECEB`, `CIDADE`, `ESTADO`, `CFOP`, `DESCRICAO`, `PEDIDO`, `ORDEM`, `TIPO_ORDEM`, `FATURA`, `TIPO_FAT`, `NFE_NUM`, `NF`, `SERIE`, `TIPO`, `CANCELADA`, `DATA_EMISS`, `GRUPO_MERC`, `MATERIAL`, `DESCRICAO_MAT`, `LOTE`, `UNIDADE`, `QUANTIDADE`, `VL_LIQUIDO`, `VL_BRUTO`, `COD_REP`, `REPRESENTANTE`, `TRANSPORTADORA`, `ACESSO`, `LAUDO`, `SAFRA`, `LOTE_MANUAL`, `DEPOSITO`, `TIPO_EMB`, `QTD_EMB`, `DATA_EMISS_FIM`, `col_status`) " +
                         //"VALUES " +
                         //"('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "','" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text.Replace(".", "").Replace(",", ".") + "','" + _35.Text.Replace(".", "").Replace(",", ".") + "','" + _46.Text.Replace(".", "").Replace(",", ".") + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0')", ConexaoDados.GetConnectionFaturameto());
@@ -1019,9 +974,7 @@ namespace SistemaGSG
                         "'" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text + "','" + _35.Text + "','" + _46.Text + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0','1')", ConexaoBancoDeDadosOffline.DBSGSG_Conex());
                         cmd.ExecuteNonQuery();
                         cmd.Connection.Close();
-                    }
-                    if (_30.Text == "100180")
-                    {
+                    }else if (MATERIAL == 100180){
                         //MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO tb_saida_semana (`DOC`, `ORG`, `CANAL`, `SETOR`, `USER_SAP`, `CENTRO`, `COD_EMPR`, `NOME`, `CNPJ`, `REC_MERC`, `EMISSO_MER`, `COD_RECEB`, `CNPJ_RECEB`, `CIDADE`, `ESTADO`, `CFOP`, `DESCRICAO`, `PEDIDO`, `ORDEM`, `TIPO_ORDEM`, `FATURA`, `TIPO_FAT`, `NFE_NUM`, `NF`, `SERIE`, `TIPO`, `CANCELADA`, `DATA_EMISS`, `GRUPO_MERC`, `MATERIAL`, `DESCRICAO_MAT`, `LOTE`, `UNIDADE`, `QUANTIDADE`, `VL_LIQUIDO`, `VL_BRUTO`, `COD_REP`, `REPRESENTANTE`, `TRANSPORTADORA`, `ACESSO`, `LAUDO`, `SAFRA`, `LOTE_MANUAL`, `DEPOSITO`, `TIPO_EMB`, `QTD_EMB`, `DATA_EMISS_FIM`, `col_status`) " +
                         //"VALUES " +
                         //"('" + DOC + "','" + ORG + "','" + CANAL + "','" + SETOR + "','" + USERSAP + "','" + CENTRO + "','" + CODEMPR + "','" + NOMEEMPR + "','" + CNPJEMPR + "','" + RECMERC + "','" + EMISSMERC + "','" + CODRECEB + "','" + CNPJRECEB + "','" + CIDADEDEST + "','" + ESTADODEST + "','" + CFOPDEST + "','" + CFOPDESC + "','" + PEDIDO + "','" + ORDEM + "','" + TIPORDEM + "','" + FATURA + "','" + TIPOFATURA + "','" + NFENUM + "','" + NF + "','" + SERIENFE + "','" + TPNF + "','" + CANCELADA + "','" + _28.Text + "','" + GRUPOMERC + "','" + MATERIAL + "','" + DESCMATERIAL + "','" + LOTE + "','" + UNIDADE + "','" + _34.Text.Replace(".", "").Replace(",", ".") + "','" + _35.Text.Replace(".", "").Replace(",", ".") + "','" + _46.Text.Replace(".", "").Replace(",", ".") + "','" + CODREP + "','" + REPRESENTANTE + "','" + TRANSPMOTORISTA + "','" + ACESSO + "','" + LAUDO + "','" + SAFRA + "','" + LOTE + "','" + DEPOSITO + "','" + TIPOPEMBALAGEM + "','" + QUANTEMBALAGEM + "','" + this.date2.Text + "','0')", ConexaoDados.GetConnectionFaturameto());
@@ -1153,7 +1106,7 @@ namespace SistemaGSG
                 date1.CustomFormat = "dd.MM.yyyy";
                 date2.Format = DateTimePickerFormat.Custom;
                 date2.CustomFormat = "dd.MM.yyyy";
-                BaixaSAPContrAcucar();
+                //BaixaSAPContrAcucar();
 
                 table.Rows.Clear();
                 date1.Format = DateTimePickerFormat.Custom;
@@ -1161,14 +1114,14 @@ namespace SistemaGSG
                 date2.Format = DateTimePickerFormat.Custom;
                 date2.CustomFormat = "dd.MM.yyyy";
 
-                BaixaSAPOVAcucar();
+                //BaixaSAPOVAcucar();
                 table.Rows.Clear();
                 date1.Format = DateTimePickerFormat.Custom;
                 date1.CustomFormat = "dd.MM.yyyy";
                 date2.Format = DateTimePickerFormat.Custom;
                 date2.CustomFormat = "dd.MM.yyyy";
 
-                OVSeparar();
+                //OVSeparar();
                 date1.Format = DateTimePickerFormat.Custom;
                 date1.CustomFormat = "dd/MM/yyyy";
                 date2.Format = DateTimePickerFormat.Custom;
@@ -1216,17 +1169,14 @@ namespace SistemaGSG
                 GuiFrameWindow guiWindow = Session.ActiveWindow;
                 //Abre Transação
                 ProgressBar.Value = 0;
-                if (OvAlter == 0)
-                {
+                if (OvAlter == 0){
                     MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT * FROM `tb_ordem_venda` WHERE col_TipoOV IS NULL", ConexaoDados.GetConnectionFaturameto());
                     DataTable SS = new DataTable();
                     ADAP.Fill(SS);
                     DT_SAP.DataSource = SS;
                     ConexaoDados.GetConnectionFaturameto().Close();
 
-                }
-                if (OvAlter == 1)
-                {
+                }else if (OvAlter == 1){
                     MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT * FROM `tb_ordem_venda` WHERE Div_ITEM='2' AND Qtd_ordem IS NULL", ConexaoDados.GetConnectionFaturameto());
                     DataTable SS = new DataTable();
                     ADAP.Fill(SS);
@@ -1571,22 +1521,27 @@ namespace SistemaGSG
             formRelat.ShowDialog();
             //BaixaSAPOVAcucar();
         }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
         /*private void VerificarOrdem()
 {
-   string OrdemVenda;
-   string TipodeOrdem;
-   //col_TipoOV
-   MySqlCommand com = new MySqlCommand();
-   com.Connection = ConexaoDados.GetConnectionFaturameto();
-   com.CommandText = "SELECT * FROM tb_ordem_venda WHERE Data_doc BETWEEN '" + monthCalendar1.SelectionStart.ToString("yyyy/MM/dd").Replace("/", ".") + "' AND '" + monthCalendar1.SelectionEnd.ToString("yyyy/MM/dd").Replace("/", ".") + "' ";
-   MySqlDataReader dr = com.ExecuteReader();
-   while (dr.Read())
-   {
-       OrdemVenda = dr["Doc_SD"].ToString();
-       TipodeOrdem = dr["col_TipoOV"].ToString();
-       MessageBox.Show(OrdemVenda +" "+ TipodeOrdem);
-       //break;
-   }
+string OrdemVenda;
+string TipodeOrdem;
+//col_TipoOV
+MySqlCommand com = new MySqlCommand();
+com.Connection = ConexaoDados.GetConnectionFaturameto();
+com.CommandText = "SELECT * FROM tb_ordem_venda WHERE Data_doc BETWEEN '" + monthCalendar1.SelectionStart.ToString("yyyy/MM/dd").Replace("/", ".") + "' AND '" + monthCalendar1.SelectionEnd.ToString("yyyy/MM/dd").Replace("/", ".") + "' ";
+MySqlDataReader dr = com.ExecuteReader();
+while (dr.Read())
+{
+OrdemVenda = dr["Doc_SD"].ToString();
+TipodeOrdem = dr["col_TipoOV"].ToString();
+MessageBox.Show(OrdemVenda +" "+ TipodeOrdem);
+//break;
+}
 }*/
     }
 }

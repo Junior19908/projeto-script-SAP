@@ -76,7 +76,6 @@
             this.btnRC.TabIndex = 2;
             this.btnRC.Text = "&Correções";
             this.btnRC.UseVisualStyleBackColor = true;
-            this.btnRC.Visible = false;
             this.btnRC.Click += new System.EventHandler(this.btnRC_Click);
             // 
             // FormRelatorioGeralPorFornecedor

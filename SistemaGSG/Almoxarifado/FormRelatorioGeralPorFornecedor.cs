@@ -1,4 +1,5 @@
 ﻿using java.util;
+using javax.swing.text.html.parser;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI;
 using Renci.SshNet;
@@ -65,8 +66,10 @@ namespace SistemaGSG.Almoxarifado
         string docNumeroMiroVerifica;
         string materialSAPCod;
         string[] materialSAPCodVer;
+        string[] nomeMaterialSAPCodVer;
         string updateRelRequisicoes;
         string updateRelPedido;
+        string[] quantidadeItemPedido;
         string grupoCompradores;
         string iconMarcaRC;
 
@@ -74,7 +77,7 @@ namespace SistemaGSG.Almoxarifado
         {
             int count = ZMM039.RowCount;
             int linha = 0;
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 try
                 {
@@ -91,11 +94,11 @@ namespace SistemaGSG.Almoxarifado
                     linha++;
                     posicao++;
                 }
-                catch(FormatException Errp)
+                catch (FormatException Errp)
                 {
 
                 }
-                catch(Exception Error)
+                catch (Exception Error)
                 {
                     MessageBox.Show(Error.Message);
                 }
@@ -115,7 +118,7 @@ namespace SistemaGSG.Almoxarifado
                     try
                     {
                         //Abrir Conexão.
-                        MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM `tb_relatorioentradafornecedor` WHERE col_codigoFornecedor='"+ codigoFornecedor + "'", ConexaoDados.GetConnectionAlmoxarifado());
+                        MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM `tb_relatorioentradafornecedor` WHERE col_codigoFornecedor='" + codigoFornecedor + "'", ConexaoDados.GetConnectionAlmoxarifado());
                         prompt.ExecuteNonQuery();//Executa o comando.
                         int consultDB = Convert.ToInt32(prompt.ExecuteScalar());//Converte o resultado para números inteiros.
                         if (consultDB == 0)//Verifica se o resultado for maior que zero(0), a execução inicia a Menssagem de que já existe contas, caso contrario faz a inserção no Banco.
@@ -124,7 +127,7 @@ namespace SistemaGSG.Almoxarifado
                             {
                                 MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_relatorioentradafornecedor (col_codigoFornecedor, col_descricaoFornecedor, col_materialCodigoSAP, col_textoBreveMaterial, col_numeroNotaFiscal, col_quantidade, col_unidadeMedida, col_valorMaterialSAP, col_documentoMiroSAP, col_pedido, col_requisicao,col_posicao,col_dataImportacao) " +
                                     "VALUES " +
-                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','"+ posicao + "', NOW())", ConexaoDados.GetConnectionAlmoxarifado());
+                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','" + posicao + "', NOW())", ConexaoDados.GetConnectionAlmoxarifado());
                                 cmd.ExecuteNonQuery();
                                 cmd.Connection.Close();
                                 prompt.Connection.Close();
@@ -138,7 +141,7 @@ namespace SistemaGSG.Almoxarifado
                                 ConexaoDados.GetConnectionAlmoxarifado().Close();
                             }
                         }
-                        else if(consultDB > 0)
+                        else if (consultDB > 0)
                         {
 
                             try
@@ -154,7 +157,7 @@ namespace SistemaGSG.Almoxarifado
                                 }
                                 MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_relatorioentradafornecedor (col_codigoFornecedor, col_descricaoFornecedor, col_materialCodigoSAP, col_textoBreveMaterial, col_numeroNotaFiscal, col_quantidade, col_unidadeMedida, col_valorMaterialSAP, col_documentoMiroSAP, col_pedido, col_requisicao,col_posicao,col_dataImportacao) " +
                                     "VALUES " +
-                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP.Replace("'","") + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','" + posicao + "', NOW())", ConexaoDados.GetConnectionAlmoxarifado());
+                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP.Replace("'", "") + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','" + posicao + "', NOW())", ConexaoDados.GetConnectionAlmoxarifado());
                                 cmd.ExecuteNonQuery();
                                 cmd.Connection.Close();
                                 MyCommand.Connection.Close();
@@ -245,7 +248,7 @@ namespace SistemaGSG.Almoxarifado
         {
             try
             {
-                if(nomeFornecedor == "ITEM BLOQUEADO")
+                if (nomeFornecedor == "ITEM BLOQUEADO")
                 {
 
                 }
@@ -319,6 +322,9 @@ namespace SistemaGSG.Almoxarifado
             MySqlCommand CommandDelete = new MySqlCommand("TRUNCATE `tb_relatorioentradafornecedor`", ConexaoDados.GetConnectionAlmoxarifado());
             CommandDelete.ExecuteNonQuery();
             CommandDelete.Connection.Close();
+            MySqlCommand CommandoDelete = new MySqlCommand("TRUNCATE `tb_marcareferencia`", ConexaoDados.GetConnectionAlmoxarifado());
+            CommandoDelete.ExecuteNonQuery();
+            CommandoDelete.Connection.Close();
             ConexaoDados.GetConnectionAlmoxarifado().Close();
             EnviarParaOBancoDeDados();
             PreencherTextBox();
@@ -346,6 +352,10 @@ namespace SistemaGSG.Almoxarifado
                 {
                     linha++;
                     contRows++;
+                }else if (string.IsNullOrEmpty(docNumeroMiro))
+                {
+                    linha++;
+                    contRows++;
                 }
                 else
                 {
@@ -367,7 +377,7 @@ namespace SistemaGSG.Almoxarifado
                     {
                         try
                         {
-                            if(rowD == 16)
+                            if (rowD == 16)
                             {
                                 ((GuiTableControl)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M")).VerticalScrollbar.Position = position;
                                 rowD--;
@@ -476,7 +486,7 @@ namespace SistemaGSG.Almoxarifado
                             requisicaoCompra[v] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:1303/tabsITEM_DETAIL/tabpTABIDT6/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1320/tblSAPLMEGUITC_1320/ctxtMEPO1320-BANFN[7,0]")).Text;
                             ((GuiButton)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB2:SAPLMEVIEWS:1100/subSUB1:SAPLMEVIEWS:4001/btnDYN_4000-BUTTON")).Press();
                             requisitanteCompra[v] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/txtMEPO1211-AFNAM[21,0]")).Text;
-                            MySqlCommand mySql = new MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_requisicao` = '" + requisicaoCompra[v] + "', col_requisitanteRC='"+ requisitanteCompra[v] +"' WHERE col_materialCodigoSAP = '" + materialSAPCodVer[v] + "' AND col_documentoMiroSAP='" + docNumeroMiro + "'", ConexaoDados.GetConnectionAlmoxarifado());
+                            MySqlCommand mySql = new MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_requisicao` = '" + requisicaoCompra[v] + "', col_requisitanteRC='" + requisitanteCompra[v] + "' WHERE col_materialCodigoSAP = '" + materialSAPCodVer[v] + "' AND col_documentoMiroSAP='" + docNumeroMiro + "'", ConexaoDados.GetConnectionAlmoxarifado());
                             mySql.ExecuteNonQuery();
                             mySql.Connection.Close();
                             ConexaoDados.GetConnectionAlmoxarifado().Close();
@@ -555,10 +565,14 @@ namespace SistemaGSG.Almoxarifado
                 int i = 0;
                 materialSAPCodVer = new string[30];
                 requisicaoCompra = new string[30];
+                nomeMaterialSAPCodVer = new string[30];
+                quantidadeItemPedido = new string[30];
                 try
                 {
                     Array.Clear(materialSAPCodVer, 0, materialSAPCodVer.Length);
+                    Array.Clear(nomeMaterialSAPCodVer, 0, nomeMaterialSAPCodVer.Length);
                     Array.Clear(requisicaoCompra, 0, requisicaoCompra.Length);
+                    Array.Clear(quantidadeItemPedido, 0, quantidadeItemPedido.Length);
                 }
                 catch
                 {
@@ -574,7 +588,7 @@ namespace SistemaGSG.Almoxarifado
                     {
                         if (rowD == 10)
                         {
-                            while(TelaSAP2 < 99)
+                            while (TelaSAP2 < 99)
                             {
                                 try
                                 {
@@ -596,6 +610,8 @@ namespace SistemaGSG.Almoxarifado
                             {
                                 TelaSAP++;
                                 materialSAPCodVer[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/ctxtMEPO1211-EMATN[4," + rowD + "]")).Text;
+                                quantidadeItemPedido[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/txtMEPO1211-MENGE[6," + rowD + "]")).Text;
+                                nomeMaterialSAPCodVer[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/txtMEPO1211-TXZ01[5," + rowD + "]")).Text;
                                 requisicaoCompra[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/ctxtMEPO1211-BANFN[28," + rowD + "]")).Text;
                                 break;
                             }
@@ -606,14 +622,23 @@ namespace SistemaGSG.Almoxarifado
                         }
                         if (string.IsNullOrEmpty(materialSAPCodVer[i]))
                         {
+
+                            MySqlCommand mySqlCommand = new
+                            MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_textoBreveMaterial` = '" + nomeMaterialSAPCodVer[i] + "', `col_statusPedido` = 1 " +
+                            "WHERE " +
+                            "`col_materialCodigoSAP` = '" + materialSAPCodVer[i] + "' AND `col_pedido` = '" + updateRelPedido + "' AND `col_quantidade` = '" + quantidadeItemPedido[i].Replace(".","") + "' ", ConexaoDados.GetConnectionAlmoxarifado());
+                            mySqlCommand.ExecuteNonQuery();
+                            mySqlCommand.Connection.Close();
+
                             break;
                         }
                         else
                         {
+
                             MySqlCommand mySqlCommand = new
                             MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_requisicao` = '" + requisicaoCompra[i] + "', `col_statusPedido` = 1 " +
                             "WHERE " +
-                            "`col_materialCodigoSAP` = '" + materialSAPCodVer[i] + "' AND `col_pedido` = '" + updateRelPedido + "' ", ConexaoDados.GetConnectionAlmoxarifado());
+                            "`col_materialCodigoSAP` = '" + materialSAPCodVer[i] + "' AND `col_pedido` = '" + updateRelPedido + "' AND `col_quantidade` = '" + quantidadeItemPedido[i].Replace(".", "") + "' ", ConexaoDados.GetConnectionAlmoxarifado());
                             mySqlCommand.ExecuteNonQuery();
                             mySqlCommand.Connection.Close();
                         }
@@ -647,13 +672,13 @@ namespace SistemaGSG.Almoxarifado
             //guiWindow.Maximize();
             Session.SendCommand("/NME53N");
             bool LigarWhile = true;
-            while(LigarWhile == true)
+            while (LigarWhile == true)
             {
                 try
                 {
                     MySqlCommand MyCommand = new MySqlCommand();
                     MyCommand.Connection = ConexaoDados.GetConnectionAlmoxarifado();
-                    MyCommand.CommandText = "SELECT * FROM `tb_relatorioentradafornecedor` WHERE col_requisicao NOT IN(0,'',' ') AND `col_status` IS NULL ORDER BY `col_descricaoFornecedor` ASC";
+                    MyCommand.CommandText = "SELECT * FROM `tb_relatorioentradafornecedor` WHERE col_requisicao NOT IN(0,'',' ') AND `col_status` IS NULL AND col_materialCodigoSAP NOT BETWEEN '270000' AND '279999' ORDER BY `col_descricaoFornecedor` ASC";
                     MySqlDataReader dreader = MyCommand.ExecuteReader();
                     while (dreader.Read())
                     {
@@ -719,7 +744,15 @@ namespace SistemaGSG.Almoxarifado
                                     REQC = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "BANFN");
                                     MATERIAL = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "MATNR");
                                     ITEM = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "BNFPO");
-                                    SubmitDataBase();
+
+                                    //Abrir Conexão.
+                                    MySqlCommand ComandoMSQL = new MySqlCommand("SELECT * FROM `tb_marcareferencia` WHERE col_materialCodigoSAP='"+ MATERIAL + "'", ConexaoDados.GetConnectionAlmoxarifado());
+                                    ComandoMSQL.ExecuteNonQuery();
+                                    int RetornoMarca = Convert.ToInt32(ComandoMSQL.ExecuteScalar());
+                                    if (RetornoMarca == 0)
+                                    {
+                                        SubmitDataBase();
+                                    }
                                     SubmitDataBaseRC();
                                 }
                                 row++;
@@ -740,7 +773,7 @@ namespace SistemaGSG.Almoxarifado
                     SubmitDataBaseRCeRRO();
                 }
                 //Abrir Conexão.
-                MySqlCommand prompt = new MySqlCommand("SELECT * FROM `tb_relatorioentradafornecedor` WHERE col_requisicao NOT IN(0,'',' ') AND `col_status` IS NULL ORDER BY `col_descricaoFornecedor` ASC", ConexaoDados.GetConnectionAlmoxarifado());
+                MySqlCommand prompt = new MySqlCommand("SELECT * FROM `tb_relatorioentradafornecedor` WHERE col_requisicao NOT IN(0,'',' ') AND `col_status` IS NULL AND col_materialCodigoSAP NOT BETWEEN '270000' AND '279999' ORDER BY `col_descricaoFornecedor` ASC", ConexaoDados.GetConnectionAlmoxarifado());
                 prompt.ExecuteNonQuery();
                 int consultDB = Convert.ToInt32(prompt.ExecuteScalar());
                 if (consultDB == 0)
@@ -751,10 +784,10 @@ namespace SistemaGSG.Almoxarifado
         }
         private void SubmitDataBase()
         {
-            MySqlCommand mySqlCommand = new 
+            MySqlCommand mySqlCommand = new
                 MySqlCommand("INSERT INTO `tb_marcareferencia` (`col_marcaDescricao`, `col_referenciaDescricao`, `col_requisicao`, `col_itemDaRequisicao`, `col_materialCodigoSAP`) " +
                 "VALUES " +
-                "('"+ MARCA +"', '"+ REFERENCIA +"', '"+ REQC +"', '"+ ITEM +"', '"+ MATERIAL +"')", ConexaoDados.GetConnectionAlmoxarifado());
+                "('" + MARCA + "', '" + REFERENCIA + "', '" + REQC + "', '" + ITEM + "', '" + MATERIAL + "')", ConexaoDados.GetConnectionAlmoxarifado());
             mySqlCommand.ExecuteNonQuery();
             mySqlCommand.Connection.Close();
         }
@@ -763,7 +796,7 @@ namespace SistemaGSG.Almoxarifado
             MySqlCommand mySqlCommand = new
             MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_status` = '1',`col_grupoDeCompradores` = '" + grupoCompradores + "' " +
             "WHERE " +
-            "`col_requisicao` = '"+ updateRelRequisicoes + "'", ConexaoDados.GetConnectionAlmoxarifado());
+            "`col_requisicao` = '" + updateRelRequisicoes + "'", ConexaoDados.GetConnectionAlmoxarifado());
             mySqlCommand.ExecuteNonQuery();
             mySqlCommand.Connection.Close();
 
@@ -781,7 +814,7 @@ namespace SistemaGSG.Almoxarifado
 
         private void FormRelatorioGeralPorFornecedor_Load(object sender, EventArgs e)
         {
-            CarregarGridView(); 
+            CarregarGridView();
         }
 
         private void btnRC_Click(object sender, EventArgs e)

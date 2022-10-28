@@ -59,21 +59,38 @@ namespace SistemaGSG
         }
         private void DataGridBaixaSAP()
         {
-            MySqlDataAdapter BaixaSAP = new MySqlDataAdapter("SELECT * FROM  tb_almox_reserva WHERE TPNEC = 0", ConexaoDados.GetConnectionAlmoxarifado());
-            DataTable Baixa = new DataTable();
-            BaixaSAP.Fill(Baixa);
-            dataGridViewBaixaSAP.DataSource = Baixa;
-            ConexaoDados.GetConnectionAlmoxarifado().Close();
+            try
+            {
+                MySqlDataAdapter BaixaSAP = new MySqlDataAdapter("SELECT * FROM  tb_almox_reserva WHERE TPNEC = 0", ConexaoDados.GetConnectionAlmoxarifado());
+                DataTable Baixa = new DataTable();
+                BaixaSAP.Fill(Baixa);
+                dataGridViewBaixaSAP.DataSource = Baixa;
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                ConexaoDados.GetConnectionAlmoxarifado().Close();
+            }
         }
         private void CarregarDataGrid()
         {
             try
             {
-                MySqlDataAdapter Solicitacao = new MySqlDataAdapter("SELECT * FROM  tb_almox_solicitacao WHERE FINALIZADO != 1", ConexaoDados.GetConnectionAlmoxarifado());
-                DataTable Solict = new DataTable();
-                Solicitacao.Fill(Solict);
-                dataGridViewSolc.DataSource = Solict;
-                lblConexao.Visible = false;
+                try
+                {
+                    MySqlDataAdapter Solicitacao = new MySqlDataAdapter("SELECT * FROM  tb_almox_solicitacao WHERE FINALIZADO != 1", ConexaoDados.GetConnectionAlmoxarifado());
+                    DataTable Solict = new DataTable();
+                    Solicitacao.Fill(Solict);
+                    dataGridViewSolc.DataSource = Solict;
+                    lblConexao.Visible = false;
+                }
+                catch
+                {
+
+                }
 
                 int Countag = dataGridViewSolc.RowCount;
                 if (Countag == 0)
