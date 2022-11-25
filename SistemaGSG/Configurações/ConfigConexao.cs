@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SistemaGSG.Log;
+using sun.util.calendar;
+using System;
 using System.Data.OleDb;
 using System.Windows.Forms;
 
@@ -19,6 +21,7 @@ namespace SistemaGSG
             if(ofd.ShowDialog() == DialogResult.OK)
             {
                 txtCaminho.Text = ofd.FileName;
+                log.WriteLog("Info : Caminho do Banco de Dados - " + txtCaminho.Text);
             }
         }
 
@@ -27,6 +30,7 @@ namespace SistemaGSG
             if(txtSenhaDB.PasswordChar == '*')
             {
                 txtSenhaDB.PasswordChar = default;
+                log.WriteLog("Info : Senha do banco de dados exibida!");
             }
             else
             {
@@ -49,6 +53,7 @@ namespace SistemaGSG
                     setting.SaveConnectionString("DBSGSG", conexaoBancoDados);
                     if(MessageBox.Show("Sua conexão foi salva com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.OK)
                     {
+                        log.WriteLog("Info : Banco de dados localizado!");
                         Application.Restart();
                         //Environment.Exit(0);
                     }
@@ -57,10 +62,12 @@ namespace SistemaGSG
             catch (OleDbException eRR)
             {
                 MessageBox.Show(eRR.Message);
+                log.WriteLog("Warning : " + eRR.Message);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                log.WriteLog("Warning : " + ex.Message);
             }
         }
 

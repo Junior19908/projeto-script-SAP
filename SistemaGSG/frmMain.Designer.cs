@@ -71,6 +71,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.infoToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -163,10 +165,12 @@
             this.faturamentoToolStripMenuItem,
             this.financeiroToolStripMenuItem,
             this.fiscalToolStripMenuItem,
-            this.testeToolStripMenuItem});
+            this.testeToolStripMenuItem,
+            this.infoToolStripMenuItem,
+            this.infoToolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(20, 60);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(618, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(754, 24);
             this.menuStrip1.TabIndex = 11;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -440,6 +444,19 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick_1);
             // 
+            // infoToolStripMenuItem
+            // 
+            this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
+            this.infoToolStripMenuItem.Text = "Configurações";
+            this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
+            // 
+            // infoToolStripMenuItem1
+            // 
+            this.infoToolStripMenuItem1.Name = "infoToolStripMenuItem1";
+            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(40, 20);
+            this.infoToolStripMenuItem1.Text = "Info";
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -519,5 +536,7 @@
         private System.Windows.Forms.ToolStripMenuItem criarPedidoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem criarAcessoBalançaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem notasFiscaisConfirmaçãoSefazToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem1;
     }
 }

@@ -310,5 +310,15 @@ namespace SistemaGSG
             FormRelatorioGeralPorFornecedor formSolicitacao = new FormRelatorioGeralPorFornecedor();
             formSolicitacao.ShowDialog();
         }
+
+        private void btnVoltar_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Deseja Voltar?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                frm_Main back = new frm_Main();
+                back.Show();
+                Close();
+            }
+        }
     }
 }

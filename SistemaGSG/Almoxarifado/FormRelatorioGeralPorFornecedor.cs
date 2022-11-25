@@ -1,10 +1,12 @@
 ﻿using java.util;
 using javax.swing.text.html.parser;
+using K4os.Compression.LZ4.Internal;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI;
 using Renci.SshNet;
 using SAPFEWSELib;
 using SapROTWr;
+using SistemaGSG.Log;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -72,6 +74,7 @@ namespace SistemaGSG.Almoxarifado
         string[] quantidadeItemPedido;
         string grupoCompradores;
         string iconMarcaRC;
+        string idPedido;
 
         private void PreencherTextBox()
         {
@@ -96,10 +99,11 @@ namespace SistemaGSG.Almoxarifado
                 }
                 catch (FormatException Errp)
                 {
-
+                    log.WriteLog("Warning : " + Errp.Message);
                 }
                 catch (Exception Error)
                 {
+                    log.WriteLog("Warning : " + Error.Message);
                     MessageBox.Show(Error.Message);
                 }
 
@@ -109,7 +113,7 @@ namespace SistemaGSG.Almoxarifado
         {
             try
             {
-                if (string.IsNullOrEmpty(codigoFornecedor))
+                if (string.IsNullOrEmpty(codigoFornecedor) || string.IsNullOrEmpty(docNumeroMiro))
                 {
 
                 }
@@ -127,13 +131,14 @@ namespace SistemaGSG.Almoxarifado
                             {
                                 MySqlCommand cmd = new MySqlCommand("INSERT INTO tb_relatorioentradafornecedor (col_codigoFornecedor, col_descricaoFornecedor, col_materialCodigoSAP, col_textoBreveMaterial, col_numeroNotaFiscal, col_quantidade, col_unidadeMedida, col_valorMaterialSAP, col_documentoMiroSAP, col_pedido, col_requisicao,col_posicao,col_dataImportacao) " +
                                     "VALUES " +
-                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','" + posicao + "', NOW())", ConexaoDados.GetConnectionAlmoxarifado());
+                                    "('" + codigoFornecedor + "','" + nomeFornecedor + "','" + materialSAP + "','" + materialDescricaoSAP.Replace("'", "") + "','" + notaFiscal + "','" + quantidade.ToString().Replace(",", ".") + "','" + unidadeMedida.ToString().Replace("******", "PC") + "','" + valor.ToString().Replace(",", ".") + "','" + docNumeroMiro + "','0','0','" + posicao + "', NOW())", ConexaoDados.GetConnectionAlmoxarifado());
                                 cmd.ExecuteNonQuery();
                                 cmd.Connection.Close();
                                 prompt.Connection.Close();
                             }
                             catch (Exception Err)
                             {
+                                log.WriteLog("Warning : " + Err.Message);
                                 MessageBox.Show(Err.Message);
                             }
                             finally
@@ -164,6 +169,7 @@ namespace SistemaGSG.Almoxarifado
                             }
                             catch (Exception Err)
                             {
+                                log.WriteLog("Warning : " + Err.Message);
                                 MessageBox.Show(Err.Message);
                             }
                             finally
@@ -180,6 +186,7 @@ namespace SistemaGSG.Almoxarifado
             }
             catch (Exception Err)
             {
+                log.WriteLog("Warning : " + Err.Message);
                 MessageBox.Show(Err.Message);
             }
         }
@@ -218,10 +225,11 @@ namespace SistemaGSG.Almoxarifado
                 }
                 catch (FormatException Errp)
                 {
-
+                    log.WriteLog("Warning : " + Errp.Message);
                 }
                 catch (Exception Error)
                 {
+                    log.WriteLog("Warning : " + Error.Message);
                     MessageBox.Show(Error.Message);
                 }
 
@@ -275,6 +283,7 @@ namespace SistemaGSG.Almoxarifado
                             }
                             catch (Exception Err)
                             {
+                                log.WriteLog("Warning : " + Err.Message);
                                 MessageBox.Show(Err.Message);
                             }
                         }
@@ -284,6 +293,7 @@ namespace SistemaGSG.Almoxarifado
             }
             catch (Exception Err)
             {
+                log.WriteLog("Warning : " + Err.Message);
                 MessageBox.Show(Err.Message);
             }
             finally
@@ -308,6 +318,7 @@ namespace SistemaGSG.Almoxarifado
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGP_BUKRS")).Text = "USGA";
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGSO_PERI-LOW")).Text = this.calendarioMes.SelectionStart.ToString("dd.MM.yyyy");
             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGSO_PERI-HIGH")).Text = this.calendarioMes.SelectionEnd.ToString("dd.MM.yyyy");
+            //((GuiTextField)Session.FindById("wnd[0]/usr/ctxtGP_PARID-LOW")).Text = "1200000123";
             ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
             ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[33]")).Press();
             ((GuiComboBox)Session.FindById("wnd[1]/usr/ssubD0500_SUBSCREEN:SAPLSLVC_DIALOG:0501/cmbG51_USPEC_LBOX")).Key = "X";
@@ -328,7 +339,7 @@ namespace SistemaGSG.Almoxarifado
             ConexaoDados.GetConnectionAlmoxarifado().Close();
             EnviarParaOBancoDeDados();
             PreencherTextBox();
-
+            log.WriteLog("Info : ZMM039 Iniciada");
             int linha = 0;
             int i;
             int contRows = 0;
@@ -344,15 +355,16 @@ namespace SistemaGSG.Almoxarifado
                 {
                     docNumeroMiro = ((GuiGridView)Session.FindById("wnd[0]/usr/cntlGRID1/shellcont/shell")).GetCellValue(linha, "BELNR");
                 }
-                catch (Exception)
+                catch (Exception errPedido)
                 {
-
+                    log.WriteLog(errPedido.Message + " " + docNumeroMiro);
                 }
                 if (docNumeroMiro == docNumeroMiroVerifica)
                 {
                     linha++;
                     contRows++;
-                }else if (string.IsNullOrEmpty(docNumeroMiro))
+                }
+                else if (string.IsNullOrEmpty(docNumeroMiro))
                 {
                     linha++;
                     contRows++;
@@ -399,10 +411,12 @@ namespace SistemaGSG.Almoxarifado
                         }
                         catch (ArgumentException ErroSAP)
                         {
+                            log.WriteLog("Warning : " + ErroSAP.Message);
                             break;
                         }
                         catch (Exception ErroProg)
                         {
+                            log.WriteLog("Warning : " + ErroProg.Message);
                             MessageBox.Show("Erro Printar a tela e Enviar ao Administrador do Programa." + ErroProg.Message);
                         }
                         materialSAPCodVer[v] = materialSAPCod;
@@ -410,107 +424,18 @@ namespace SistemaGSG.Almoxarifado
                         rowD++;
                         v++;
                     }
-                    rowD = 0;
-                    v = 0;
-                    int RCLinha = 0;
-                    if (rowE > 0)
-                    {
-                        Array.Clear(requisicaoCompra, 0, requisicaoCompra.Length);
-                        Array.Clear(requisitanteCompra, 0, requisitanteCompra.Length);
-
-                        int rowC = 0;
-                        while (rowT == true)
-                        {
-
-                            try
-                            {
-                                ((GuiTextField)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M/txtDRSEG-EBELN[5," + rowC + "]")).SetFocus();
-                                ((GuiTextField)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M/txtDRSEG-EBELN[5," + rowC + "]")).CaretPosition = 7;
-                                guiWindow.SendVKey(2);
-                                ((GuiButton)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB2:SAPLMEVIEWS:1100/subSUB1:SAPLMEVIEWS:4001/btnDYN_4000-BUTTON")).Press();
-                                while (rowT == true)
-                                {
-                                    try
-                                    {
-                                        //Pegar Requisições
-                                        requisicaoCompra[v] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/ctxtMEPO1211-BANFN[28," + RCLinha + "]")).Text;
-                                        requisitanteCompra[v] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/txtMEPO1211-AFNAM[21," + RCLinha + "]")).Text;
-
-                                        RCLinha++;
-                                        v++;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        //MessageBox.Show(ex.Message);
-                                        rowT = false;
-                                    }
-                                }
-                                for (i = 0; i < RCLinha; i++)
-                                {
-                                    MySqlCommand mySql = new MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_requisicao` = '" + requisicaoCompra[i] + "',`col_requisitanteRC`='" + requisitanteCompra[i] + "' WHERE col_materialCodigoSAP = '" + materialSAPCodVer[i] + "' AND col_documentoMiroSAP='" + docNumeroMiro + "'", ConexaoDados.GetConnectionAlmoxarifado());
-                                    mySql.ExecuteNonQuery();
-                                    mySql.Connection.Close();
-                                    ConexaoDados.GetConnectionAlmoxarifado().Close();
-                                }
-                                    ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
-                                ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
-
-                                docNumeroMiroVerifica = docNumeroMiro;
-                                linha++;
-                                contRows++;
-                            }
-
-                            catch (ArgumentException ErroSAP)
-                            {
-                                break;
-                            }
-                            catch (Exception ErroProg)
-                            {
-                                MessageBox.Show("Erro Printar a tela e Enviar ao Administrador do Programa." + ErroProg.Message);
-                            }
-                            rowC++;
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            Array.Clear(requisicaoCompra, 0, requisicaoCompra.Length);
-                            v = 0;
-                            ((GuiTextField)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M/txtDRSEG-EBELN[5,0]")).SetFocus();
-                            ((GuiTextField)Session.FindById("wnd[0]/usr/subHEADER_AND_ITEMS:SAPLMR1M:6005/subITEMS:SAPLMR1M:6010/tabsITEMTAB/tabpITEMS_PO/ssubTABS:SAPLMR1M:6020/subITEM:SAPLMR1M:6310/tblSAPLMR1MTC_MR1M/txtDRSEG-EBELN[5,0]")).CaretPosition = 7;
-                            guiWindow.SendVKey(2);
-                            ((GuiTab)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:1303/tabsITEM_DETAIL/tabpTABIDT6")).Select();
-                            ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:1303/tabsITEM_DETAIL/tabpTABIDT6/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1320/tblSAPLMEGUITC_1320/ctxtMEPO1320-BANFN[7,0]")).SetFocus();
-                            ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:1303/tabsITEM_DETAIL/tabpTABIDT6/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1320/tblSAPLMEGUITC_1320/ctxtMEPO1320-BANFN[7,0]")).CaretPosition = 3;
-                            requisicaoCompra[v] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:1303/tabsITEM_DETAIL/tabpTABIDT6/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1320/tblSAPLMEGUITC_1320/ctxtMEPO1320-BANFN[7,0]")).Text;
-                            ((GuiButton)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB2:SAPLMEVIEWS:1100/subSUB1:SAPLMEVIEWS:4001/btnDYN_4000-BUTTON")).Press();
-                            requisitanteCompra[v] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/txtMEPO1211-AFNAM[21,0]")).Text;
-                            MySqlCommand mySql = new MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_requisicao` = '" + requisicaoCompra[v] + "', col_requisitanteRC='" + requisitanteCompra[v] + "' WHERE col_materialCodigoSAP = '" + materialSAPCodVer[v] + "' AND col_documentoMiroSAP='" + docNumeroMiro + "'", ConexaoDados.GetConnectionAlmoxarifado());
-                            mySql.ExecuteNonQuery();
-                            mySql.Connection.Close();
-                            ConexaoDados.GetConnectionAlmoxarifado().Close();
-                            ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
-                            ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
-                            docNumeroMiroVerifica = docNumeroMiro;
-                            linha++;
-                            contRows++;
-                        }
-                        catch (ArgumentException ErroSAP)
-                        {
-                            break;
-                        }
-                        catch (Exception ErroProg)
-                        {
-                            MessageBox.Show("Erro Printar a tela e Enviar ao Administrador do Programa." + ErroProg.Message);
-                        }
-
-                    }
+                    ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
+                    //((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
+                    docNumeroMiroVerifica = docNumeroMiro;
+                    linha++;
+                    contRows++;
                 }
             }
+            log.WriteLog("Info : ZMM039 Finalizado");
         }
         private void btnRelatorio_Click(object sender, EventArgs e)
         {
+            log.WriteLog("Info : Iniciado o relatório de materiais por fornecedor - Almoxarifado.");
             var sw = new Stopwatch();
             sw.Start();
 
@@ -520,6 +445,7 @@ namespace SistemaGSG.Almoxarifado
 
             sw.Stop();
             MessageBox.Show("Tempo Decorrido... " + sw.Elapsed.ToString(@"hh\:mm\:ss"), "SAP for Windows 7.70 - Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            log.WriteLog("Info : Tempo Decorrido... " + sw.Elapsed.ToString(@"hh\:mm\:ss"));
         }
         private void VerificaPedido()
         {
@@ -532,7 +458,7 @@ namespace SistemaGSG.Almoxarifado
             GuiFrameWindow guiWindow = Session.ActiveWindow;
             //guiWindow.Maximize();
             Session.SendCommand("/NME23N");
-
+            log.WriteLog("Info : ME23N Iniciado");
             bool IniWhile = true;
 
             while (IniWhile == true)
@@ -553,6 +479,7 @@ namespace SistemaGSG.Almoxarifado
                 }
                 catch (Exception Error)
                 {
+                    log.WriteLog("Warning : " + Error.Message);
                     MessageBox.Show(Error.Message);
                 }
                 finally
@@ -563,15 +490,17 @@ namespace SistemaGSG.Almoxarifado
                 guiWindow.SendVKey(0);
                 bool LigarWhile = true;
                 int i = 0;
-                materialSAPCodVer = new string[30];
-                requisicaoCompra = new string[30];
-                nomeMaterialSAPCodVer = new string[30];
-                quantidadeItemPedido = new string[30];
+                materialSAPCodVer = new string[100];
+                requisicaoCompra = new string[100];
+                requisitanteCompra = new string[100];
+                nomeMaterialSAPCodVer = new string[100];
+                quantidadeItemPedido = new string[100];
                 try
                 {
                     Array.Clear(materialSAPCodVer, 0, materialSAPCodVer.Length);
                     Array.Clear(nomeMaterialSAPCodVer, 0, nomeMaterialSAPCodVer.Length);
                     Array.Clear(requisicaoCompra, 0, requisicaoCompra.Length);
+                    Array.Clear(requisitanteCompra, 0, requisitanteCompra.Length);
                     Array.Clear(quantidadeItemPedido, 0, quantidadeItemPedido.Length);
                 }
                 catch
@@ -613,6 +542,7 @@ namespace SistemaGSG.Almoxarifado
                                 quantidadeItemPedido[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/txtMEPO1211-MENGE[6," + rowD + "]")).Text;
                                 nomeMaterialSAPCodVer[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/txtMEPO1211-TXZ01[5," + rowD + "]")).Text;
                                 requisicaoCompra[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/ctxtMEPO1211-BANFN[28," + rowD + "]")).Text;
+                                requisitanteCompra[i] = ((GuiTextField)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:00" + TelaSAP + "/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1211/tblSAPLMEGUITC_1211/txtMEPO1211-AFNAM[21," + rowD + "]")).Text;
                                 break;
                             }
                             catch
@@ -620,27 +550,75 @@ namespace SistemaGSG.Almoxarifado
 
                             }
                         }
-                        if (string.IsNullOrEmpty(materialSAPCodVer[i]))
+                        if (string.IsNullOrEmpty(materialSAPCodVer[0]))
                         {
-
-                            MySqlCommand mySqlCommand = new
-                            MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_textoBreveMaterial` = '" + nomeMaterialSAPCodVer[i] + "', `col_statusPedido` = 1 " +
-                            "WHERE " +
-                            "`col_materialCodigoSAP` = '" + materialSAPCodVer[i] + "' AND `col_pedido` = '" + updateRelPedido + "' AND `col_quantidade` = '" + quantidadeItemPedido[i].Replace(".","") + "' ", ConexaoDados.GetConnectionAlmoxarifado());
-                            mySqlCommand.ExecuteNonQuery();
-                            mySqlCommand.Connection.Close();
-
+                            if (string.IsNullOrEmpty(nomeMaterialSAPCodVer[i]))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                MySqlCommand _mySqlCommand = new MySqlCommand("SELECT COUNT(*) FROM `tb_relatorioentradafornecedor` WHERE col_pedido = '" + updateRelPedido + "'", ConexaoDados.GetConnectionAlmoxarifado());
+                                _mySqlCommand.ExecuteNonQuery();
+                                int _consultDB = Convert.ToInt32(_mySqlCommand.ExecuteScalar());
+                                if (_consultDB > 1)
+                                {
+                                    MySqlCommand ConsultIDPEdido = new MySqlCommand();
+                                    ConsultIDPEdido.Connection = ConexaoDados.GetConnectionAlmoxarifado();
+                                    ConsultIDPEdido.CommandText = "SELECT * FROM `tb_relatorioentradafornecedor` WHERE col_pedido = '" + updateRelPedido + "' AND col_statusPedido IS null ORDER BY `col_descricaoFornecedor` ASC";
+                                    MySqlDataReader dataReader = ConsultIDPEdido.ExecuteReader();
+                                    while (dataReader.Read())
+                                    {
+                                        idPedido = dataReader["col_id"].ToString();
+                                        break;
+                                    }
+                                    MySqlCommand mySqlCommand = new
+                                    MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_textoBreveMaterial` = '" + nomeMaterialSAPCodVer[i] + "', `col_statusPedido` = 1 " +
+                                    "WHERE " +
+                                    "`col_pedido` = '" + updateRelPedido + "' AND `col_quantidade` = '" + quantidadeItemPedido[i].Replace(".", "").Replace(",000", "") + "' AND `col_id`='" + idPedido + "' ", ConexaoDados.GetConnectionAlmoxarifado());
+                                    mySqlCommand.ExecuteNonQuery();
+                                    mySqlCommand.Connection.Close();
+                                    ConsultIDPEdido.Connection.Close();
+                                }
+                                else
+                                {
+                                    MySqlCommand mySqlCommand = new
+                                    MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_textoBreveMaterial` = '" + nomeMaterialSAPCodVer[i] + "', `col_statusPedido` = 1 " +
+                                    "WHERE " +
+                                    "`col_pedido` = '" + updateRelPedido + "' AND `col_quantidade` = '" + quantidadeItemPedido[i].Replace(".", "").Replace(",000", "") + "'", ConexaoDados.GetConnectionAlmoxarifado());
+                                    mySqlCommand.ExecuteNonQuery();
+                                    mySqlCommand.Connection.Close();
+                                }
+                            }
+                        }
+                        else if (string.IsNullOrEmpty(materialSAPCodVer[i]))
+                        {
                             break;
                         }
                         else
                         {
-
-                            MySqlCommand mySqlCommand = new
-                            MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_requisicao` = '" + requisicaoCompra[i] + "', `col_statusPedido` = 1 " +
-                            "WHERE " +
-                            "`col_materialCodigoSAP` = '" + materialSAPCodVer[i] + "' AND `col_pedido` = '" + updateRelPedido + "' AND `col_quantidade` = '" + quantidadeItemPedido[i].Replace(".", "") + "' ", ConexaoDados.GetConnectionAlmoxarifado());
-                            mySqlCommand.ExecuteNonQuery();
-                            mySqlCommand.Connection.Close();
+                            MySqlCommand _mySqlCommand = new MySqlCommand("SELECT COUNT(*) FROM `tb_relatorioentradafornecedor` WHERE col_statusPedido = '" + updateRelPedido + "' AND `col_quantidade` = '" + quantidadeItemPedido[i].Replace(".", "").Replace(",000", "") + "' ", ConexaoDados.GetConnectionAlmoxarifado());
+                            _mySqlCommand.ExecuteNonQuery();
+                            int _consultDB = Convert.ToInt32(_mySqlCommand.ExecuteScalar());
+                            if (_consultDB > 0)
+                            {
+                                MySqlCommand mySqlCommand = new
+                                MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_requisicao` = '" + requisicaoCompra[i] + "', `col_statusPedido` = 1, `col_requisitanteRC` = '" + requisitanteCompra[i] + "' " +
+                                "WHERE " +
+                                "`col_materialCodigoSAP` = '" + materialSAPCodVer[i] + "' AND `col_pedido` = '" + updateRelPedido + "' AND `col_quantidade` = '" + quantidadeItemPedido[i].Replace(".", "").Replace(",000", "") + "' ", ConexaoDados.GetConnectionAlmoxarifado());
+                                mySqlCommand.ExecuteNonQuery();
+                                mySqlCommand.Connection.Close();
+                            }
+                            else
+                            {
+                                MySqlCommand mySqlCommandQ = new
+                                MySqlCommand("UPDATE `tb_relatorioentradafornecedor` SET `col_requisicao` = '" + requisicaoCompra[i] + "', `col_statusPedido` = 1, `col_requisitanteRC` = '" + requisitanteCompra[i] + "' " +
+                                "WHERE " +
+                                "`col_materialCodigoSAP` = '" + materialSAPCodVer[i] + "' AND `col_pedido` = '" + updateRelPedido + "'", ConexaoDados.GetConnectionAlmoxarifado());
+                                mySqlCommandQ.ExecuteNonQuery();
+                                mySqlCommandQ.Connection.Close();
+                            }
+                            _mySqlCommand.Connection.Close();
                         }
                         i++;
                         rowD++;
@@ -651,7 +629,7 @@ namespace SistemaGSG.Almoxarifado
                     }
                 }
                 //Abrir Conexão.
-                MySqlCommand prompt = new MySqlCommand("SELECT * FROM `tb_relatorioentradafornecedor` WHERE col_statusPedido IS null ORDER BY `col_descricaoFornecedor` ASC", ConexaoDados.GetConnectionAlmoxarifado());
+                MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM `tb_relatorioentradafornecedor` WHERE col_statusPedido IS null ORDER BY `col_descricaoFornecedor` ASC", ConexaoDados.GetConnectionAlmoxarifado());
                 prompt.ExecuteNonQuery();
                 int consultDB = Convert.ToInt32(prompt.ExecuteScalar());
                 if (consultDB == 0)
@@ -659,6 +637,7 @@ namespace SistemaGSG.Almoxarifado
                     IniWhile = false;
                 }
             }
+            log.WriteLog("Info : ME23N Finalizado");
         }
         private void VerificarRequisicao()
         {
@@ -671,6 +650,7 @@ namespace SistemaGSG.Almoxarifado
             GuiFrameWindow guiWindow = Session.ActiveWindow;
             //guiWindow.Maximize();
             Session.SendCommand("/NME53N");
+            log.WriteLog("Info : ME53N Iniciado");
             bool LigarWhile = true;
             while (LigarWhile == true)
             {
@@ -689,6 +669,7 @@ namespace SistemaGSG.Almoxarifado
                 }
                 catch (Exception Error)
                 {
+                    log.WriteLog("Warning : " + Error.Message);
                     MessageBox.Show(Error.Message);
                 }
                 finally
@@ -720,51 +701,40 @@ namespace SistemaGSG.Almoxarifado
                 //UpdateDataBase();
                 try
                 {
-                    if (string.IsNullOrEmpty(((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(0, "NAME1")))
+                    bool k = true;
+                    int row = 0;
+                    while (k == true)
                     {
-                        MessageBox.Show("Nada!");
-                    }
-                    else
-                    {
-                        bool k = true;
-                        int row = 0;
-                        while (k == true)
+                        try
                         {
-                            try
-                            {
-                                if (((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "ICON") == "@GI@")
-                                {
 
-                                    SubmitDataBaseRC();
-                                }
-                                else
-                                {
-                                    MARCA = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "NAME1");
-                                    REFERENCIA = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "MFRPN");
-                                    REQC = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "BANFN");
-                                    MATERIAL = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "MATNR");
-                                    ITEM = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "BNFPO");
+                            MARCA = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "NAME1");
+                            REFERENCIA = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "MFRPN");
+                            REQC = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "BANFN");
+                            MATERIAL = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "MATNR");
+                            ITEM = ((GuiGridView)Session.FindById("wnd[0]/usr/subSUB0:SAPLMEGUI:0010/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT16/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1318/ssubCUSTOMER_DATA_ITEM:SAPLXM02:0111/cntlCC_REQC_REF/shellcont/shell")).GetCellValue(row, "BNFPO");
 
-                                    //Abrir Conexão.
-                                    MySqlCommand ComandoMSQL = new MySqlCommand("SELECT * FROM `tb_marcareferencia` WHERE col_materialCodigoSAP='"+ MATERIAL + "'", ConexaoDados.GetConnectionAlmoxarifado());
-                                    ComandoMSQL.ExecuteNonQuery();
-                                    int RetornoMarca = Convert.ToInt32(ComandoMSQL.ExecuteScalar());
-                                    if (RetornoMarca == 0)
-                                    {
-                                        SubmitDataBase();
-                                    }
-                                    SubmitDataBaseRC();
-                                }
-                                row++;
-                            }
-                            catch (ArgumentException ErroSAP)
+                            //Abrir Conexão.
+                            MySqlCommand ComandoMSQL = new MySqlCommand("SELECT COUNT(*) FROM `tb_marcareferencia` WHERE col_materialCodigoSAP='" + MATERIAL + "'", ConexaoDados.GetConnectionAlmoxarifado());
+                            ComandoMSQL.ExecuteNonQuery();
+                            int RetornoMarca = Convert.ToInt32(ComandoMSQL.ExecuteScalar());
+                            if (RetornoMarca == 0)
                             {
-                                break;
+                                SubmitDataBase();
                             }
-                            catch (Exception ErroProg)
-                            {
-                                MessageBox.Show("Erro Printar a tela e Enviar ao Administrador do Programa.");
-                            }
+                            SubmitDataBaseRC();
+
+                            row++;
+                        }
+                        catch (ArgumentException ErroSAP)
+                        {
+                            log.WriteLog("Warning : " + ErroSAP.Message);
+                            SubmitDataBaseRC();
+                            break;
+                        }
+                        catch (Exception ErroProg)
+                        {
+                            MessageBox.Show("Erro Printar a tela e Enviar ao Administrador do Programa.");
                         }
                     }
                 }
@@ -773,7 +743,7 @@ namespace SistemaGSG.Almoxarifado
                     SubmitDataBaseRCeRRO();
                 }
                 //Abrir Conexão.
-                MySqlCommand prompt = new MySqlCommand("SELECT * FROM `tb_relatorioentradafornecedor` WHERE col_requisicao NOT IN(0,'',' ') AND `col_status` IS NULL AND col_materialCodigoSAP NOT BETWEEN '270000' AND '279999' ORDER BY `col_descricaoFornecedor` ASC", ConexaoDados.GetConnectionAlmoxarifado());
+                MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM `tb_relatorioentradafornecedor` WHERE col_requisicao NOT IN(0,'',' ') AND `col_status` IS NULL AND col_materialCodigoSAP NOT BETWEEN '270000' AND '279999' ORDER BY `col_descricaoFornecedor` ASC", ConexaoDados.GetConnectionAlmoxarifado());
                 prompt.ExecuteNonQuery();
                 int consultDB = Convert.ToInt32(prompt.ExecuteScalar());
                 if (consultDB == 0)
@@ -781,6 +751,7 @@ namespace SistemaGSG.Almoxarifado
                     LigarWhile = false;
                 }
             }
+            log.WriteLog("Info : ME53N Finalizado");
         }
         private void SubmitDataBase()
         {
@@ -824,6 +795,13 @@ namespace SistemaGSG.Almoxarifado
             //EnviarParaOBancoDeDadosZMM040();
             //PreencherTextBoxZMM040();
 
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string _fileName = txtCodBarra.Text;
+            System.Diagnostics.Process.Start(_fileName);
+            log.WriteLog("Info : PDF Aberto.");
         }
     }
 }

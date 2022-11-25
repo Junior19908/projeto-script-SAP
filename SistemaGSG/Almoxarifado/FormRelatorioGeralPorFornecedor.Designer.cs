@@ -33,6 +33,8 @@
             this.btnRelatorio = new System.Windows.Forms.Button();
             this.calendarioMes = new System.Windows.Forms.MonthCalendar();
             this.btnRC = new System.Windows.Forms.Button();
+            this.txtCodBarra = new System.Windows.Forms.TextBox();
+            this.btnSearch = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ZMM039)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,16 +44,16 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ZMM039.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ZMM039.Location = new System.Drawing.Point(12, 211);
+            this.ZMM039.Location = new System.Drawing.Point(12, 289);
             this.ZMM039.Name = "ZMM039";
-            this.ZMM039.Size = new System.Drawing.Size(232, 25);
+            this.ZMM039.Size = new System.Drawing.Size(232, 52);
             this.ZMM039.TabIndex = 0;
             this.ZMM039.Visible = false;
             // 
             // btnRelatorio
             // 
             this.btnRelatorio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRelatorio.Location = new System.Drawing.Point(169, 209);
+            this.btnRelatorio.Location = new System.Drawing.Point(169, 236);
             this.btnRelatorio.Name = "btnRelatorio";
             this.btnRelatorio.Size = new System.Drawing.Size(75, 23);
             this.btnRelatorio.TabIndex = 1;
@@ -70,19 +72,40 @@
             // btnRC
             // 
             this.btnRC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRC.Location = new System.Drawing.Point(88, 209);
+            this.btnRC.Location = new System.Drawing.Point(98, 236);
             this.btnRC.Name = "btnRC";
-            this.btnRC.Size = new System.Drawing.Size(75, 23);
+            this.btnRC.Size = new System.Drawing.Size(65, 23);
             this.btnRC.TabIndex = 2;
             this.btnRC.Text = "&Correções";
             this.btnRC.UseVisualStyleBackColor = true;
             this.btnRC.Click += new System.EventHandler(this.btnRC_Click);
             // 
+            // txtCodBarra
+            // 
+            this.txtCodBarra.Location = new System.Drawing.Point(17, 209);
+            this.txtCodBarra.Name = "txtCodBarra";
+            this.txtCodBarra.Size = new System.Drawing.Size(227, 20);
+            this.txtCodBarra.TabIndex = 3;
+            this.txtCodBarra.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearch.Location = new System.Drawing.Point(17, 236);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(75, 23);
+            this.btnSearch.TabIndex = 4;
+            this.btnSearch.Text = "&Buscar";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
             // FormRelatorioGeralPorFornecedor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(256, 243);
+            this.ClientSize = new System.Drawing.Size(256, 270);
+            this.Controls.Add(this.btnSearch);
+            this.Controls.Add(this.txtCodBarra);
             this.Controls.Add(this.btnRC);
             this.Controls.Add(this.calendarioMes);
             this.Controls.Add(this.btnRelatorio);
@@ -95,6 +118,7 @@
             this.Load += new System.EventHandler(this.FormRelatorioGeralPorFornecedor_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ZMM039)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -112,5 +136,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.Windows.Forms.MonthCalendar calendarioMes;
         private System.Windows.Forms.Button btnRC;
+        private System.Windows.Forms.TextBox txtCodBarra;
+        private System.Windows.Forms.Button btnSearch;
     }
 }

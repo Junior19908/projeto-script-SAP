@@ -52,7 +52,6 @@
             this.txtNumAleat = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.textValor1 = new SistemaGSG.textValor();
             this.txtCfop = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -79,12 +78,12 @@
             this.txtCHAVE = new System.Windows.Forms.TextBox();
             this.txtNFE = new System.Windows.Forms.TextBox();
             this.txtserie = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
             this.btnImport = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnAbrirXML = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label20 = new System.Windows.Forms.Label();
-            this.btnAbrirXML = new System.Windows.Forms.Button();
             this.IMPOSTOGRID = new System.Windows.Forms.DataGridView();
             this.CHAVEGRID = new System.Windows.Forms.DataGridView();
             this.chNFe = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -144,7 +143,9 @@
             this.IMPOSTO = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.LblStatus = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.EMITDES = new System.Windows.Forms.DataGridView();
+            this.textValor1 = new SistemaGSG.textValor();
+            this.DESTINA = new System.Windows.Forms.DataGridView();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -152,6 +153,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IMPOSTOGRID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CHAVEGRID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ICMS30GRID)).BeginInit();
@@ -161,7 +163,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.CNPJGRID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PRODUTOGRID)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.EMITDES)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DESTINA)).BeginInit();
             this.SuspendLayout();
             // 
             // ProgBar
@@ -199,6 +202,7 @@
             this.txtCountTexto.Size = new System.Drawing.Size(100, 20);
             this.txtCountTexto.TabIndex = 66;
             this.txtCountTexto.Visible = false;
+            this.txtCountTexto.WordWrap = false;
             // 
             // pictureBox5
             // 
@@ -251,6 +255,7 @@
             this.txtCFOPUlt.Size = new System.Drawing.Size(100, 20);
             this.txtCFOPUlt.TabIndex = 61;
             this.txtCFOPUlt.Visible = false;
+            this.txtCFOPUlt.WordWrap = false;
             // 
             // txtCFOPInic
             // 
@@ -259,6 +264,7 @@
             this.txtCFOPInic.Size = new System.Drawing.Size(100, 20);
             this.txtCFOPInic.TabIndex = 59;
             this.txtCFOPInic.Visible = false;
+            this.txtCFOPInic.WordWrap = false;
             // 
             // txtDate
             // 
@@ -268,6 +274,7 @@
             this.txtDate.Size = new System.Drawing.Size(100, 20);
             this.txtDate.TabIndex = 48;
             this.txtDate.Visible = false;
+            this.txtDate.WordWrap = false;
             // 
             // groupBox1
             // 
@@ -406,15 +413,6 @@
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(156, 20);
             this.dateTimePicker1.TabIndex = 62;
-            // 
-            // textValor1
-            // 
-            this.textValor1.Location = new System.Drawing.Point(131, 269);
-            this.textValor1.MaxLength = 9;
-            this.textValor1.Name = "textValor1";
-            this.textValor1.Size = new System.Drawing.Size(156, 20);
-            this.textValor1.TabIndex = 62;
-            this.textValor1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtCfop
             // 
@@ -632,22 +630,12 @@
             this.txtserie.Size = new System.Drawing.Size(156, 20);
             this.txtserie.TabIndex = 47;
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(20, 31);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 21);
-            this.button2.TabIndex = 79;
-            this.button2.Text = "&Ler XML";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
-            // 
             // btnImport
             // 
             this.btnImport.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnImport.Location = new System.Drawing.Point(189, 31);
+            this.btnImport.Location = new System.Drawing.Point(3, 11);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(75, 21);
+            this.btnImport.Size = new System.Drawing.Size(279, 37);
             this.btnImport.TabIndex = 59;
             this.btnImport.Text = "&SAP";
             this.btnImport.UseVisualStyleBackColor = true;
@@ -656,6 +644,8 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.DESTINA);
+            this.tabPage1.Controls.Add(this.EMITDES);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.label20);
             this.tabPage1.Controls.Add(this.IMPOSTOGRID);
@@ -671,18 +661,40 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(1219, 394);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Ler XML";
+            this.tabPage1.Text = "XML";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.btnAbrirXML);
+            this.groupBox2.Controls.Add(this.btnImport);
+            this.groupBox2.Location = new System.Drawing.Point(464, 11);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(288, 100);
+            this.groupBox2.TabIndex = 80;
+            this.groupBox2.TabStop = false;
+            // 
+            // btnAbrirXML
+            // 
+            this.btnAbrirXML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAbrirXML.Location = new System.Drawing.Point(3, 58);
+            this.btnAbrirXML.Name = "btnAbrirXML";
+            this.btnAbrirXML.Size = new System.Drawing.Size(279, 36);
+            this.btnAbrirXML.TabIndex = 72;
+            this.btnAbrirXML.Text = "&Abrir";
+            this.btnAbrirXML.UseVisualStyleBackColor = true;
+            this.btnAbrirXML.Click += new System.EventHandler(this.btnAbrirXML_Click_1);
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(22, 58);
+            this.button1.Location = new System.Drawing.Point(1166, 487);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 74;
             this.button1.Text = "&Voltar";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label20
@@ -695,17 +707,6 @@
             this.label20.Text = "label20";
             this.label20.Visible = false;
             // 
-            // btnAbrirXML
-            // 
-            this.btnAbrirXML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAbrirXML.Location = new System.Drawing.Point(189, 58);
-            this.btnAbrirXML.Name = "btnAbrirXML";
-            this.btnAbrirXML.Size = new System.Drawing.Size(75, 23);
-            this.btnAbrirXML.TabIndex = 72;
-            this.btnAbrirXML.Text = "&Abrir";
-            this.btnAbrirXML.UseVisualStyleBackColor = true;
-            this.btnAbrirXML.Click += new System.EventHandler(this.btnAbrirXML_Click_1);
-            // 
             // IMPOSTOGRID
             // 
             this.IMPOSTOGRID.AllowUserToAddRows = false;
@@ -716,6 +717,7 @@
             this.IMPOSTOGRID.RowHeadersWidth = 51;
             this.IMPOSTOGRID.Size = new System.Drawing.Size(455, 64);
             this.IMPOSTOGRID.TabIndex = 2;
+            this.IMPOSTOGRID.Visible = false;
             // 
             // CHAVEGRID
             // 
@@ -731,10 +733,10 @@
             this.digVal,
             this.cStat,
             this.xMotivo});
-            this.CHAVEGRID.Location = new System.Drawing.Point(6, 210);
+            this.CHAVEGRID.Location = new System.Drawing.Point(6, 147);
             this.CHAVEGRID.Name = "CHAVEGRID";
             this.CHAVEGRID.RowHeadersWidth = 51;
-            this.CHAVEGRID.Size = new System.Drawing.Size(452, 61);
+            this.CHAVEGRID.Size = new System.Drawing.Size(455, 68);
             this.CHAVEGRID.TabIndex = 4;
             // 
             // chNFe
@@ -828,6 +830,7 @@
             this.ICMS30GRID.RowHeadersWidth = 51;
             this.ICMS30GRID.Size = new System.Drawing.Size(455, 64);
             this.ICMS30GRID.TabIndex = 1;
+            this.ICMS30GRID.Visible = false;
             // 
             // NFEGRID
             // 
@@ -855,7 +858,7 @@
             this.indPres,
             this.procEmi,
             this.verProc});
-            this.NFEGRID.Location = new System.Drawing.Point(3, 74);
+            this.NFEGRID.Location = new System.Drawing.Point(6, 11);
             this.NFEGRID.Name = "NFEGRID";
             this.NFEGRID.RowHeadersWidth = 51;
             this.NFEGRID.Size = new System.Drawing.Size(455, 64);
@@ -913,7 +916,7 @@
             this.nNF.HeaderText = "Nº Nf-e";
             this.nNF.MinimumWidth = 6;
             this.nNF.Name = "nNF";
-            this.nNF.Width = 62;
+            this.nNF.Width = 67;
             // 
             // serie
             // 
@@ -922,7 +925,7 @@
             this.serie.HeaderText = "Nº de Série";
             this.serie.MinimumWidth = 6;
             this.serie.Name = "serie";
-            this.serie.Width = 79;
+            this.serie.Width = 86;
             // 
             // dhEmi
             // 
@@ -1063,6 +1066,7 @@
             this.ICMS00GRID.RowHeadersWidth = 51;
             this.ICMS00GRID.Size = new System.Drawing.Size(455, 64);
             this.ICMS00GRID.TabIndex = 0;
+            this.ICMS00GRID.Visible = false;
             // 
             // DADOSGRID
             // 
@@ -1070,10 +1074,10 @@
             this.DADOSGRID.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DADOSGRID.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.infCpl});
-            this.DADOSGRID.Location = new System.Drawing.Point(6, 144);
+            this.DADOSGRID.Location = new System.Drawing.Point(6, 81);
             this.DADOSGRID.Name = "DADOSGRID";
             this.DADOSGRID.RowHeadersWidth = 51;
-            this.DADOSGRID.Size = new System.Drawing.Size(452, 60);
+            this.DADOSGRID.Size = new System.Drawing.Size(455, 60);
             this.DADOSGRID.TabIndex = 3;
             // 
             // infCpl
@@ -1089,10 +1093,10 @@
             // 
             this.CNPJGRID.AllowUserToAddRows = false;
             this.CNPJGRID.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CNPJGRID.Location = new System.Drawing.Point(6, 11);
+            this.CNPJGRID.Location = new System.Drawing.Point(758, 11);
             this.CNPJGRID.Name = "CNPJGRID";
             this.CNPJGRID.RowHeadersWidth = 51;
-            this.CNPJGRID.Size = new System.Drawing.Size(452, 57);
+            this.CNPJGRID.Size = new System.Drawing.Size(455, 204);
             this.CNPJGRID.TabIndex = 0;
             // 
             // PRODUTOGRID
@@ -1121,10 +1125,10 @@
             this.qCom,
             this.xPed,
             this.IMPOSTO});
-            this.PRODUTOGRID.Location = new System.Drawing.Point(6, 277);
+            this.PRODUTOGRID.Location = new System.Drawing.Point(6, 221);
             this.PRODUTOGRID.Name = "PRODUTOGRID";
             this.PRODUTOGRID.RowHeadersWidth = 51;
-            this.PRODUTOGRID.Size = new System.Drawing.Size(1207, 111);
+            this.PRODUTOGRID.Size = new System.Drawing.Size(1207, 167);
             this.PRODUTOGRID.TabIndex = 25;
             // 
             // cProd
@@ -1233,6 +1237,7 @@
             this.indTot.MinimumWidth = 6;
             this.indTot.Name = "indTot";
             this.indTot.Visible = false;
+            this.indTot.Width = 79;
             // 
             // NCM
             // 
@@ -1313,17 +1318,32 @@
             this.LblStatus.Text = "Status de Processamento.....";
             this.LblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // groupBox2
+            // EMITDES
             // 
-            this.groupBox2.Controls.Add(this.btnAbrirXML);
-            this.groupBox2.Controls.Add(this.button2);
-            this.groupBox2.Controls.Add(this.btnImport);
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Location = new System.Drawing.Point(464, 11);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(288, 100);
-            this.groupBox2.TabIndex = 80;
-            this.groupBox2.TabStop = false;
+            this.EMITDES.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.EMITDES.Location = new System.Drawing.Point(464, 117);
+            this.EMITDES.Name = "EMITDES";
+            this.EMITDES.Size = new System.Drawing.Size(288, 98);
+            this.EMITDES.TabIndex = 81;
+            this.EMITDES.Visible = false;
+            // 
+            // textValor1
+            // 
+            this.textValor1.Location = new System.Drawing.Point(131, 269);
+            this.textValor1.MaxLength = 9;
+            this.textValor1.Name = "textValor1";
+            this.textValor1.Size = new System.Drawing.Size(156, 20);
+            this.textValor1.TabIndex = 62;
+            this.textValor1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // DESTINA
+            // 
+            this.DESTINA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DESTINA.Location = new System.Drawing.Point(464, 117);
+            this.DESTINA.Name = "DESTINA";
+            this.DESTINA.Size = new System.Drawing.Size(288, 98);
+            this.DESTINA.TabIndex = 82;
+            this.DESTINA.Visible = false;
             // 
             // frmXML
             // 
@@ -1333,6 +1353,7 @@
             this.Controls.Add(this.LblStatus);
             this.Controls.Add(this.ProgBar);
             this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.button1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(1263, 536);
             this.Name = "frmXML";
@@ -1350,6 +1371,7 @@
             this.groupBox1.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.IMPOSTOGRID)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CHAVEGRID)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ICMS30GRID)).EndInit();
@@ -1359,7 +1381,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.CNPJGRID)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PRODUTOGRID)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.EMITDES)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DESTINA)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1461,7 +1484,6 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox txtCountTexto;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridViewTextBoxColumn cProd;
         private System.Windows.Forms.DataGridViewTextBoxColumn cEANTrib;
         private System.Windows.Forms.DataGridViewTextBoxColumn uTrib;
@@ -1481,6 +1503,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn xPed;
         private System.Windows.Forms.DataGridViewTextBoxColumn IMPOSTO;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DataGridView EMITDES;
+        private System.Windows.Forms.DataGridView DESTINA;
     }
 }
 

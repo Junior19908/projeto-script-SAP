@@ -25,7 +25,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>\\10.2.1.6\Departamentos\PLfinan\entradaenergia\</UpdateUrl>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>236</ApplicationRevision>
+    <ApplicationRevision>262</ApplicationRevision>
     <ApplicationVersion>2.0.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -287,14 +287,20 @@
     <Compile Include="Almoxarifado\FormRelatorioGeralPorFornecedor.Designer.cs">
       <DependentUpon>FormRelatorioGeralPorFornecedor.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppSetting.cs" />
+    <Compile Include="Configurações\AppSetting.cs" />
     <Compile Include="AxAcroPDFLib\AxAcroPDF.cs" />
     <Compile Include="ConexaoBancoDeDadosOffline.cs" />
     <Compile Include="ConexaoDados.cs" />
-    <Compile Include="ConfigConexao.cs">
+    <Compile Include="Configurações\ConfigPasta .cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConfigConexao.Designer.cs">
+    <Compile Include="Configurações\ConfigPasta .Designer.cs">
+      <DependentUpon>ConfigPasta .cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configurações\ConfigConexao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configurações\ConfigConexao.Designer.cs">
       <DependentUpon>ConfigConexao.cs</DependentUpon>
     </Compile>
     <Compile Include="dados.cs" />
@@ -311,6 +317,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DBSGSGAcesso.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Email\email.cs" />
     <Compile Include="FichaCadastroCliente.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -439,6 +446,7 @@
     <Compile Include="Licença\FormChaveLicenca.Designer.cs">
       <DependentUpon>FormChaveLicenca.cs</DependentUpon>
     </Compile>
+    <Compile Include="Log\log.cs" />
     <Compile Include="mshtml\HTMLDocument.cs" />
     <Compile Include="Navegador.cs">
       <SubType>Form</SubType>
@@ -523,7 +531,10 @@
     <EmbeddedResource Include="Almoxarifado\FormRelatorioGeralPorFornecedor.resx">
       <DependentUpon>FormRelatorioGeralPorFornecedor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConfigConexao.resx">
+    <EmbeddedResource Include="Configurações\ConfigPasta .resx">
+      <DependentUpon>ConfigPasta .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configurações\ConfigConexao.resx">
       <DependentUpon>ConfigConexao.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FichaCadastroCliente.resx">

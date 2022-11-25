@@ -264,5 +264,12 @@ namespace SistemaGSG
                 MessageBox.Show("Sem Autorização!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConfigPasta configPasta = new ConfigPasta();
+            configPasta.Show();
+            this.Visible = false;
+        }
     }
 }

@@ -4,7 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Data.OleDb;
-
+using SistemaGSG.Log;
+using sun.util.calendar;
 
 namespace SistemaGSG
 {
@@ -45,11 +46,13 @@ namespace SistemaGSG
                 {
                     if (dados.nivel == 3)
                     {
+                        log.WriteLog($"Info : Login de Usuário Padrão efetuado com sucesso! - {txtUser.Text}");
                         FormRelacao AbrirForm = new FormRelacao();
                         AbrirForm.Show();
                     }
                     if (dados.nivel == 1)
                     {
+                        log.WriteLog($"Info : Login de Administrador efetuado com sucesso! - {txtUser.Text}");
                         FMP = true;
                         this.Dispose();
                     }
@@ -63,6 +66,7 @@ namespace SistemaGSG
                     label5.Text = "Erro você ainda tem " + Menos + " chances.";
                     label5.ForeColor = Color.Red;
                     FMP = false;
+                    log.WriteLog($"Info : Senha incorreta contagem {Menos} - Usuário - {txtUser.Text}");
                     txtUser.Text = "";
                     txtSenha.Text = "";
                 }
@@ -71,20 +75,24 @@ namespace SistemaGSG
                     label6.Visible = true;
                     label6.Text = "Você teve 3 de 3 tentativas, Feche o programa e tente novamente.";
                     label6.ForeColor = Color.Blue;
-
                     txtUser.Visible = false;
                     label5.Visible = false;
                     txtSenha.Visible = false;
                     btnEntrar.Visible = false;
                     lblUsuario.Visible = false;
                     lblSenha.Visible = false;
+                    log.WriteLog("Info : Excesso de tentativas!");
                 }
             }
             catch (OleDbException ErrO)
             {
-                MessageBox.Show("Erro no Banco de Dados! - \n Não Foi Possivel Conectar!");
+                MessageBox.Show("Erro no Banco de Dados! - \n Não Foi Possível Conectar!");
+                log.WriteLog("Warning : " + ErrO.Message);
+                log.WriteLog("Info : Erro no Banco de Dados - Não Foi Possível Conectar!");
+
                 if (MessageBox.Show("Deseja encerrar a aplicação ?" + ErrO.HelpLink, "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
+                    log.WriteLog("Info : Programa encerrado pelo usuário!");
                     Application.Exit();
                 }
                 else
@@ -92,7 +100,7 @@ namespace SistemaGSG
                     if (MessageBox.Show("Deseja entrar no modo offline?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         dados.nivel = Convert.ToInt32("1");
-
+                        log.WriteLog("Info : Programa executado em modo offline pelo usuário!");
                         FMP = true;
                         this.Dispose();
 
@@ -101,6 +109,7 @@ namespace SistemaGSG
             }
             catch (Exception Err)
             {
+                log.WriteLog("Warning : " + Err.Message);
                 MessageBox.Show(Err.Message);
             }
         }
@@ -117,6 +126,7 @@ namespace SistemaGSG
         }
         private void button2_Click(object sender, EventArgs e)
         {
+            log.WriteLog("Info : Programa fechado!");
             Application.Exit();
         }
         private void frmLogin_Load(object sender, EventArgs e)
@@ -129,11 +139,11 @@ namespace SistemaGSG
             }
             catch (Exception ERROR)
             {
+                log.WriteLog("Warning : " + ERROR.Message);
                 MessageBox.Show(ERROR.Message);
             }
             try
             {
-
 
                 if (ConexaoBancoDeDadosOffline.DBSGSG_Conex().State == System.Data.ConnectionState.Open)
                 {
@@ -150,8 +160,13 @@ namespace SistemaGSG
             catch (OleDbException MysqlErr)
             {
                 MessageBox.Show("Erro no Banco de Dados! -\nNão Foi Possivel Conectar!");
+                log.WriteLog("Warning : " + MysqlErr.Message);
+                log.WriteLog("Info : Erro no Banco de Dados - Não Foi Possível Conectar!");
+
                 if (MessageBox.Show("Localizar banco de dados ?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
+                    log.WriteLog("Info : Busca por banco de dados iniciada!");
+
                     ConfigConexao configConexao = new ConfigConexao();
                     configConexao.ShowDialog();
                 }
@@ -163,6 +178,7 @@ namespace SistemaGSG
             }
             catch (Exception Err)
             {
+                log.WriteLog("Warning : " + Err.Message);
                 MessageBox.Show(Err.Message);
             }
         }
