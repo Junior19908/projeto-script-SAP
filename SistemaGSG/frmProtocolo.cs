@@ -13,6 +13,18 @@ using SistemaGSG.Email;
 using org.junit.@internal.runners.statements;
 using javax.security.auth;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
+using System.Text.RegularExpressions;
+using System.Globalization;
+using System.Xml;
+using HtmlAgilityPack;
+using System.Windows.Controls;
+using javax.swing.text.html;
+using static sun.awt.geom.AreaOp;
+using System.Collections.Generic;
+using SistemaGSG.NotasFiscais;
+using javax.lang.model.util;
+using org.w3c.dom.html;
+using SistemaGSG.Log;
 
 namespace SistemaGSG
 {
@@ -20,15 +32,34 @@ namespace SistemaGSG
     {
         private const string Texto = "Duplicidade!, Esta Chave já existe no Banco de Dados.";
         string usuarioLogado = dados.Usuario;
+        //string[] destinatarios = { "junior@usga.com.br", "evaristo@usga.com.br", "jackson@usga.com.br" , "luciano.eduardo@usga.com.br" };
+        //string[] destinatarios = { "junior@usga.com.br", "sigtisistemasintegrados@gmail.com", "luanabritosilva8@gmail.com" , "luanacaetano346@gmail.com" };
+        string[] destinatarios = { "sigtisistemasintegrados@gmail.com" };
+        private void ConsultaNotasFiscaisBD()
+        {
+            ConsultaNotasFiscais consultaNotas = new ConsultaNotasFiscais();
+            txtNotasOmissas.Text = consultaNotas.OmissasNotasFiscais().ToString();
+            txtNotasRegistradas.Text = consultaNotas.RegistradasNotasFiscais().ToString();
+            txtTotalNotas.Text = consultaNotas.TotalNotasFiscais().ToString();
+            txtNotasCanceladas.Text = consultaNotas.CanceladaNotasFiscais().ToString();
+            DateTime dataConsulta = consultaNotas.DataConsulta().Date;
+            DateTime dataHoje = DateTime.Today;
 
+            TimeSpan diff = dataConsulta.Subtract(dataHoje);
+            int dias = Math.Abs(diff.Days);
+
+            lblDias.Text = dias.ToString("0");
+        }
         public frmProtocolo()
         {
             InitializeComponent();
             VerifyVersion(webBrowser);
-            //webBrowser.Navigate("https://www.nfe.fazenda.gov.br/portal/manifestacaoDestinatario.aspx?tipoConteudo=z+xSrb/veGA=");
-            //webBrowser.ScriptErrorsSuppressed = true;
+          //webBrowser.Navigate("https://www.nfe.fazenda.gov.br/portal/manifestacaoDestinatario.aspx?tipoConteudo=o9MkXc+hmKs=");
+           webBrowser.Navigate("http://127.0.0.1/teste/");
+            webBrowser.ScriptErrorsSuppressed = true;
+            ConsultaNotasFiscaisBD();
         }
-        public void VerifyVersion(WebBrowser webbrowser)
+        public void VerifyVersion(System.Windows.Forms.WebBrowser webbrowser)
         {
             string appName = "";
             try
@@ -62,86 +93,178 @@ namespace SistemaGSG
             }
         }
         public string Mensagem { get; private set; }
+        string onclickValue;
+        DataHora dataHora;
+        string dataString;
+        string horaString;
+        string razaoSocial;
+        string tipoOperacao;
+        string chaveAcessoRegistros;
+        string valorNotaFiscal;
+        decimal valorNotaFiscalDec;
+        string statusNotaFiscal;
         private void webBrowser_DocumentCompleted_1(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            webBrowser.Document.GetElementById("ctl00_ContentPlaceHolder1_rbtSemChave").InvokeMember("click");
-            HtmlElementCollection elc = this.webBrowser.Document.GetElementsByTagName("select");
-            foreach (HtmlElement el in elc)
+            //webBrowser.Document.GetElementById("ctl00_ContentPlaceHolder1_rbtSemChave").InvokeMember("click");
+        }
+        private void UpdateNotaFiscalCancelada()
+        {
+            try
             {
-                if (el.GetAttribute("id").Equals("ctl00_ContentPlaceHolder1_ddlEmissor"))
-                {
-                    el.GetElementsByTagName("option")[1].SetAttribute("selected", "selected");
-                }
+                MySqlCommand cmd = new MySqlCommand("UPDATE `tb_chave` SET `status` = @canceladaNotaFiscal WHERE `col_chave` = @chaveNotaFiscal;", ConexaoDados.GetConnectionXML());
+                cmd.Parameters.AddWithValue("@canceladaNotaFiscal", "CANCELADA");
+                cmd.Parameters.AddWithValue("@chaveNotaFiscal", txtChave.Text.Trim());
+                cmd.ExecuteNonQuery();
+                cmd.Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                log.WriteLog("Erro Update Chave : "+ex.Message);
             }
         }
+
         private void ConsultaChaveSefaz()
         {
             try
             {
+                webBrowser.Document.GetElementById("ctl00_ContentPlaceHolder1_rbtSemChave").InvokeMember("click");
+
+                HtmlElementCollection Botao = this.webBrowser.Document.GetElementsByTagName("input");
+                foreach (HtmlElement Funcao in Botao)
+                {
+                    if (Funcao.GetAttribute("id").Equals("ctl00_ContentPlaceHolder1_btnPesquisar"))
+                    {
+                        Funcao.InvokeMember("Click");
+                    }
+                }
                 int countg = dataGridViewSefaz.RowCount;
                 label6.Text = countg.ToString();
-                HtmlElementCollection Pesquisa = this.webBrowser.Document.GetElementsByTagName("span");
+                HtmlElementCollection Pesquisa = this.webBrowser.Document.GetElementsByTagName("table");
                 foreach (HtmlElement Funcao in Pesquisa)
                 {
-                    if (Funcao.GetAttribute("id").Equals("ctl00_ContentPlaceHolder1_lblResultado"))
+                    //Verificar Este momento do código
+                    if (Funcao.GetAttribute("id").Equals("ctl00_ContentPlaceHolder1_gdvResultadoPesquisa"))
                     {
                         textBox4.Text = Funcao.GetAttribute("innerText");
-                        if (textBox4.Text.Contains("Continue pesquisando"))
+                        if (textBox4.Text.Contains("Próxima >>"))
                         {
                             var links = webBrowser.Document.GetElementsByTagName("input");
                             foreach (HtmlElement link in links)
                             {
-                                txtNSU.Text = link.GetAttribute("id").Replace("ctl00_ContentPlaceHolder1_rbtSemChave", "").Replace("ctl00_ContentPlaceHolder1_rbtComChave", "").Replace("ctl00_ContentPlaceHolder1_iptCNPJBase", "").Replace("ctl00_ContentPlaceHolder1_iptCNPJ", "").Replace("ctl00_ContentPlaceHolder1_btnPesquisar", "").Replace("ctl00_ContentPlaceHolder1_btnPesquisar", "").Replace("hiddenInputToUpdateATBuffer_CommonToolkitScripts", "").Replace("__VIEWSTATE", "").Replace("__VIEWSTATEGENERATOR", "").Replace("__EVENTVALIDATION", "").Replace("ctl00_ContentPlaceHolder1_iptNSU", "");
-                                txtChave.Text = link.GetAttribute("value").Replace("rbtComChave", "").Replace("rbtSemChave", "").Replace("Enviar Consulta", "").Replace("wEPDwULLTExOTEzNzk2NzEPFCsAAhUCAABkFgJmD2QWAgIDD2QWEAIJDw8WAh4EVGV4dAUPMjYsNjE0IGJpbGjDtWVzZGQCDQ8PFgIfAAUOMSw4MTggbWlsaMO1ZXNkZAIPDw8WAh4LTmF2aWdhdGVVcmwFFWluZm9Fc3RhdGlzdGljYXMuYXNweGRkAhMPDxYCHwEFOWh0dHBzOi8vd3d3MS5zcGVkLmZhemVuZGEuZ292LmJyL2xvZ2luL3NwZWQvc3BlZG5mZWFjZXNzb2RkAhcPDxYCHwEFMnBlcmd1bnRhc0ZyZXF1ZW50ZXMuYXNweD90aXBvQ29udGV1ZG89NDdGSW83Mno5OXM9ZGQCJw88KwARAwAPFgQeC18hRGF0YUJvdW5kZx4LXyFJdGVtQ291bnQCBWQBEBYAFgAWAAwUKwAAFgJmD2QWDmYPDxYCHgdWaXNpYmxlaGRkAgEPZBYCZg9kFgICAQ8PFgYeDUFsdGVybmF0ZVRleHQFK01hbmlmZXN0byBFbGV0csO0bmljbyBkZSBEb2N1bWVudG9zIEZpc2NhaXMeD0NvbW1hbmRBcmd1bWVudAUmaHR0cHM6Ly9kZmUtcG9ydGFsLnN2cnMucnMuZ292LmJyL01kZmUeCEltYWdlVXJsBR1", "").Replace("Pesquisar", "").Replace("SemAssinatura", "").Replace("4A2556B2", "").Replace("OK", "").Replace("/wEPDwULLTExOTEzNzk2NzEPFCsAAhUCAABkFgJmD2QWAgIDD2QWEAIJDw8WAh4EVGV4dAUPMjYsNjE0IGJpbGjDtWVzZGQCDQ8PFgIfAAUOMSw4MTggbWlsaMO1ZXNkZAIPDw8WAh4LTmF2aWdhdGVVcmwFFWluZm9Fc3RhdGlzdGljYXMuYXNweGRkAhMPDxYCHwEFOWh0dHBzOi8vd3d3MS5zcGVkLmZhemVuZGEuZ292LmJyL2xvZ2luL3NwZWQvc3BlZG5mZWFjZXNzb2RkAhcPDxYCHwEFMnBlcmd1bnRhc0ZyZXF1ZW50ZXMuYXNweD90aXBvQ29udGV1ZG89NDdGSW83Mno5OXM9ZGQCJw88KwARAwAPFgQeC18hRGF0YUJvdW5kZx4LXyFJdGVtQ291bnQCBWQBEBYAFgAWAAwUKwAAFgJmD2QWDmYPDxYCHgdWaXNpYmxlaGRkAgEPZBYCZg9kFgICAQ8PFgYeDUFsdGVybmF0ZVRleHQFK01hbmlmZXN0byBFbGV0csO0bmljbyBkZSBEb2N1bWVudG9zIEZpc2NhaXMeD0NvbW1hbmRBcmd1bWVudAUmaHR0cHM6Ly9kZmUtcG9ydGFsLnN2cnMucnMuZ292LmJyL01kZmUeCEltYWdlVXJsBR1+L2ltYWdlbnMvYmFubmVyX21kZmVfT2ZmLnBuZxYCHgV0aXRsZQUrTWFuaWZlc3RvIEVsZXRyw7RuaWNvIGRlIERvY3VtZW50b3MgRmlzY2Fpc2QCAg9kFgJmD2QWAgIBDw8WBh8FBSZDb25oZWNpbWVudG8gZGUgVHJhbnNwb3J0ZSBFbGV0csO0bmljbx8GBR1odHRwOi8vd3d3LmN0ZS5mYXplbmRhLmdvdi5ich8HBSR+L2ltYWdlbnMvYmFubmVyc19WaXNpdGVfQ1RlX09mZi5wbmcWAh8IBSZDb25oZWNpbWVudG8gZGUgVHJhbnNwb3J0ZSBFbGV0csO0bmljb2QCAw9kFgJmD2QWAgIBDw8WBh8FBSlTaXN0ZW1hIFDDumJsaWNvIGRlIEVzY3JpdHVyYcOnw6NvIEZpc2NhbB8GBSNodHRwOi8vd3d3MS5yZWNlaXRhLmZhemVuZGEuZ292LmJyLx8HBSV+L2ltYWdlbnMvYmFubmVyc19WaXNpdGVfU3BlZF9PZmYucG5nFgIfCAUpU2lzdGVtYSBQw7pibGljbyBkZSBFc2NyaXR1cmHDp8OjbyBGaXNjYWxkAgQPZBYCZg9kFgICAQ8PFgYfBQUqU3VwZXJpbnRlbmTDqm5jaWEgZGEgWm9uYSBGcmFuY2EgZGUgTWFuYXVzHwYFGmh0dHA6Ly93d3cuc3VmcmFtYS5nb3YuYnIvHwcFIH4vaW1hZ2Vucy9iYW5uZXJzX21hbmF1c19PZmYucG5nFgIfCAUqU3VwZXJpbnRlbmTDqm5jaWEgZGEgWm9uYSBGcmFuY2EgZGUgTWFuYXVzZAIFD2QWAmYPZBYCAgEPDxYGHwUFMlBvcnRhbCBOYWNpb25hbCBkbyBCaWxoZXRlIGRlIFBhc3NhZ2VtIEVsZXRyw7RuaWNvHwYFJWh0dHBzOi8vZGZlLXBvcnRhbC5zdnJzLnJzLmdvdi5ici9CcGUfBwUcfi9pbWFnZW5zL2Jhbm5lcl9icGVfT2ZmLnBuZxYCHwgFMlBvcnRhbCBOYWNpb25hbCBkbyBCaWxoZXRlIGRlIFBhc3NhZ2VtIEVsZXRyw7RuaWNvZAIGDw8WAh8EaGRkAjMPZBYCAgEPZBYCZg9kFgICCQ9kFgwCAw8QDxYCHgdDaGVja2VkaGRkZGQCBQ8QDxYCHwlnZGRkZAIHD2QWAmYPZBYEAgMPDxYCHwAFCDEyNzA2Mjg5ZGQCBw8PFgIeD1ZhbGlkYXRpb25Hcm91cAUIc2VtQ2hhdmVkZAIJD2QWBGYPZBYCAgMPD2QWCB4KT25LZXlQcmVzcwUZbWFzY2FyYSh0aGlzLHNvTnVtZXJvczQ0KR4Hb25Gb2N1cwUZbWFzY2FyYSh0aGlzLHNvTnVtZXJvczQ0KR4Gb25CbHVyBRltYXNjYXJhKHRoaXMsc29OdW1lcm9zNDQpHghvbkNoYW5nZQUZbWFzY2FyYSh0aGlzLHNvTnVtZXJvczQ0KWQCAQ9kFgICEw88KwARAwAPFgYfAmcfAwICHwRnZAEQFgICAwIEFgI8KwAFAQAWAh4KSGVhZGVyVGV4dAUOU2l0dWHDp8OjbyBORmU8KwAFAQAWAh8PBRRTaXR1YcOnw6NvIE1hbmlmZXN0LhYCZmYMFCsAABYCZg9kFgYCAQ9kFgpmD2QWAmYPFQMLNDY4MDA2NjM4OTQsMzUyMTAyNTQzODM1MDAwMDAxODk1NTAwMTAwMDA0MjIyMTEwMDAzNzExMzdNYXR1YWxpemFyQ2hhdmVTZWxlY2lvbmFkYSgnMzUyMTAyNTQzODM1MDAwMDAxODk1NTAwMTAwMDA0MjIyMTEwMDAzNzExMzcnLCcwJylkAgEPDxYCHwAFCzQ2ODAwNjYzODk0ZGQCAg9kFgJmDxUOCzQ2ODAwNjYzODk0CzQ2ODAwNjYzODk0CzQ2ODAwNjYzODk0CzQ2ODAwNjYzODk0LDM1MjEwMjU0MzgzNTAwMDAwMTg5NTUwMDEwMDAwNDIyMjExMDAwMzcxMTM3CzQ2ODAwNjYzODk0HkVRVUlQRSBJTkRVU1RSSUEgTUVDQU5JQ0EgTFREQRI1NC4zODMuNTAwLzAwMDEtODkMNTM1MDA0NzE3MTEzEzAxLzAyLzIwMjEgMDA6MDA6MDAGU2HDrWRhC1IkIDQuMzEyLDAwHCtOYlhFczdiZElxcytqaUE0YUJGbjNBMWNoUT0TMDEvMDIvMjAyMSAwODoxNDowOGQCAw8PFgIfAAUKQXV0b3JpemFkYWRkAgQPDxYCHwAFGlNlbSBNYW5pZmVzdGEmIzIzMTsmIzIyNztvZGQCAg9kFgpmD2QWAmYPFQMLNDY4MDA2OTIwMDQsMjcyMTAyMDUxNDc3NDgwMDAxMzU1NTAwNDAwMDAxNzE5MzE4NTAwOTI2NDVNYXR1YWxpemFyQ2hhdmVTZWxlY2lvbmFkYSgnMjcyMTAyMDUxNDc3NDgwMDAxMzU1NTAwNDAwMDAxNzE5MzE4NTAwOTI2NDUnLCcxJylkAgEPDxYCHwAFCzQ2ODAwNjkyMDA0ZGQCAg9kFgJmDxUOCzQ2ODAwNjkyMDA0CzQ2ODAwNjkyMDA0CzQ2ODAwNjkyMDA0CzQ2ODAwNjkyMDA0LDI3MjEwMjA1MTQ3NzQ4MDAwMTM1NTUwMDQwMDAwMTcxOTMxODUwMDkyNjQ1CzQ2ODAwNjkyMDA0IkFHUk9DQU5BIENPTSBFIFJFUFJFU0VOVEFDT0VTIExUREESMDUuMTQ3Ljc0OC8wMDAxLTM1CTI0MTAyMDQ2OBMwMS8wMi8yMDIxIDAwOjAwOjAwBlNhw61kYQ1SJCAxMzkuMDAwLDAwHGRnTmFZUXNJeXNZNkFFMFFFTXRrNGNPVjMvcz0TMDEvMDIvMjAyMSAwODoxNDowMWQCAw8PFgIfAAUKQXV0b3JpemFkYWRkAgQPDxYCHwAFGlNlbSBNYW5pZmVzdGEmIzIzMTsmIzIyNztvZGQCAw8PFgIfBGhkZAILDw8WAh8EZ2QWBgIDDw8WAh8KBQhzZW1DaGF2ZWRkAgUPEGRkFgFmZAINDw8WAh8KBQhzZW1DaGF2ZWRkAg8PDxYCHwoFCHNlbUNoYXZlZGQCNw8PFgIfAAUtUG9ydGFsIGRhIE5GLWUgMjAyMSAtIE5vdGEgRmlzY2FsIEVsZXRyw7RuaWNhZGQYBQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgkFD2N0bDAwJGlidEJ1c2NhcgUpY3RsMDAkZ2R2TGlua3NEZXN0YXF1ZSRjdGwwMiRJbWFnZUJ1dHRvbjEFKWN0bDAwJGdkdkxpbmtzRGVzdGFxdWUkY3RsMDMkSW1hZ2VCdXR0b24xBSljdGwwMCRnZHZMaW5rc0Rlc3RhcXVlJGN0bDA0JEltYWdlQnV0dG9uMQUpY3RsMDAkZ2R2TGlua3NEZXN0YXF1ZSRjdGwwNSRJbWFnZUJ1dHRvbjEFKWN0bDAwJGdkdkxpbmtzRGVzdGFxdWUkY3RsMDYkSW1hZ2VCdXR0b24xBSVjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJHJidENvbUNoYXZlBSVjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJHJidENvbUNoYXZlBSVjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJHJidFNlbUNoYXZlBSljdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJG10dk1hbmlmZXN0YWNhbw8PZAIBZAUuY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSRnZHZSZXN1bHRhZG9QZXNxdWlzYQ88KwAMAQgCAWQFJmN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkbXR2SW5zY3JpY2FvDw9kZmQFFmN0bDAwJGdkdkxpbmtzRGVzdGFxdWUPPCsADAEIAgFkmJ1ICoGnMMdQ6XF+w66s2IS2tUs=", "").Replace("/wEPDwULLTExOTEzNzk2NzEPFCsAAhUCAABkFgJmD2QWAgIDD2QWEAIJDw8WAh4EVGV4dAUPMjYsNjE0IGJpbGjDtWVzZGQCDQ8PFgIfAAUOMSw4MTggbWlsaMO1ZXNkZAIPDw8WAh4LTmF2aWdhdGVVcmwFFWluZm9Fc3RhdGlzdGljYXMuYXNweGRkAhMPDxYCHwEFOWh0dHBzOi8vd3d3MS5zcGVkLmZhemVuZGEuZ292LmJyL2xvZ2luL3NwZWQvc3BlZG5mZWFjZXNzb2RkAhcPDxYCHwEFMnBlcmd1bnRhc0ZyZXF1ZW50ZXMuYXNweD90aXBvQ29udGV1ZG89NDdGSW83Mno5OXM9ZGQCJw88KwARAwAPFgQeC18hRGF0YUJvdW5kZx4LXyFJdGVtQ291bnQCBWQBEBYAFgAWAAwUKwAAFgJmD2QWDmYPDxYCHgdWaXNpYmxlaGRkAgEPZBYCZg9kFgICAQ8PFgYeDUFsdGVybmF0ZVRleHQFK01hbmlmZXN0byBFbGV0csO0bmljbyBkZSBEb2N1bWVudG9zIEZpc2NhaXMeD0NvbW1hbmRBcmd1bWVudAUmaHR0cHM6Ly9kZmUtcG9ydGFsLnN2cnMucnMuZ292LmJyL01kZmUeCEltYWdlVXJsBR1+L2ltYWdlbnMvYmFubmVyX21kZmVfT2ZmLnBuZxYCHgV0aXRsZQUrTWFuaWZlc3RvIEVsZXRyw7RuaWNvIGRlIERvY3VtZW50b3MgRmlzY2Fpc2QCAg9kFgJmD2QWAgIBDw8WBh8FBSZDb25oZWNpbWVudG8gZGUgVHJhbnNwb3J0ZSBFbGV0csO0bmljbx8GBR1odHRwOi8vd3d3LmN0ZS5mYXplbmRhLmdvdi5ich8HBSR+L2ltYWdlbnMvYmFubmVyc19WaXNpdGVfQ1RlX09mZi5wbmcWAh8IBSZDb25oZWNpbWVudG8gZGUgVHJhbnNwb3J0ZSBFbGV0csO0bmljb2QCAw9kFgJmD2QWAgIBDw8WBh8FBSlTaXN0ZW1hIFDDumJsaWNvIGRlIEVzY3JpdHVyYcOnw6NvIEZpc2NhbB8GBSNodHRwOi8vd3d3MS5yZWNlaXRhLmZhemVuZGEuZ292LmJyLx8HBSV+L2ltYWdlbnMvYmFubmVyc19WaXNpdGVfU3BlZF9PZmYucG5nFgIfCAUpU2lzdGVtYSBQw7pibGljbyBkZSBFc2NyaXR1cmHDp8OjbyBGaXNjYWxkAgQPZBYCZg9kFgICAQ8PFgYfBQUqU3VwZXJpbnRlbmTDqm5jaWEgZGEgWm9uYSBGcmFuY2EgZGUgTWFuYXVzHwYFGmh0dHA6Ly93d3cuc3VmcmFtYS5nb3YuYnIvHwcFIH4vaW1hZ2Vucy9iYW5uZXJzX21hbmF1c19PZmYucG5nFgIfCAUqU3VwZXJpbnRlbmTDqm5jaWEgZGEgWm9uYSBGcmFuY2EgZGUgTWFuYXVzZAIFD2QWAmYPZBYCAgEPDxYGHwUFMlBvcnRhbCBOYWNpb25hbCBkbyBCaWxoZXRlIGRlIFBhc3NhZ2VtIEVsZXRyw7RuaWNvHwYFJWh0dHBzOi8vZGZlLXBvcnRhbC5zdnJzLnJzLmdvdi5ici9CcGUfBwUcfi9pbWFnZW5zL2Jhbm5lcl9icGVfT2ZmLnBuZxYCHwgFMlBvcnRhbCBOYWNpb25hbCBkbyBCaWxoZXRlIGRlIFBhc3NhZ2VtIEVsZXRyw7RuaWNvZAIGDw8WAh8EaGRkAjMPZBYCAgEPZBYCZg9kFgICCQ9kFgwCAw8QDxYCHgdDaGVja2VkaGRkZGQCBQ8QDxYCHwlnZGRkZAIHD2QWAmYPZBYEAgMPDxYCHwAFCDEyNzA2Mjg5ZGQCBw8PFgIeD1ZhbGlkYXRpb25Hcm91cAUIc2VtQ2hhdmVkZAIJD2QWBGYPZBYCAgMPD2QWCB4KT25LZXlQcmVzcwUZbWFzY2FyYSh0aGlzLHNvTnVtZXJvczQ0KR4Hb25Gb2N1cwUZbWFzY2FyYSh0aGlzLHNvTnVtZXJvczQ0KR4Gb25CbHVyBRltYXNjYXJhKHRoaXMsc29OdW1lcm9zNDQpHghvbkNoYW5nZQUZbWFzY2FyYSh0aGlzLHNvTnVtZXJvczQ0KWQCAQ9kFgICEw88KwARAgEQFgAWABYADBQrAABkAgsPDxYCHwRoZBYIAgMPDxYCHwoFCHNlbUNoYXZlZGQCBQ8QZGQWAWZkAgsPDxYCHwBlZGQCDQ8PFgIfCgUIc2VtQ2hhdmVkZAIPDw8WAh8KBQhzZW1DaGF2ZWRkAjcPDxYCHwAFLVBvcnRhbCBkYSBORi1lIDIwMjEgLSBOb3RhIEZpc2NhbCBFbGV0csO0bmljYWRkGAUFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYJBQ9jdGwwMCRpYnRCdXNjYXIFKWN0bDAwJGdkdkxpbmtzRGVzdGFxdWUkY3RsMDIkSW1hZ2VCdXR0b24xBSljdGwwMCRnZHZMaW5rc0Rlc3RhcXVlJGN0bDAzJEltYWdlQnV0dG9uMQUpY3RsMDAkZ2R2TGlua3NEZXN0YXF1ZSRjdGwwNCRJbWFnZUJ1dHRvbjEFKWN0bDAwJGdkdkxpbmtzRGVzdGFxdWUkY3RsMDUkSW1hZ2VCdXR0b24xBSljdGwwMCRnZHZMaW5rc0Rlc3RhcXVlJGN0bDA2JEltYWdlQnV0dG9uMQUlY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSRyYnRDb21DaGF2ZQUlY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSRyYnRDb21DaGF2ZQUlY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSRyYnRTZW1DaGF2ZQUpY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSRtdHZNYW5pZmVzdGFjYW8PD2QCAWQFLmN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkZ2R2UmVzdWx0YWRvUGVzcXVpc2EPZ2QFJmN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkbXR2SW5zY3JpY2FvDw9kZmQFFmN0bDAwJGdkdkxpbmtzRGVzdGFxdWUPPCsADAEIAgFkYPU3MMaZI90uLMS40LUlBm+6ivA=", "").Replace("/wEdACCZQKK7vRSRx4cQr1vYEFpQBGqPhwrln+9PTG+a425C4DQnJFM/mcs/d0VTMpMTYCF7arWIoAH6PP2G1YCHzk2BKmBS14FN+WjES3+DgGSxUhsv/8cgfVlU0c0VJB1DUuyMESBPWoOaEyn28Ulnl8glx4q7/POFF+ZhCwckO4rNNnFk901JR2pNXVbNcOI28xDN+LwgF7/qA/18pRQPHtbkdD7Xc1i83uy2RcKT19Xt0oWB3QqcHrat9AQl847by603YNPHBQBMCYcIffKKQyuNZwz77K2NFsDMYVxy7Rz9ZFEVCsZbzESC0Io+Uh033heiqdGYNZxbmcrurRp/zRPzXH16ZoHTII0N4WNnQmi39uS7Ad/dJxX0AdeXtOePjhHuGGF9M+Mxvu0wxo38I3j9MDR3qY3QLwCuQSDCQWUiHtbLJWvmIhvpV/TH6ilkyr9jwSlajPz+juOASAFOSnLvxX4zJujwnr3S+vdsZIjtyPnsuBk53VJ5/QjVX776QEfIx36AVoOLbK7qJmlnnVXS5IDR4kz9/BfZYB0/OL+tTQeHAMAxfxedYdp4fmCh4H2eOO0tTX51je1QOUgbhAXiTo1Ol8i+hK4G4Vo+jsDQOY8aEJZjnoPmyZdMj0cTDps02TTrU70chmk+oYZUyBFDTddRiEgPoDnKgxp8GtbRSplNGXywhWM49pzD+ImmeSYRpsLF", "").Replace("/wEdABlPHdHyh9YUee8+6l/u3+lxBGqPhwrln+9PTG+a425C4DQnJFM/mcs/d0VTMpMTYCF7arWIoAH6PP2G1YCHzk2BKmBS14FN+WjES3+DgGSxUhsv/8cgfVlU0c0VJB1DUuyMESBPWoOaEyn28Ulnl8glx4q7/POFF+ZhCwckO4rNNnFk901JR2pNXVbNcOI28xDN+LwgF7/qA/18pRQPHtbkdD7Xc1i83uy2RcKT19Xt0oWB3QqcHrat9AQl847by603YNPHBQBMCYcIffKKQyuNZwz77K2NFsDMYVxy7Rz9ZFEVCsZbzESC0Io+Uh033heiqdGYNZxbmcrurRp/zRPz+ey4GTndUnn9CNVfvvpAR8jHfoBWg4tsruomaWedVdLkgNHiTP38F9lgHT84v61NB4cAwDF/F51h2nh+YKHgfZ447S1NfnWN7VA5SBuEBeJOjU6XyL6ErgbhWj6OwNA5jxoQlmOeg+bJl0yPRxMOmzTZNOtTvRyGaT6hhlTIEUNN11GISA+gOcqDGnwa1tFKX7829YhsmqHVuhDwHKme5MteXu4=", "");
+                                txtChave.Text = link.GetAttribute("value");
+                                if (string.IsNullOrWhiteSpace(txtChave.Text))
+                                {
+
+                                }
+                                else if (txtChave.Text.Length == 44)
+                                {
+                                    HtmlElement divElement = webBrowser.Document.GetElementById("footnote" + txtChave.Text);
+                                    if (divElement != null)
+                                    {
+                                        string divInnerHtml = divElement.InnerHtml;
+                                        razaoSocial = ExtrairRazaoSocial(divInnerHtml);
+                                        tipoOperacao = ExtrairValorCampo(divInnerHtml);
+                                        valorNotaFiscal = ExtrairValorNotaFiscal(divInnerHtml);
+                                        valorNotaFiscalDec = decimal.Parse(valorNotaFiscal.Replace(".", ","));
+
+
+/*NOTASFISCAL CANCELADA AJUSTAR O <TD>
+ * A LOGICA ESTÁ EXECUTANDO PARA TODAS
+ * ÁS CHAVES INDEPENDENTE DE ESTAR
+ * CACELADA
+ */
+                                        //HtmlElementCollection trElements = this.webBrowser.Document.GetElementsByTagName("tr");
+                                        //
+                                        //foreach (HtmlElement trElement in trElements)
+                                        //{
+                                        //    // Verifica se é uma linha de dados
+                                        //    if (trElement.GetAttribute("className") == "linhaImparCentralizada" || trElement.GetAttribute("className") == "linhaParCentralizada")
+                                        //    {
+                                        //        // Obtém as células da linha
+                                        //        HtmlElementCollection tdElements = trElement.GetElementsByTagName("td");
+                                        //
+                                        //        // Verifica se a célula da coluna "Situação NFe" contém o valor "Cancelada"
+                                        //        if (tdElements.Count > 3 && tdElements[3].InnerText.Trim() == "Cancelada")
+                                        //        {
+                                        //            // Realize o update para a linha correspondente aqui
+                                        //            UpdateNotaFiscalCancelada();
+                                        //        }
+                                        //    }
+                                        //}
+
+                                    }
+                                    txtNFE.Text = txtChave.Text.Substring(26, 9);
+                                    try
+                                    {
+                                        onclickValue = link.GetAttribute("atualizarChaveSelecionada");
+                                        onclickValue = link.OuterHtml;
+                                        dataHora = ExtrairDataHora(onclickValue);
+                                        VerificarChaveNoBanco();
+                                    }
+                                    catch (Exception Erro)
+                                    {
+                                        log.WriteLog("Erro : "+Erro.Message);
+                                    }
+                                }
+                            }
+                            textBox4.Text = "";
+                        }
+                        else
+                        {
+                            var links = webBrowser.Document.GetElementsByTagName("input");
+                            foreach (HtmlElement link in links)
+                            {
+                                txtChave.Text = link.GetAttribute("value");
                                 if (string.IsNullOrWhiteSpace(txtChave.Text))
                                 {
 
                                 }
                                 else
                                 {
-                                    if (string.IsNullOrWhiteSpace(txtNSU.Text))
+                                    if (txtChave.Text == "rbtComChave")
+                                    {
+
+                                    }
+                                    else if (txtChave.Text == "rbtSemChave")
+                                    {
+
+                                    }
+                                    else if (txtChave.Text == "12706289")
+                                    {
+
+                                    }
+                                    else if (txtChave.Text == "000148")
+                                    {
+
+                                    }
+                                    else if (txtChave.Text == "Pesquisar")
+                                    {
+
+                                    }
+                                    else if (txtChave.Text == "OK")
                                     {
 
                                     }
                                     else
                                     {
+                                        onclickValue = link.GetAttribute("atualizarChaveSelecionada");
+                                        onclickValue = link.OuterHtml;
+                                        dataHora = ExtrairDataHora(onclickValue);
                                         VerificarChaveNoBanco();
                                     }
                                 }
                             }
-                            HtmlElementCollection elc = this.webBrowser.Document.GetElementsByTagName("input");
-                            foreach (HtmlElement el in elc)
-                            {
-                                if (el.GetAttribute("id").Equals("ctl00_ContentPlaceHolder1_btnPesquisar"))
-                                {
-                                    el.InvokeMember("Click");
-                                }
-                            }
                             textBox4.Text = "";
-                        }//Fim do Continue pesquisando
-                        if (textBox4.Text.Contains("Nenhum documento localizado para o destinatario"))
-                        {
                             checkBox.Checked = false;
-                            TempoEspera.Enabled = true;
-                            textBox4.Text = "";
-                        }//Fim do Nenhum documento localizado para o destinatario
-                        if (string.IsNullOrEmpty(textBox4.Text))
-                        {
-                            HtmlElementCollection elc = this.webBrowser.Document.GetElementsByTagName("input");
-                            foreach (HtmlElement el in elc)
-                            {
-                                if (el.GetAttribute("id").Equals("ctl00_ContentPlaceHolder1_btnPesquisar"))
-                                {
-                                    el.InvokeMember("Click");
-                                }
-                            }
+                            webBrowser.Refresh();
                         }
-                    }//Fim do If ID-ctl00_ContentPlaceHolder1_lblResultado
-                }//Fim do <Span>
-                HtmlElementCollection Funcai = this.webBrowser.Document.GetElementsByTagName("input");
-                foreach (HtmlElement el in Funcai)
+                    }
+                }
+                HtmlElementCollection elc = this.webBrowser.Document.GetElementsByTagName("a");
+                foreach (HtmlElement el in elc)
                 {
-                    if (el.GetAttribute("id").Equals("ctl00_ContentPlaceHolder1_btnPesquisar"))
+                    string linkText = el.GetAttribute("innerText");
+                    if (!string.IsNullOrEmpty(linkText) && linkText.Trim().Equals("Próxima >>"))
                     {
                         el.InvokeMember("Click");
                     }
@@ -151,7 +274,88 @@ namespace SistemaGSG
             {
                 MessageBox.Show(Err.Message);
             }
+
             LoadDataGrid();
+        }
+        private string ExtrairValorCampo(string html)
+        {
+            string startTag = "<span>Tipo de Operação: </span>";
+            string endTag = "<br>";
+
+            int startIndex = html.IndexOf(startTag);
+            int endIndex = html.IndexOf(endTag, startIndex);
+
+            if (startIndex != -1 && endIndex != -1)
+            {
+                startIndex += startTag.Length;
+                string valorCampo = html.Substring(startIndex, endIndex - startIndex).Trim();
+                return valorCampo;
+            }
+
+            return null;
+        }
+        private string ExtrairValorNotaFiscal(string html)
+        {
+            string startTag = "<span>Valor Total da NF-e: </span>";
+            string endTag = "<br>";
+
+            int startIndex = html.IndexOf(startTag);
+            int endIndex = html.IndexOf(endTag, startIndex);
+
+            if (startIndex != -1 && endIndex != -1)
+            {
+                startIndex += startTag.Length;
+                string valorCampo = html.Substring(startIndex, endIndex - startIndex).Trim();
+                return valorCampo;
+            }
+
+            return null;
+        }
+        private string ExtrairRazaoSocial(string html)
+        {
+            string startTag = "<span>Razão Social do Emitente:</span>";
+            string endTag = "<br>";
+
+            int startIndex = html.IndexOf(startTag);
+            int endIndex = html.IndexOf(endTag, startIndex);
+
+            if (startIndex != -1 && endIndex != -1)
+            {
+                startIndex += startTag.Length;
+                string razaoSocial = html.Substring(startIndex, endIndex - startIndex).Trim();
+                return razaoSocial;
+            }
+
+            return null;
+        }
+        private DataHora ExtrairDataHora(string onclickValue)
+        {
+            if (!string.IsNullOrEmpty(onclickValue))
+            {
+                string pattern = @"(\d{2}/\d{2}/\d{4}) (\d{2}:\d{2}:\d{2})";
+                System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(onclickValue, pattern);
+                
+                if (match.Success)
+                {
+                    string dataString = match.Groups[1].Value;
+                    string horaString = match.Groups[2].Value;
+                    DateTime data = DateTime.ParseExact(dataString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime hora = DateTime.ParseExact(horaString, "HH:mm:ss", CultureInfo.InvariantCulture);
+                    DataHora dataHora = new DataHora
+                    {
+                        Data = data,
+                        Hora = hora
+                    };
+                    //string dataHora = match.Value;
+                    return dataHora;
+                }
+            }
+            return null;
+        }
+        public class DataHora
+        {
+            public DateTime Data { get; set; }
+            public DateTime Hora { get; set; }
         }
         private void LimparTexts()
         {
@@ -163,14 +367,11 @@ namespace SistemaGSG
         {
             try
             {
-                //Seleção da tabela no Banco de Dados.
-                MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM tb_chave WHERE col_chave ='" + txtChave.Text + "' ", ConexaoDados.GetConnectionXML());
-                //Executa o comando.
+                MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM tb_chave WHERE col_chave =@chaveAcesso ", ConexaoDados.GetConnectionXML());
+                prompt.Parameters.AddWithValue("@chaveAcesso", txtChave.Text.Trim());
                 prompt.ExecuteNonQuery();
-                //Converte o resultado para números inteiros.
                 int consultDB = Convert.ToInt32(prompt.ExecuteScalar());
                 ConexaoDados.GetConnectionXML().Close();
-                //Verifica se o resultado for maior que zero(0), a execução inicia a Menssagem de que já existe contas, caso contrario faz a inserção no Banco.
                 if (consultDB > 0)
                 {
                     lblChaveDuplicidade.Text = txtChave.Text + ".xml";
@@ -193,13 +394,52 @@ namespace SistemaGSG
                 MessageBox.Show("Erro: " + Err.Message);
             }
         }
+        int operadorTipo;
         private void InserirChave()
         {
             try
             {
-                MySqlCommand prompt_cmd = new MySqlCommand("INSERT INTO tb_chave (col_chave,col_nsu,status,col_Downl) VALUES ('" + txtChave.Text.Trim() + "','" + txtNSU.Text.Trim() + "','.','1')", ConexaoDados.GetConnectionXML());
-                prompt_cmd.ExecuteNonQuery();
-                ConexaoDados.GetConnectionXML().Close();
+                if(txtChave.Text.Length >= 45)
+                {
+
+                }else if (txtChave.Text.Length < 44)
+                {
+
+                }
+                else
+                {
+                    if(dataHora != null)
+                    {
+                        if (tipoOperacao == "Saída")
+                        {
+                            operadorTipo = 1;
+                        }
+                        else
+                        {
+                            operadorTipo = 0;
+                        }
+                        try
+                        {
+                            MySqlCommand prompt_cmd = new MySqlCommand("INSERT INTO tb_chave (col_chave,empresa,status,col_Downl,col_dataHoraCriacao,emisao,tpNF,vNF,n_nfe) VALUES (@chaveAcesso, @razaoSocialEmpresa, @statusNF, @downloadXML, @dataHoraData, @dataData, @tipoOperador, @valorNF, @numeroNF)", ConexaoDados.GetConnectionXML());
+                            prompt_cmd.Parameters.AddWithValue("@chaveAcesso", txtChave.Text.Trim());
+                            prompt_cmd.Parameters.AddWithValue("@razaoSocialEmpresa", razaoSocial);
+                            prompt_cmd.Parameters.AddWithValue("@statusNF", ".");
+                            prompt_cmd.Parameters.AddWithValue("@downloadXML", "1");
+                            prompt_cmd.Parameters.AddWithValue("@dataHoraData", dataHora.Data.ToString("yyyy-MM-dd") +" "+ dataHora.Hora.ToString("HH:mm:ss"));
+                            prompt_cmd.Parameters.AddWithValue("@dataData", dataHora.Data.ToString("yyyy-MM-dd"));
+                            prompt_cmd.Parameters.AddWithValue("@tipoOperador", operadorTipo);
+                            prompt_cmd.Parameters.AddWithValue("@valorNF", valorNotaFiscalDec.ToString("C"));
+                            prompt_cmd.Parameters.AddWithValue("@numeroNF", txtNFE.Text);
+                            prompt_cmd.ExecuteNonQuery();
+                            ConexaoDados.GetConnectionXML().Close();
+                            SenderEmail_();
+                        }
+                        catch (Exception Err)
+                        {
+                            Log.log.WriteLog("Erro : " + Err.Message);
+                        }
+                    }
+                }
             }
             catch (MySqlException ErroR)
             {
@@ -210,31 +450,61 @@ namespace SistemaGSG
                 MessageBox.Show("Erro: " + err.Message);
             }
         }
+        private void SenderEmail_()
+        {
+            EmailSender emailSender = new EmailSender();
+            foreach (string destinatario in destinatarios)
+            {
+                emailSender.SendEmail(destinatario, dataHora.Data, dataHora.Hora, txtChave.Text, razaoSocial, valorNotaFiscalDec, tipoOperacao);
+            }
+        }
         private void timer1_Tick(object sender, EventArgs e)
         {
             ConsultaChaveSefaz();
         }
+        private void SenderEmailReg()
+        {
+            EmailSender emailSender = new EmailSender();
+            foreach (string destinatario in destinatarios)
+            {
+                emailSender.SendEmailRegistros(destinatario);
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
-            CriarEmail();
-            //if (MessageBox.Show("Deseja Baixar XML's?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            //{
-            //    FormDownloadXML frm_Main = new FormDownloadXML();
-            //    frm_Main.Show();
-            //    Close();
-            //}
+            SenderEmailReg();
+           //if (MessageBox.Show("Deseja Baixar XML's?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+           //{
+           //    FormDownloadXML frm_Main = new FormDownloadXML();
+           //    frm_Main.Show();
+           //    Close();
+           //}
         }
         private void frmProtocolo_Load(object sender, EventArgs e)
         {
-            LoadDataGrid();
-            LoadDataGridPress();
-            txtUrl.Text = @"C:\ArquivosSAP\xmlDownload\";
-            label7.Text = @"C:\ArquivosSAP\xmlDownload\";
-            lblChaveDuplicidade.Visible = false;
+            DateTime dataInicioAvaliacao = DateTime.ParseExact("02/09/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime dataAtual = DateTime.Now;
+            TimeSpan duracaoAvaliacao = dataAtual - dataInicioAvaliacao;
+            TimeSpan duracaoAvaliacaolbl = dataInicioAvaliacao.AddDays(1) - DateTime.Now;
+            if (duracaoAvaliacaolbl.TotalDays > 0)
+            {
+                lblperiodoAvaliacao.Text = duracaoAvaliacaolbl.Days + " dias restantes";
+                LoadDataGrid();
+                LoadDataGridPress();
+                txtUrl.Text = @"C:\ArquivosSAP\xmlDownload\";
+                label7.Text = @"C:\ArquivosSAP\xmlDownload\";
+                lblChaveDuplicidade.Visible = false;
+                ConsultaNotasFiscaisBD();
+            }
+            else
+            {
+                MessageBox.Show("Período Expirado!");
+                Application.Exit();
+            }
         }
         private void LoadDataGrid()
         {
-            MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status!='LANÇADA' ORDER BY emisao DESC", ConexaoDados.GetConnectionXML());
+            MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status!='LANÇADA' AND status NOT IN('CANCELADA') ORDER BY col_dataHoraCriacao DESC", ConexaoDados.GetConnectionXML());
             DataTable SS = new DataTable();
             ADAP.Fill(SS);
             dataGridViewSefaz.DataSource = SS;
@@ -243,7 +513,6 @@ namespace SistemaGSG
             label6.Text = countg.ToString();
             ProgBar.Maximum = countg;
         }
-
         private void LoadDataGridPress()
         {
             MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT * FROM `tb_chave` WHERE status IS NULL", ConexaoDados.GetConnectionXML());
@@ -380,8 +649,9 @@ namespace SistemaGSG
                             XMLContResult++;
                             try
                             {
-                                double percentual = XMLCont / TotaldeLinhas * 100.0;
-                                lblPorcentagem.Text = percentual.ToString().Substring(0, 3) + " %";
+                                double percentual = (XMLCont / TotaldeLinhas) * 100.0;
+                                string percentualFormatado = percentual.ToString("0.00") + " %";
+                                lblPorcentagem.Text = percentualFormatado;
                             }
                             catch (Exception)
                             {
@@ -432,10 +702,12 @@ namespace SistemaGSG
             if (checkBox.Checked)
             {
                 TempoPesquisa.Enabled = true;
+                ConsultaNotasFiscaisBD();
             }
             else
             {
                 TempoPesquisa.Enabled = false;
+                ConsultaNotasFiscaisBD();
             }
         }
         private void button4_Click(object sender, EventArgs e)
@@ -570,10 +842,10 @@ namespace SistemaGSG
                     try
                     {
                         double TotaldeLinhas = countg;
-                        //double TotalLinhasNaoLanc = countgXML;
-                        double percentual = Chave / TotaldeLinhas * 100.0;
+                        double percentual = (Chave / TotaldeLinhas) * 100.0;
                         double percent = 100.0 - percentual;
-                        lblPorcentagem.Text = percentual.ToString().Substring(0, 3) + " %";
+                        string percentualFormatado = percentual.ToString("0.00") + " %";
+                        lblPorcentagem.Text = percentualFormatado;
                     }
                     catch
                     {
@@ -583,6 +855,11 @@ namespace SistemaGSG
                 LoadDataGrid();
             }
             sw.Stop();
+            lblTempo.Text = sw.Elapsed.ToString(@"hh\:mm\:ss");
+            if(MessageBox.Show("Enviar E-mail's ?","Atenção", MessageBoxButtons.YesNo, MessageBoxIcon.Hand) == DialogResult.Yes)
+            {
+                SenderEmailReg();
+            }
             MessageBox.Show("Processo, Finalizado com Sucesso!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
         private void TempoEspera_Tick(object sender, EventArgs e)
@@ -618,11 +895,9 @@ namespace SistemaGSG
                 }
             }
         }
-
         private void maskFiltro_MaskChanged(object sender, EventArgs e)
         {
         }
-
         private void maskFiltro_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -645,7 +920,6 @@ namespace SistemaGSG
                 LoadDataGrid();
             }
         }
-
         private void button5_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Deseja ir para o Relatório Geral de Danf's?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -653,32 +927,6 @@ namespace SistemaGSG
                 FormRelacao frm_Main = new FormRelacao();
                 frm_Main.Show();
                 Close();
-            }
-        }
-        
-        private void CriarEmail()
-        {
- 
-            MailMessage mail = new MailMessage();
-            mail.From = new MailAddress("junior@usga.com.br");
-            mail.To.Add("carlosjunyoor@gmail.com");
-            mail.Subject = "Teste 1";
-            mail.Body = "Testando mensagem de e-mail";
-            mail.Attachments.Add(new Attachment(@"C:\ArquivosSAP\xmlDownload\25221110144451000156550010000012111004640320-procNfe.xml"));
-            
-
-            using (var smtp = new SmtpClient("smtp.gmail.com"))
-            {
-                smtp.EnableSsl = true; // GMail requer SSL
-                smtp.Port = 587;       // porta para SSL
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network; // modo de envio
-                smtp.UseDefaultCredentials = true; // vamos utilizar credencias especificas
-
-                // seu usuário e senha para autenticação
-                smtp.Credentials = new NetworkCredential("carlosjunyoor@gmail.com", "02984646#Lua");
-
-                // envia o e-mail
-                smtp.Send(mail);
             }
         }
     }

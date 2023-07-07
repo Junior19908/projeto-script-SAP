@@ -18,8 +18,8 @@ namespace SistemaGSG
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            frmXML frm_Main = new frmXML();
-            frm_Main.ShowDialog();
+            frmProtocolo frm_Main = new frmProtocolo();
+            frm_Main.ShowDialog();      
             //FormRelat frm_Main = new FormRelat();
             //frm_Main.ShowDialog();
 

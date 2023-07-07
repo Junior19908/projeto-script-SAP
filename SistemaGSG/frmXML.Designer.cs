@@ -80,9 +80,10 @@
             this.txtserie = new System.Windows.Forms.TextBox();
             this.btnImport = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.DESTINA = new System.Windows.Forms.DataGridView();
+            this.EMITDES = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnAbrirXML = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.label20 = new System.Windows.Forms.Label();
             this.IMPOSTOGRID = new System.Windows.Forms.DataGridView();
             this.CHAVEGRID = new System.Windows.Forms.DataGridView();
@@ -141,11 +142,10 @@
             this.qCom = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.xPed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IMPOSTO = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.LblStatus = new System.Windows.Forms.Label();
-            this.EMITDES = new System.Windows.Forms.DataGridView();
             this.textValor1 = new SistemaGSG.textValor();
-            this.DESTINA = new System.Windows.Forms.DataGridView();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -153,6 +153,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DESTINA)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.EMITDES)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IMPOSTOGRID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CHAVEGRID)).BeginInit();
@@ -163,8 +165,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.CNPJGRID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PRODUTOGRID)).BeginInit();
             this.tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.EMITDES)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DESTINA)).BeginInit();
             this.SuspendLayout();
             // 
             // ProgBar
@@ -664,6 +664,24 @@
             this.tabPage1.Text = "XML";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // DESTINA
+            // 
+            this.DESTINA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DESTINA.Location = new System.Drawing.Point(464, 117);
+            this.DESTINA.Name = "DESTINA";
+            this.DESTINA.Size = new System.Drawing.Size(288, 98);
+            this.DESTINA.TabIndex = 82;
+            this.DESTINA.Visible = false;
+            // 
+            // EMITDES
+            // 
+            this.EMITDES.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.EMITDES.Location = new System.Drawing.Point(464, 117);
+            this.EMITDES.Name = "EMITDES";
+            this.EMITDES.Size = new System.Drawing.Size(288, 98);
+            this.EMITDES.TabIndex = 81;
+            this.EMITDES.Visible = false;
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnAbrirXML);
@@ -684,18 +702,6 @@
             this.btnAbrirXML.Text = "&Abrir";
             this.btnAbrirXML.UseVisualStyleBackColor = true;
             this.btnAbrirXML.Click += new System.EventHandler(this.btnAbrirXML_Click_1);
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(1166, 487);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 74;
-            this.button1.Text = "&Voltar";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label20
             // 
@@ -1092,6 +1098,8 @@
             // CNPJGRID
             // 
             this.CNPJGRID.AllowUserToAddRows = false;
+            this.CNPJGRID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.CNPJGRID.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.CNPJGRID.Location = new System.Drawing.Point(758, 11);
             this.CNPJGRID.Name = "CNPJGRID";
@@ -1289,6 +1297,18 @@
             this.IMPOSTO.Name = "IMPOSTO";
             this.IMPOSTO.ToolTipText = "1";
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(1166, 487);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 74;
+            this.button1.Text = "&Voltar";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // tabControl1
             // 
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1318,15 +1338,6 @@
             this.LblStatus.Text = "Status de Processamento.....";
             this.LblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // EMITDES
-            // 
-            this.EMITDES.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.EMITDES.Location = new System.Drawing.Point(464, 117);
-            this.EMITDES.Name = "EMITDES";
-            this.EMITDES.Size = new System.Drawing.Size(288, 98);
-            this.EMITDES.TabIndex = 81;
-            this.EMITDES.Visible = false;
-            // 
             // textValor1
             // 
             this.textValor1.Location = new System.Drawing.Point(131, 269);
@@ -1335,15 +1346,6 @@
             this.textValor1.Size = new System.Drawing.Size(156, 20);
             this.textValor1.TabIndex = 62;
             this.textValor1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // DESTINA
-            // 
-            this.DESTINA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DESTINA.Location = new System.Drawing.Point(464, 117);
-            this.DESTINA.Name = "DESTINA";
-            this.DESTINA.Size = new System.Drawing.Size(288, 98);
-            this.DESTINA.TabIndex = 82;
-            this.DESTINA.Visible = false;
             // 
             // frmXML
             // 
@@ -1371,6 +1373,8 @@
             this.groupBox1.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DESTINA)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.EMITDES)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.IMPOSTOGRID)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CHAVEGRID)).EndInit();
@@ -1381,8 +1385,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.CNPJGRID)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PRODUTOGRID)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.EMITDES)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DESTINA)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

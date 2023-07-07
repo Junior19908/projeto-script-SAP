@@ -321,17 +321,17 @@ namespace SistemaGSG
                             GuiStatusbar statusbar = (GuiStatusbar)Session.FindById("wnd[0]/sbar");
                             //Me retorna apenas o número do pedido no tratamento da importação no Banco de Dados ele retira o º e os espaços.
                             string resultado = statusbar.Text.Substring(12, 10);
-                            try
-                            {
-
-                                MySqlCommand cmd = new MySqlCommand("INSERT INTO `tb_result` (`col_notafiscal`, `col_DocNumSAP`) VALUES ('" + txtNFE.Text.Trim() + "', '" + resultado.Trim() + "')", ConexaoDados.GetConnectionXML());
-                                cmd.ExecuteNonQuery();
-                                ConexaoDados.GetConnectionXML().Close();
-                            }
-                            catch (MySqlException ErroMysql)
-                            {
-                                MessageBox.Show(ErroMysql.Message);
-                            }
+                            //try
+                            //{
+                            //
+                            //    MySqlCommand cmd = new MySqlCommand("INSERT INTO `tb_result` (`col_notafiscal`, `col_DocNumSAP`) VALUES ('" + txtNFE.Text.Trim() + "', '" + resultado.Trim() + "')", ConexaoDados.GetConnectionXML());
+                            //    cmd.ExecuteNonQuery();
+                            //    ConexaoDados.GetConnectionXML().Close();
+                            //}
+                            //catch (MySqlException ErroMysql)
+                            //{
+                            //    MessageBox.Show(ErroMysql.Message);
+                            //}
                             if (countg == 1)
                             {
                                 Barra = 100;
@@ -355,17 +355,17 @@ namespace SistemaGSG
                                 GuiStatusbar statusbar = (GuiStatusbar)Session.FindById("wnd[0]/sbar");
                                 //Me retorna apenas o número do pedido no tratamento da importação no Banco de Dados ele retira o º e os espaços.
                                 string resultado = statusbar.Text.Substring(12, 10);
-                                try
-                                {
-
-                                    MySqlCommand cmd = new MySqlCommand("INSERT INTO `tb_result` (`col_notafiscal`, `col_DocNumSAP`) VALUES ('" + txtNFE.Text.Trim() + "', '" + resultado.Trim() + "')", ConexaoDados.GetConnectionXML());
-                                    cmd.ExecuteNonQuery();
-                                    ConexaoDados.GetConnectionXML().Close();
-                                }
-                                catch (MySqlException ErroMysql)
-                                {
-                                    MessageBox.Show(ErroMysql.Message);
-                                }
+                                //try
+                                //{
+                                //
+                                //    MySqlCommand cmd = new MySqlCommand("INSERT INTO `tb_result` (`col_notafiscal`, `col_DocNumSAP`) VALUES ('" + txtNFE.Text.Trim() + "', '" + resultado.Trim() + "')", ConexaoDados.GetConnectionXML());
+                                //    cmd.ExecuteNonQuery();
+                                //    ConexaoDados.GetConnectionXML().Close();
+                                //}
+                                //catch (MySqlException ErroMysql)
+                                //{
+                                //    MessageBox.Show(ErroMysql.Message);
+                                //}
                                 if (countg == 1)
                                 {
                                     Barra = 100;
@@ -538,10 +538,6 @@ namespace SistemaGSG
                         }
                         ICMS30GRID.DataSource = ds.Tables["ICMS30"];
                         IMPOSTOGRID.DataSource = ds.Tables["imposto"];
-                        if(IMPOSTOGRID.DataSource != null)
-                        {
-                            MessageBox.Show("Tem Imposto!");
-                        }
                         DADOSGRID.DataSource = ds.Tables["infAdic"];
                         try
                         {

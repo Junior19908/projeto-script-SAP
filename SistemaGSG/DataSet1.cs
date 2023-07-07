@@ -1,6 +1,8 @@
-﻿namespace SistemaGSG {
-    
-    
-    public partial class SaidaSemana {
+﻿namespace SistemaGSG
+{
+
+
+    public partial class SaidaSemana
+    {
     }
 }

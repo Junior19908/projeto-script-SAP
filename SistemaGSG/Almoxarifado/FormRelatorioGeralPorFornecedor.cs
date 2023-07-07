@@ -433,12 +433,30 @@ namespace SistemaGSG.Almoxarifado
             }
             log.WriteLog("Info : ZMM039 Finalizado");
         }
+        private void criarPeriodo()
+        {
+            try
+            {
+                MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO `tb_periodos` (`col_inicio`, `col_fim`) " +
+                "VALUES " +
+                "('" + this.calendarioMes.SelectionStart.ToString("yyyy-MM-dd") + "', '" + this.calendarioMes.SelectionEnd.ToString("yyyy-MM-dd") + "')", ConexaoDados.GetConnectionAlmoxarifado());
+                mySqlCommand.ExecuteNonQuery();
+                mySqlCommand.Connection.Close();
+                log.WriteLog("Info : Período Inserido com Sucesso!.");
+            }
+            catch(Exception ErroProg)
+            {
+                log.WriteLog("Warning : " + ErroProg.Message);
+            }
+        }
+
         private void btnRelatorio_Click(object sender, EventArgs e)
         {
             log.WriteLog("Info : Iniciado o relatório de materiais por fornecedor - Almoxarifado.");
             var sw = new Stopwatch();
             sw.Start();
 
+            criarPeriodo();
             RelatorioZMM039();
             VerificaPedido();
             VerificarRequisicao();
@@ -473,6 +491,10 @@ namespace SistemaGSG.Almoxarifado
                     while (dreader.Read())
                     {
                         updateRelPedido = dreader["col_pedido"].ToString();
+                        break;
+                    }
+                    if (string.IsNullOrEmpty(updateRelPedido))
+                    {
                         break;
                     }
                     MyCommand.Connection.Close();
@@ -665,6 +687,10 @@ namespace SistemaGSG.Almoxarifado
                         updateRelRequisicoes = dreader["col_requisicao"].ToString();
                         break;
                     }
+                    if (string.IsNullOrEmpty(updateRelRequisicoes))
+                    {
+                        break;
+                    }
                     MyCommand.Connection.Close();
                 }
                 catch (Exception Error)
@@ -758,7 +784,7 @@ namespace SistemaGSG.Almoxarifado
             MySqlCommand mySqlCommand = new
                 MySqlCommand("INSERT INTO `tb_marcareferencia` (`col_marcaDescricao`, `col_referenciaDescricao`, `col_requisicao`, `col_itemDaRequisicao`, `col_materialCodigoSAP`) " +
                 "VALUES " +
-                "('" + MARCA + "', '" + REFERENCIA + "', '" + REQC + "', '" + ITEM + "', '" + MATERIAL + "')", ConexaoDados.GetConnectionAlmoxarifado());
+                "('" + MARCA.Replace("'","") + "', '" + REFERENCIA.Replace("'", "") + "', '" + REQC + "', '" + ITEM + "', '" + MATERIAL + "')", ConexaoDados.GetConnectionAlmoxarifado());
             mySqlCommand.ExecuteNonQuery();
             mySqlCommand.Connection.Close();
         }

@@ -50,6 +50,18 @@
             this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.txtNotasCanceladas = new System.Windows.Forms.TextBox();
+            this.txtNotasOmissas = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.txtNotasRegistradas = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.txtTotalNotas = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.lblDias = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.maskFiltro = new System.Windows.Forms.MaskedTextBox();
             this.checkBox = new System.Windows.Forms.CheckBox();
@@ -102,10 +114,14 @@
             this.button5 = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.lblTempo = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.lblperiodoAvaliacao = new System.Windows.Forms.Label();
             this.textValor1 = new SistemaGSG.textValor();
             this.vNF = new SistemaGSG.textValor();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtXML)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NFEGRID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DADOSGRID)).BeginInit();
@@ -119,11 +135,12 @@
             this.webBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.webBrowser.Location = new System.Drawing.Point(15, 760);
+            this.webBrowser.Location = new System.Drawing.Point(255, -2);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(879, 384);
+            this.webBrowser.Size = new System.Drawing.Size(1157, 673);
             this.webBrowser.TabIndex = 0;
+            this.webBrowser.Visible = false;
             this.webBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webBrowser_DocumentCompleted_1);
             // 
             // txtNSU
@@ -157,10 +174,10 @@
             this.Column15,
             this.Column16,
             this.Column1});
-            this.dataGridViewSefaz.Location = new System.Drawing.Point(15, 82);
+            this.dataGridViewSefaz.Location = new System.Drawing.Point(15, 124);
             this.dataGridViewSefaz.Name = "dataGridViewSefaz";
             this.dataGridViewSefaz.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewSefaz.Size = new System.Drawing.Size(1604, 564);
+            this.dataGridViewSefaz.Size = new System.Drawing.Size(1604, 522);
             this.dataGridViewSefaz.TabIndex = 3;
             this.dataGridViewSefaz.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewSefaz_CellClick);
             this.dataGridViewSefaz.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridViewSefaz_CellFormatting);
@@ -276,6 +293,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.label13);
             this.groupBox1.Controls.Add(this.maskFiltro);
             this.groupBox1.Controls.Add(this.checkBox);
@@ -285,25 +303,155 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 20);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1607, 56);
+            this.groupBox1.Size = new System.Drawing.Size(1607, 98);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Informações do Destinatário";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.groupBox3);
+            this.groupBox2.Controls.Add(this.lblDias);
+            this.groupBox2.Controls.Add(this.label15);
+            this.groupBox2.Location = new System.Drawing.Point(316, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(1090, 80);
+            this.groupBox2.TabIndex = 17;
+            this.groupBox2.TabStop = false;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label19);
+            this.groupBox3.Controls.Add(this.txtNotasCanceladas);
+            this.groupBox3.Controls.Add(this.txtNotasOmissas);
+            this.groupBox3.Controls.Add(this.label18);
+            this.groupBox3.Controls.Add(this.txtNotasRegistradas);
+            this.groupBox3.Controls.Add(this.label17);
+            this.groupBox3.Controls.Add(this.txtTotalNotas);
+            this.groupBox3.Controls.Add(this.label16);
+            this.groupBox3.Location = new System.Drawing.Point(6, 10);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(435, 63);
+            this.groupBox3.TabIndex = 23;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Notas Fiscais";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(236, 18);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(63, 13);
+            this.label19.TabIndex = 24;
+            this.label19.Text = "Canceladas";
+            // 
+            // txtNotasCanceladas
+            // 
+            this.txtNotasCanceladas.BackColor = System.Drawing.Color.Gold;
+            this.txtNotasCanceladas.Enabled = false;
+            this.txtNotasCanceladas.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNotasCanceladas.Location = new System.Drawing.Point(219, 32);
+            this.txtNotasCanceladas.Name = "txtNotasCanceladas";
+            this.txtNotasCanceladas.Size = new System.Drawing.Size(100, 20);
+            this.txtNotasCanceladas.TabIndex = 23;
+            this.txtNotasCanceladas.Text = "-";
+            this.txtNotasCanceladas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtNotasOmissas
+            // 
+            this.txtNotasOmissas.BackColor = System.Drawing.Color.IndianRed;
+            this.txtNotasOmissas.Enabled = false;
+            this.txtNotasOmissas.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNotasOmissas.Location = new System.Drawing.Point(7, 32);
+            this.txtNotasOmissas.Name = "txtNotasOmissas";
+            this.txtNotasOmissas.Size = new System.Drawing.Size(100, 20);
+            this.txtNotasOmissas.TabIndex = 17;
+            this.txtNotasOmissas.Text = "1";
+            this.txtNotasOmissas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(360, 18);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(31, 13);
+            this.label18.TabIndex = 22;
+            this.label18.Text = "Total";
+            // 
+            // txtNotasRegistradas
+            // 
+            this.txtNotasRegistradas.BackColor = System.Drawing.Color.LightGreen;
+            this.txtNotasRegistradas.Enabled = false;
+            this.txtNotasRegistradas.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNotasRegistradas.Location = new System.Drawing.Point(113, 32);
+            this.txtNotasRegistradas.Name = "txtNotasRegistradas";
+            this.txtNotasRegistradas.Size = new System.Drawing.Size(100, 20);
+            this.txtNotasRegistradas.TabIndex = 18;
+            this.txtNotasRegistradas.Text = "1";
+            this.txtNotasRegistradas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(131, 18);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(63, 13);
+            this.label17.TabIndex = 21;
+            this.label17.Text = "Registradas";
+            // 
+            // txtTotalNotas
+            // 
+            this.txtTotalNotas.BackColor = System.Drawing.Color.Gainsboro;
+            this.txtTotalNotas.Enabled = false;
+            this.txtTotalNotas.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTotalNotas.Location = new System.Drawing.Point(325, 32);
+            this.txtTotalNotas.Name = "txtTotalNotas";
+            this.txtTotalNotas.Size = new System.Drawing.Size(100, 20);
+            this.txtTotalNotas.TabIndex = 19;
+            this.txtTotalNotas.Text = "1";
+            this.txtTotalNotas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(35, 18);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(46, 13);
+            this.label16.TabIndex = 20;
+            this.label16.Text = "Omissas";
+            // 
+            // lblDias
+            // 
+            this.lblDias.AutoSize = true;
+            this.lblDias.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDias.Location = new System.Drawing.Point(819, 42);
+            this.lblDias.Name = "lblDias";
+            this.lblDias.Size = new System.Drawing.Size(29, 20);
+            this.lblDias.TabIndex = 16;
+            this.lblDias.Text = "00";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(683, 21);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(287, 20);
+            this.label15.TabIndex = 15;
+            this.label15.Text = "DIAS SEM CONSULTAR A SEFAZ";
+            // 
             // label13
             // 
-            this.label13.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(730, 12);
+            this.label13.Location = new System.Drawing.Point(22, 48);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(32, 13);
+            this.label13.Size = new System.Drawing.Size(35, 13);
             this.label13.TabIndex = 14;
-            this.label13.Text = "Filtrar";
+            this.label13.Text = "Filtrar:";
             // 
             // maskFiltro
             // 
-            this.maskFiltro.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.maskFiltro.Location = new System.Drawing.Point(719, 28);
+            this.maskFiltro.Location = new System.Drawing.Point(63, 45);
             this.maskFiltro.Mask = "00/0000";
             this.maskFiltro.Name = "maskFiltro";
             this.maskFiltro.Size = new System.Drawing.Size(56, 20);
@@ -315,20 +463,19 @@
             // checkBox
             // 
             this.checkBox.AutoSize = true;
-            this.checkBox.Enabled = false;
-            this.checkBox.Location = new System.Drawing.Point(228, 29);
+            this.checkBox.Location = new System.Drawing.Point(125, 48);
             this.checkBox.Name = "checkBox";
-            this.checkBox.Size = new System.Drawing.Size(82, 17);
+            this.checkBox.Size = new System.Drawing.Size(86, 17);
             this.checkBox.TabIndex = 12;
-            this.checkBox.Text = "Ativar Timer";
+            this.checkBox.Text = "Ativar Busca";
             this.checkBox.UseVisualStyleBackColor = true;
             this.checkBox.CheckedChanged += new System.EventHandler(this.checkBox_CheckedChanged);
             // 
             // textBox2
             // 
-            this.textBox2.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(1488, 23);
+            this.textBox2.Location = new System.Drawing.Point(1488, 19);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(113, 20);
             this.textBox2.TabIndex = 3;
@@ -336,9 +483,9 @@
             // 
             // label2
             // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1431, 26);
+            this.label2.Location = new System.Drawing.Point(1431, 22);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 2;
@@ -346,9 +493,8 @@
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(63, 23);
+            this.textBox1.Location = new System.Drawing.Point(63, 19);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(159, 20);
             this.textBox1.TabIndex = 1;
@@ -356,9 +502,8 @@
             // 
             // label1
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 26);
+            this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(51, 13);
             this.label1.TabIndex = 0;
@@ -411,6 +556,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(1424, 699);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(91, 23);
@@ -422,6 +568,7 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Enabled = false;
             this.button3.Location = new System.Drawing.Point(1164, 699);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
@@ -652,9 +799,11 @@
             // 
             this.lblPorcentagem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPorcentagem.AutoSize = true;
-            this.lblPorcentagem.Location = new System.Drawing.Point(1587, 655);
+            this.lblPorcentagem.BackColor = System.Drawing.Color.Transparent;
+            this.lblPorcentagem.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPorcentagem.Location = new System.Drawing.Point(1591, 656);
             this.lblPorcentagem.Name = "lblPorcentagem";
-            this.lblPorcentagem.Size = new System.Drawing.Size(24, 13);
+            this.lblPorcentagem.Size = new System.Drawing.Size(20, 12);
             this.lblPorcentagem.TabIndex = 34;
             this.lblPorcentagem.Text = "0 %";
             // 
@@ -736,6 +885,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button5.Enabled = false;
             this.button5.Location = new System.Drawing.Point(1245, 699);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
@@ -761,6 +911,26 @@
             this.lblTempo.Size = new System.Drawing.Size(0, 13);
             this.lblTempo.TabIndex = 50;
             // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(1333, 680);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(104, 13);
+            this.label20.TabIndex = 51;
+            this.label20.Text = "Período da Licença:";
+            // 
+            // lblperiodoAvaliacao
+            // 
+            this.lblperiodoAvaliacao.AutoSize = true;
+            this.lblperiodoAvaliacao.BackColor = System.Drawing.Color.Red;
+            this.lblperiodoAvaliacao.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblperiodoAvaliacao.ForeColor = System.Drawing.Color.White;
+            this.lblperiodoAvaliacao.Location = new System.Drawing.Point(1443, 680);
+            this.lblperiodoAvaliacao.Name = "lblperiodoAvaliacao";
+            this.lblperiodoAvaliacao.Size = new System.Drawing.Size(0, 13);
+            this.lblperiodoAvaliacao.TabIndex = 52;
+            // 
             // textValor1
             // 
             this.textValor1.Location = new System.Drawing.Point(1851, 590);
@@ -782,6 +952,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1623, 733);
+            this.Controls.Add(this.lblperiodoAvaliacao);
+            this.Controls.Add(this.label20);
             this.Controls.Add(this.lblTempo);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.button5);
@@ -841,6 +1013,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtXML)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NFEGRID)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DADOSGRID)).EndInit();
@@ -928,5 +1104,19 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label lblDias;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox txtNotasOmissas;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox txtNotasRegistradas;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox txtTotalNotas;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox txtNotasCanceladas;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label lblperiodoAvaliacao;
     }
 }
