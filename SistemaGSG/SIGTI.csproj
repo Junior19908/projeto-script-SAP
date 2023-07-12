@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C250A6E3-BF11-4E53-96D5-46A8C2588528}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>SistemaGSG</RootNamespace>
-    <AssemblyName>SistemaGSG</AssemblyName>
+    <RootNamespace>SIGTI</RootNamespace>
+    <AssemblyName>SIGTI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -25,7 +25,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>\\10.2.1.6\Departamentos\PLfinan\entradaenergia\</UpdateUrl>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>285</ApplicationRevision>
+    <ApplicationRevision>287</ApplicationRevision>
     <ApplicationVersion>2.0.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -534,6 +534,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="textValor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="textValor1.cs">
       <SubType>Component</SubType>
     </Compile>
     <EmbeddedResource Include="Almoxarifado\FormRelatorioGeralPorFornecedor.resx">

@@ -17,7 +17,7 @@ namespace SistemaGSG.NotasFiscais
         public int OmissasNotasFiscais()
         {
             int omissas = 0;
-            string query = "SELECT COUNT(*) FROM tb_chave WHERE status != 'LANÇADA'";
+            string query = "SELECT COUNT(*) FROM tb_chave WHERE status != 'LANÇADA' AND status NOT IN('CANCELADA')";
             MySqlCommand command = new MySqlCommand(query, ConexaoDados.GetConnectionXML());
             omissas = Convert.ToInt32(command.ExecuteScalar());
             return omissas;

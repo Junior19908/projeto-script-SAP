@@ -512,6 +512,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(1521, 699);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(98, 23);
@@ -1008,7 +1009,7 @@
             this.MinimumSize = new System.Drawing.Size(1623, 733);
             this.Name = "frmProtocolo";
             this.Style = MetroFramework.MetroColorStyle.Orange;
-            this.Text = "Consulta DF-e";
+            this.Text = "SIGTI - Consulta DF-e";
             this.Load += new System.EventHandler(this.frmProtocolo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).EndInit();
             this.groupBox1.ResumeLayout(false);

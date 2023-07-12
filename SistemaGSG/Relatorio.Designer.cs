@@ -1,4 +1,6 @@
-﻿namespace SistemaGSG
+﻿using SIGTI;
+
+namespace SistemaGSG
 {
     partial class Relatorio
     {
@@ -80,5 +82,9 @@
         private Microsoft.Reporting.WinForms.ReportViewer reportViewer1;
         private System.Windows.Forms.BindingSource dBSGSGAcessoBindingSource;
         private DBSGSGAcesso dBSGSGAcesso;
+    }
+
+    internal class DBSGSGAcesso : SIGTI.DBSGSGAcesso
+    {
     }
 }

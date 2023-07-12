@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace SistemaGSG {
+namespace SIGTI {
     
     
     /// <summary>
@@ -1375,7 +1375,7 @@ namespace SistemaGSG {
         }
     }
 }
-namespace SistemaGSG.DBSGSGAcessoTableAdapters {
+namespace SIGTI.DBSGSGAcessoTableAdapters {
     
     
     /// <summary>
@@ -1662,7 +1662,7 @@ namespace SistemaGSG.DBSGSGAcessoTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.OleDb.OleDbConnection();
-            this._connection.ConnectionString = global::SistemaGSG.Properties.Settings.Default.DBSGSG;
+            this._connection.ConnectionString = global::SIGTI.Properties.Settings.Default.DBSGSG;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
