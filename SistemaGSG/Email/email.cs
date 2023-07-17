@@ -176,8 +176,9 @@ namespace SistemaGSG.Email
         {
             // Aqui você deve implementar o código para obter as chaves de acesso do banco de dados
             // Neste exemplo, estou retornando algumas chaves de acesso de forma estática
-            MySqlCommand prompt = new MySqlCommand("SELECT col_chave,empresa FROM tb_chave WHERE status != @lancada ORDER BY `empresa` ASC;", ConexaoDados.GetConnectionXML());
+            MySqlCommand prompt = new MySqlCommand("SELECT col_chave,empresa FROM tb_chave WHERE status NOT IN(@lancada,@cancelada) ORDER BY `empresa` ASC;", ConexaoDados.GetConnectionXML());
             prompt.Parameters.AddWithValue("@lancada", "LANÇADA");
+            prompt.Parameters.AddWithValue("@cancelada", "CANCELADA");
             List<string> chavesDeAcesso = new List<string>();
             List<string> razaoSocial = new List<string>();
             MySqlDataReader reader = prompt.ExecuteReader();

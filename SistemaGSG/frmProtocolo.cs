@@ -32,9 +32,9 @@ namespace SistemaGSG
     {
         private const string Texto = "Duplicidade!, Esta Chave já existe no Banco de Dados.";
         string usuarioLogado = dados.Usuario;
-        string[] destinatarios = { "junior@usga.com.br", "evaristo@usga.com.br", "jackson@usga.com.br" , "luciano.eduardo@usga.com.br" };
+        //string[] destinatarios = { "junior@usga.com.br", "evaristo@usga.com.br", "jackson@usga.com.br" , "luciano.eduardo@usga.com.br" };
         //string[] destinatarios = { "junior@usga.com.br", "sigtisistemasintegrados@gmail.com", "luanabritosilva8@gmail.com" , "luanacaetano346@gmail.com" };
-        //string[] destinatarios = { "sigtisistemasintegrados@gmail.com" };
+        string[] destinatarios = { "sigtisistemasintegrados@gmail.com" };
         private void ConsultaNotasFiscaisBD()
         {
             ConsultaNotasFiscais consultaNotas = new ConsultaNotasFiscais();
@@ -54,8 +54,8 @@ namespace SistemaGSG
         {
             InitializeComponent();
             VerifyVersion(webBrowser);
-          webBrowser.Navigate("https://www.nfe.fazenda.gov.br/portal/manifestacaoDestinatario.aspx?tipoConteudo=o9MkXc+hmKs=");
-           //webBrowser.Navigate("http://127.0.0.1/teste/");
+            webBrowser.Navigate("https://www.nfe.fazenda.gov.br/portal/manifestacaoDestinatario.aspx?tipoConteudo=o9MkXc+hmKs=");
+            //webBrowser.Navigate("http://127.0.0.1/teste/");
             webBrowser.ScriptErrorsSuppressed = true;
             ConsultaNotasFiscaisBD();
         }
@@ -452,11 +452,13 @@ namespace SistemaGSG
         }
         private void SenderEmail_()
         {
+            lblEmailEnviado.Visible = false;
             EmailSender emailSender = new EmailSender();
             foreach (string destinatario in destinatarios)
             {
                 emailSender.SendEmail(destinatario, dataHora.Data, dataHora.Hora, txtChave.Text, razaoSocial, valorNotaFiscalDec, tipoOperacao);
             }
+            lblEmailEnviado.Visible = true;
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -464,11 +466,13 @@ namespace SistemaGSG
         }
         private void SenderEmailReg()
         {
+            lblEmailEnviado.Visible = false;
             EmailSender emailSender = new EmailSender();
             foreach (string destinatario in destinatarios)
             {
                 emailSender.SendEmailRegistros(destinatario);
             }
+            lblEmailEnviado.Visible = true;
         }
         private void button1_Click(object sender, EventArgs e)
         {

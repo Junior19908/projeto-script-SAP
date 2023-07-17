@@ -116,6 +116,7 @@
             this.lblTempo = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.lblperiodoAvaliacao = new System.Windows.Forms.Label();
+            this.lblEmailEnviado = new System.Windows.Forms.Label();
             this.textValor1 = new SistemaGSG.textValor();
             this.vNF = new SistemaGSG.textValor();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).BeginInit();
@@ -512,7 +513,6 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(1521, 699);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(98, 23);
@@ -932,6 +932,19 @@
             this.lblperiodoAvaliacao.Size = new System.Drawing.Size(0, 13);
             this.lblperiodoAvaliacao.TabIndex = 52;
             // 
+            // lblEmailEnviado
+            // 
+            this.lblEmailEnviado.AutoSize = true;
+            this.lblEmailEnviado.BackColor = System.Drawing.Color.Red;
+            this.lblEmailEnviado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEmailEnviado.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.lblEmailEnviado.Location = new System.Drawing.Point(683, 7);
+            this.lblEmailEnviado.Name = "lblEmailEnviado";
+            this.lblEmailEnviado.Size = new System.Drawing.Size(108, 15);
+            this.lblEmailEnviado.TabIndex = 53;
+            this.lblEmailEnviado.Text = "E-mail Enviado!";
+            this.lblEmailEnviado.Visible = false;
+            // 
             // textValor1
             // 
             this.textValor1.Location = new System.Drawing.Point(1851, 590);
@@ -953,6 +966,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1623, 733);
+            this.Controls.Add(this.lblEmailEnviado);
             this.Controls.Add(this.lblperiodoAvaliacao);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.lblTempo);
@@ -1119,5 +1133,6 @@
         private System.Windows.Forms.TextBox txtNotasCanceladas;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label lblperiodoAvaliacao;
+        private System.Windows.Forms.Label lblEmailEnviado;
     }
 }
