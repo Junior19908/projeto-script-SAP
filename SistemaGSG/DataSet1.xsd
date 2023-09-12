@@ -4,7 +4,7 @@
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
       <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
-          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DBSGSGSaidaSemana" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DBSGSGSaidaSemana (Settings)" PropertyReference="ApplicationSettings.SIGTI.Properties.Settings.GlobalReference.Default.DBSGSGSaidaSemana" Provider="System.Data.OleDb" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DBSGSGSaidaSemana" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DBSGSGSaidaSemana (Settings)" PropertyReference="ApplicationSettings.SIGT.Properties.Settings.GlobalReference.Default.DBSGSGSaidaSemana" Provider="System.Data.OleDb" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="DBSGSG_SaidaSemanaTableAdapter" GeneratorDataComponentClassName="DBSGSG_SaidaSemanaTableAdapter" Name="DBSGSG_SaidaSemana" UserDataComponentName="DBSGSG_SaidaSemanaTableAdapter">

@@ -49,16 +49,20 @@
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txtNotasEntrada = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
+            this.txtTotalNotas = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
             this.txtNotasCanceladas = new System.Windows.Forms.TextBox();
             this.txtNotasOmissas = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
             this.txtNotasRegistradas = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.txtTotalNotas = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.lblDias = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
@@ -121,6 +125,7 @@
             this.vNF = new SistemaGSG.textValor();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtXML)).BeginInit();
@@ -174,7 +179,8 @@
             this.Column12,
             this.Column15,
             this.Column16,
-            this.Column1});
+            this.Column1,
+            this.Column17});
             this.dataGridViewSefaz.Location = new System.Drawing.Point(15, 124);
             this.dataGridViewSefaz.Name = "dataGridViewSefaz";
             this.dataGridViewSefaz.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -290,10 +296,18 @@
             this.Column1.Name = "Column1";
             this.Column1.Visible = false;
             // 
+            // Column17
+            // 
+            this.Column17.DataPropertyName = "col_dataHoraCriacao";
+            this.Column17.HeaderText = "col_dataHoraCriacao";
+            this.Column17.Name = "Column17";
+            this.Column17.Visible = false;
+            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.label13);
             this.groupBox1.Controls.Add(this.maskFiltro);
@@ -309,6 +323,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Informações do Destinatário";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::SIGT.Properties.Resources.SIGT_LOGO_OFC;
+            this.pictureBox1.Location = new System.Drawing.Point(1513, 11);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(88, 80);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 18;
+            this.pictureBox1.TabStop = false;
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.groupBox3);
@@ -322,20 +346,43 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label21);
+            this.groupBox3.Controls.Add(this.txtNotasEntrada);
             this.groupBox3.Controls.Add(this.label19);
+            this.groupBox3.Controls.Add(this.txtTotalNotas);
+            this.groupBox3.Controls.Add(this.label18);
             this.groupBox3.Controls.Add(this.txtNotasCanceladas);
             this.groupBox3.Controls.Add(this.txtNotasOmissas);
-            this.groupBox3.Controls.Add(this.label18);
             this.groupBox3.Controls.Add(this.txtNotasRegistradas);
             this.groupBox3.Controls.Add(this.label17);
-            this.groupBox3.Controls.Add(this.txtTotalNotas);
             this.groupBox3.Controls.Add(this.label16);
             this.groupBox3.Location = new System.Drawing.Point(6, 10);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(435, 63);
+            this.groupBox3.Size = new System.Drawing.Size(575, 63);
             this.groupBox3.TabIndex = 23;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Notas Fiscais";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(353, 18);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(44, 13);
+            this.label21.TabIndex = 26;
+            this.label21.Text = "Entrada";
+            // 
+            // txtNotasEntrada
+            // 
+            this.txtNotasEntrada.BackColor = System.Drawing.Color.MediumPurple;
+            this.txtNotasEntrada.Enabled = false;
+            this.txtNotasEntrada.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNotasEntrada.Location = new System.Drawing.Point(325, 32);
+            this.txtNotasEntrada.Name = "txtNotasEntrada";
+            this.txtNotasEntrada.Size = new System.Drawing.Size(100, 20);
+            this.txtNotasEntrada.TabIndex = 25;
+            this.txtNotasEntrada.Text = "1";
+            this.txtNotasEntrada.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label19
             // 
@@ -345,6 +392,27 @@
             this.label19.Size = new System.Drawing.Size(63, 13);
             this.label19.TabIndex = 24;
             this.label19.Text = "Canceladas";
+            // 
+            // txtTotalNotas
+            // 
+            this.txtTotalNotas.BackColor = System.Drawing.Color.Gainsboro;
+            this.txtTotalNotas.Enabled = false;
+            this.txtTotalNotas.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTotalNotas.Location = new System.Drawing.Point(431, 32);
+            this.txtTotalNotas.Name = "txtTotalNotas";
+            this.txtTotalNotas.Size = new System.Drawing.Size(100, 20);
+            this.txtTotalNotas.TabIndex = 19;
+            this.txtTotalNotas.Text = "1";
+            this.txtTotalNotas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(466, 18);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(31, 13);
+            this.label18.TabIndex = 22;
+            this.label18.Text = "Total";
             // 
             // txtNotasCanceladas
             // 
@@ -370,15 +438,6 @@
             this.txtNotasOmissas.Text = "1";
             this.txtNotasOmissas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(360, 18);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(31, 13);
-            this.label18.TabIndex = 22;
-            this.label18.Text = "Total";
-            // 
             // txtNotasRegistradas
             // 
             this.txtNotasRegistradas.BackColor = System.Drawing.Color.LightGreen;
@@ -399,18 +458,6 @@
             this.label17.Size = new System.Drawing.Size(63, 13);
             this.label17.TabIndex = 21;
             this.label17.Text = "Registradas";
-            // 
-            // txtTotalNotas
-            // 
-            this.txtTotalNotas.BackColor = System.Drawing.Color.Gainsboro;
-            this.txtTotalNotas.Enabled = false;
-            this.txtTotalNotas.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTotalNotas.Location = new System.Drawing.Point(325, 32);
-            this.txtTotalNotas.Name = "txtTotalNotas";
-            this.txtTotalNotas.Size = new System.Drawing.Size(100, 20);
-            this.txtTotalNotas.TabIndex = 19;
-            this.txtTotalNotas.Text = "1";
-            this.txtTotalNotas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label16
             // 
@@ -476,7 +523,7 @@
             // 
             this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(1488, 19);
+            this.textBox2.Location = new System.Drawing.Point(63, 71);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(113, 20);
             this.textBox2.TabIndex = 3;
@@ -486,7 +533,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1431, 22);
+            this.label2.Location = new System.Drawing.Point(20, 74);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 2;
@@ -802,7 +849,7 @@
             this.lblPorcentagem.AutoSize = true;
             this.lblPorcentagem.BackColor = System.Drawing.Color.Transparent;
             this.lblPorcentagem.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPorcentagem.Location = new System.Drawing.Point(1591, 656);
+            this.lblPorcentagem.Location = new System.Drawing.Point(1582, 655);
             this.lblPorcentagem.Name = "lblPorcentagem";
             this.lblPorcentagem.Size = new System.Drawing.Size(20, 12);
             this.lblPorcentagem.TabIndex = 34;
@@ -886,7 +933,6 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Enabled = false;
             this.button5.Location = new System.Drawing.Point(1245, 699);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
@@ -1022,12 +1068,13 @@
             this.MaximumSize = new System.Drawing.Size(1623, 733);
             this.MinimumSize = new System.Drawing.Size(1623, 733);
             this.Name = "frmProtocolo";
-            this.Style = MetroFramework.MetroColorStyle.Orange;
-            this.Text = "SIGTI - Consulta DF-e";
+            this.Style = MetroFramework.MetroColorStyle.Green;
+            this.Text = "SIGT - Consulta DF-e";
             this.Load += new System.EventHandler(this.frmProtocolo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1103,6 +1150,21 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label lblTempo;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label lblDias;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox txtNotasOmissas;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox txtNotasRegistradas;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox txtTotalNotas;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox txtNotasCanceladas;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label lblperiodoAvaliacao;
+        private System.Windows.Forms.Label lblEmailEnviado;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
@@ -1119,20 +1181,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label lblDias;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.TextBox txtNotasOmissas;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.TextBox txtNotasRegistradas;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox txtTotalNotas;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.TextBox txtNotasCanceladas;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label lblperiodoAvaliacao;
-        private System.Windows.Forms.Label lblEmailEnviado;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox txtNotasEntrada;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

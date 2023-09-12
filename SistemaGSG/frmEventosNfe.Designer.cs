@@ -29,6 +29,7 @@ namespace SistemaGSG
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEventosNfe));
             this.WebBrowserSefaz = new System.Windows.Forms.WebBrowser();
             this.btnTeste = new System.Windows.Forms.Button();
             this.txtNfe = new System.Windows.Forms.TextBox();
@@ -178,6 +179,7 @@ namespace SistemaGSG
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.txtNfe);
             this.Controls.Add(this.WebBrowserSefaz);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(1206, 633);
             this.MinimumSize = new System.Drawing.Size(1206, 633);
             this.Name = "frmEventosNfe";

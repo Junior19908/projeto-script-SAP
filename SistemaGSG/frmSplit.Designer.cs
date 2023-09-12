@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSplit));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.btnGerar = new MetroFramework.Controls.MetroButton();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
@@ -68,7 +69,7 @@
             // 
             // pictureBox5
             // 
-            this.pictureBox5.Image = global::SIGTI.Properties.Resources.DNV_GL_Certification_logo;
+            this.pictureBox5.Image = global::SIGT.Properties.Resources.DNV_GL_Certification_logo;
             this.pictureBox5.Location = new System.Drawing.Point(798, 642);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(46, 40);
@@ -78,7 +79,7 @@
             // 
             // pictureBox4
             // 
-            this.pictureBox4.Image = global::SIGTI.Properties.Resources.Logomarca_Bonsucro_2016;
+            this.pictureBox4.Image = global::SIGT.Properties.Resources.Logomarca_Bonsucro_2016;
             this.pictureBox4.Location = new System.Drawing.Point(850, 642);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(46, 40);
@@ -88,7 +89,7 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::SIGTI.Properties.Resources.usga;
+            this.pictureBox3.Image = global::SIGT.Properties.Resources.usga;
             this.pictureBox3.Location = new System.Drawing.Point(902, 642);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(46, 40);
@@ -98,7 +99,7 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = global::SIGTI.Properties.Resources.logo_ti;
+            this.pictureBox2.Image = global::SIGT.Properties.Resources.logo_ti;
             this.pictureBox2.Location = new System.Drawing.Point(954, 642);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(46, 40);
@@ -187,6 +188,7 @@
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.btnGerar);
             this.Controls.Add(this.richTextBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmSplit";
             this.Style = MetroFramework.MetroColorStyle.Orange;
             this.Text = "Separar PDF\'s";

@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace SIGTI {
+namespace SIGT {
     
     
     /// <summary>
@@ -2725,7 +2725,7 @@ namespace SIGTI {
         }
     }
 }
-namespace SIGTI.SaidaSemanaTableAdapters {
+namespace SIGT.SaidaSemanaTableAdapters {
     
     
     /// <summary>
@@ -3282,7 +3282,7 @@ namespace SIGTI.SaidaSemanaTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.OleDb.OleDbConnection();
-            this._connection.ConnectionString = global::SIGTI.Properties.Settings.Default.DBSGSGSaidaSemana;
+            this._connection.ConnectionString = global::SIGT.Properties.Settings.Default.DBSGSGSaidaSemana;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

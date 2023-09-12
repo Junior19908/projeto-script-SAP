@@ -13,7 +13,7 @@ namespace SistemaGSG
             InitializeComponent();
             VerifyVersion(webBrowser1);
             webBrowser1.ScriptErrorsSuppressed = true;
-            webBrowser1.Navigate("https://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=resumo&tipoConteudo=d09fwabTnLk=");
+            webBrowser1.Navigate("https://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=resumo&tipoConteudo=7PhJ+gAVw2g=");
             LoadDataGrid();
             lblPasta.Text = @"C:\ArquivosSAP\XML\";
         }

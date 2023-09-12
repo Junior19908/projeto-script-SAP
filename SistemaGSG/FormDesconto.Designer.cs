@@ -72,6 +72,7 @@ namespace SistemaGSG
             this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rdSafra2023 = new System.Windows.Forms.RadioButton();
             this.rdSafra2021 = new System.Windows.Forms.RadioButton();
             this.rdSafra2020 = new System.Windows.Forms.RadioButton();
             this.btnVoltar = new System.Windows.Forms.Button();
@@ -84,7 +85,6 @@ namespace SistemaGSG
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtValorDTdesconto = new System.Windows.Forms.TextBox();
-            this.rdSafra2023 = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.dtDebitos)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtDetalhe)).BeginInit();
@@ -476,6 +476,17 @@ namespace SistemaGSG
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filtro";
             // 
+            // rdSafra2023
+            // 
+            this.rdSafra2023.AutoSize = true;
+            this.rdSafra2023.Location = new System.Drawing.Point(34, 111);
+            this.rdSafra2023.Name = "rdSafra2023";
+            this.rdSafra2023.Size = new System.Drawing.Size(78, 17);
+            this.rdSafra2023.TabIndex = 2;
+            this.rdSafra2023.Text = "2022/2023";
+            this.rdSafra2023.UseVisualStyleBackColor = true;
+            this.rdSafra2023.Click += new System.EventHandler(this.rdSafra2023_Click);
+            // 
             // rdSafra2021
             // 
             this.rdSafra2021.AutoSize = true;
@@ -586,17 +597,6 @@ namespace SistemaGSG
             this.txtValorDTdesconto.Size = new System.Drawing.Size(100, 20);
             this.txtValorDTdesconto.TabIndex = 16;
             this.txtValorDTdesconto.Visible = false;
-            // 
-            // rdSafra2023
-            // 
-            this.rdSafra2023.AutoSize = true;
-            this.rdSafra2023.Location = new System.Drawing.Point(34, 111);
-            this.rdSafra2023.Name = "rdSafra2023";
-            this.rdSafra2023.Size = new System.Drawing.Size(78, 17);
-            this.rdSafra2023.TabIndex = 2;
-            this.rdSafra2023.Text = "2022/2023";
-            this.rdSafra2023.UseVisualStyleBackColor = true;
-            this.rdSafra2023.Click += new System.EventHandler(this.rdSafra2023_Click);
             // 
             // FormDesconto
             // 

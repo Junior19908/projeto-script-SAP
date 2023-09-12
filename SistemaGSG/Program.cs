@@ -20,7 +20,7 @@ namespace SistemaGSG
 
             frmProtocolo frm_Main = new frmProtocolo();
             frm_Main.ShowDialog();      
-            //FormRelat frm_Main = new FormRelat();
+            //frm_Main frm_Main = new frm_Main();
             //frm_Main.ShowDialog();
 
 

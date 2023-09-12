@@ -6,9 +6,10 @@ namespace SistemaGSG
     public class ConexaoDados
     {
         private static readonly string server = "10.2.1.4";
-        private static readonly string username = "xml";
-        private static readonly string password = "02984646#Lua";
-        private static readonly string sslMode = "none";
+        private static readonly string username = "remoto";
+        private static readonly string password = "XTKfAFKPHNhWpSqW";
+        private static readonly string sslMode = "None";
+       // private static readonly string sslMode = "VerifyFull";
 
         public static MySqlConnection GetConnectionXML()
         {

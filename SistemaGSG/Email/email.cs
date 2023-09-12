@@ -155,13 +155,19 @@ namespace SistemaGSG.Email
                                                 ";
             mensagem.Body = corpo;
             mensagem.IsBodyHtml = true;
+            string anexo = "C:/ArquivosSAP/xmlDownload/"+ chaveAcesso +".pdf";
+            if (!String.IsNullOrEmpty(anexo))
+            {
+                Attachment anexar = new Attachment(anexo);
+                mensagem.Attachments.Add(anexar);
+            }
             SmtpClient clienteSmtp = new SmtpClient(_host, _port);
             clienteSmtp.EnableSsl = true;
             clienteSmtp.Credentials = new NetworkCredential(_username, _password);
             try
             {
                 clienteSmtp.Send(mensagem);
-                Log.log.WriteLog("Info : E-mail enviado! " + _username);
+                Log.log.WriteLog("Info : E-mail enviado! " + destinatario);
             }catch(Exception ex)
             {
                 Log.log.WriteLog("Warning :"+ ex.Message);
@@ -381,7 +387,7 @@ namespace SistemaGSG.Email
             try
             {
                 clienteSmtp.Send(mailMessage);
-                Log.log.WriteLog("Info : E-mail enviado! " + _username);
+                Log.log.WriteLog("Info : E-mail enviado! " + destinatario);
             }
             catch (Exception ex)
             {

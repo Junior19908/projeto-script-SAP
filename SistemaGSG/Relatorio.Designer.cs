@@ -1,4 +1,4 @@
-﻿using SIGTI;
+﻿using SIGT;
 
 namespace SistemaGSG
 {
@@ -32,12 +32,23 @@ namespace SistemaGSG
         {
             this.components = new System.ComponentModel.Container();
             Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 = new Microsoft.Reporting.WinForms.ReportDataSource();
-            this.reportViewer1 = new Microsoft.Reporting.WinForms.ReportViewer();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Relatorio));
             this.dBSGSGAcessoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dBSGSGAcesso = new SistemaGSG.DBSGSGAcesso();
+            this.reportViewer1 = new Microsoft.Reporting.WinForms.ReportViewer();
             ((System.ComponentModel.ISupportInitialize)(this.dBSGSGAcessoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dBSGSGAcesso)).BeginInit();
             this.SuspendLayout();
+            // 
+            // dBSGSGAcessoBindingSource
+            // 
+            this.dBSGSGAcessoBindingSource.DataSource = this.dBSGSGAcesso;
+            this.dBSGSGAcessoBindingSource.Position = 0;
+            // 
+            // dBSGSGAcesso
+            // 
+            this.dBSGSGAcesso.DataSetName = "DBSGSGAcesso";
+            this.dBSGSGAcesso.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // reportViewer1
             // 
@@ -52,22 +63,13 @@ namespace SistemaGSG
             this.reportViewer1.Size = new System.Drawing.Size(800, 450);
             this.reportViewer1.TabIndex = 0;
             // 
-            // dBSGSGAcessoBindingSource
-            // 
-            this.dBSGSGAcessoBindingSource.DataSource = this.dBSGSGAcesso;
-            this.dBSGSGAcessoBindingSource.Position = 0;
-            // 
-            // dBSGSGAcesso
-            // 
-            this.dBSGSGAcesso.DataSetName = "DBSGSGAcesso";
-            this.dBSGSGAcesso.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
             // Relatorio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.reportViewer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Relatorio";
             this.Text = "Relatorio";
             this.Load += new System.EventHandler(this.Relatorio_Load);
@@ -84,7 +86,7 @@ namespace SistemaGSG
         private DBSGSGAcesso dBSGSGAcesso;
     }
 
-    internal class DBSGSGAcesso : SIGTI.DBSGSGAcesso
+    internal class DBSGSGAcesso : SIGT.DBSGSGAcesso
     {
     }
 }

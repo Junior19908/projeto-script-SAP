@@ -52,6 +52,7 @@
             this.txtNumAleat = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.textValor1 = new SIGTI.textValor();
             this.txtCfop = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -145,7 +146,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.LblStatus = new System.Windows.Forms.Label();
-            this.textValor1 = new SIGTI.textValor();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -207,7 +207,7 @@
             // pictureBox5
             // 
             this.pictureBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox5.Image = global::SIGTI.Properties.Resources.DNV_GL_Certification_logo;
+            this.pictureBox5.Image = global::SIGT.Properties.Resources.DNV_GL_Certification_logo;
             this.pictureBox5.Location = new System.Drawing.Point(1011, 646);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(46, 40);
@@ -218,7 +218,7 @@
             // pictureBox4
             // 
             this.pictureBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox4.Image = global::SIGTI.Properties.Resources.Logomarca_Bonsucro_2016;
+            this.pictureBox4.Image = global::SIGT.Properties.Resources.Logomarca_Bonsucro_2016;
             this.pictureBox4.Location = new System.Drawing.Point(1063, 646);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(46, 40);
@@ -229,7 +229,7 @@
             // pictureBox3
             // 
             this.pictureBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox3.Image = global::SIGTI.Properties.Resources.usga;
+            this.pictureBox3.Image = global::SIGT.Properties.Resources.usga;
             this.pictureBox3.Location = new System.Drawing.Point(1115, 646);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(46, 40);
@@ -240,7 +240,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox2.Image = global::SIGTI.Properties.Resources.logo_ti;
+            this.pictureBox2.Image = global::SIGT.Properties.Resources.logo_ti;
             this.pictureBox2.Location = new System.Drawing.Point(1167, 646);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(46, 40);
@@ -413,6 +413,15 @@
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(156, 20);
             this.dateTimePicker1.TabIndex = 62;
+            // 
+            // textValor1
+            // 
+            this.textValor1.Location = new System.Drawing.Point(131, 269);
+            this.textValor1.MaxLength = 9;
+            this.textValor1.Name = "textValor1";
+            this.textValor1.Size = new System.Drawing.Size(156, 20);
+            this.textValor1.TabIndex = 62;
+            this.textValor1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtCfop
             // 
@@ -922,7 +931,7 @@
             this.nNF.HeaderText = "Nº Nf-e";
             this.nNF.MinimumWidth = 6;
             this.nNF.Name = "nNF";
-            this.nNF.Width = 67;
+            this.nNF.Width = 62;
             // 
             // serie
             // 
@@ -931,7 +940,7 @@
             this.serie.HeaderText = "Nº de Série";
             this.serie.MinimumWidth = 6;
             this.serie.Name = "serie";
-            this.serie.Width = 86;
+            this.serie.Width = 79;
             // 
             // dhEmi
             // 
@@ -1245,7 +1254,6 @@
             this.indTot.MinimumWidth = 6;
             this.indTot.Name = "indTot";
             this.indTot.Visible = false;
-            this.indTot.Width = 79;
             // 
             // NCM
             // 
@@ -1338,15 +1346,6 @@
             this.LblStatus.Text = "Status de Processamento.....";
             this.LblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // textValor1
-            // 
-            this.textValor1.Location = new System.Drawing.Point(131, 269);
-            this.textValor1.MaxLength = 9;
-            this.textValor1.Name = "textValor1";
-            this.textValor1.Size = new System.Drawing.Size(156, 20);
-            this.textValor1.TabIndex = 62;
-            this.textValor1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // frmXML
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1403,7 +1402,6 @@
         private System.Windows.Forms.TextBox txtNumAleat;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private textValor textValor1;
         private System.Windows.Forms.TextBox txtCfop;
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Label label14;
@@ -1507,6 +1505,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView EMITDES;
         private System.Windows.Forms.DataGridView DESTINA;
+        private SIGTI.textValor textValor1;
     }
 }
 

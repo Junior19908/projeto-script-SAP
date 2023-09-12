@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SIGTI.Properties {
+namespace SIGT.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SIGTI.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SIGTI.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SIGT.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -93,6 +93,16 @@ namespace SIGTI.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap document__6__removebg_preview {
+            get {
+                object obj = ResourceManager.GetObject("document__6_-removebg-preview", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Logo {
             get {
                 object obj = ResourceManager.GetObject("Logo", resourceCulture);
@@ -126,6 +136,16 @@ namespace SIGTI.Properties {
         internal static System.Drawing.Bitmap Logomarca_Bonsucro_2016 {
             get {
                 object obj = ResourceManager.GetObject("Logomarca_Bonsucro_2016", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SIGT_LOGO_OFC {
+            get {
+                object obj = ResourceManager.GetObject("SIGT_LOGO_OFC", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

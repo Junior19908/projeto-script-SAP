@@ -1153,7 +1153,7 @@
             // pictureBox5
             // 
             this.pictureBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox5.Image = global::SIGTI.Properties.Resources.DNV_GL_Certification_logo;
+            this.pictureBox5.Image = global::SIGT.Properties.Resources.DNV_GL_Certification_logo;
             this.pictureBox5.Location = new System.Drawing.Point(1002, 725);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(46, 40);
@@ -1164,7 +1164,7 @@
             // pictureBox4
             // 
             this.pictureBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox4.Image = global::SIGTI.Properties.Resources.Logomarca_Bonsucro_2016;
+            this.pictureBox4.Image = global::SIGT.Properties.Resources.Logomarca_Bonsucro_2016;
             this.pictureBox4.Location = new System.Drawing.Point(1054, 725);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(46, 40);
@@ -1175,7 +1175,7 @@
             // pictureBox3
             // 
             this.pictureBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox3.Image = global::SIGTI.Properties.Resources.usga;
+            this.pictureBox3.Image = global::SIGT.Properties.Resources.usga;
             this.pictureBox3.Location = new System.Drawing.Point(1106, 725);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(46, 40);
@@ -1186,7 +1186,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox2.Image = global::SIGTI.Properties.Resources.logo_ti;
+            this.pictureBox2.Image = global::SIGT.Properties.Resources.logo_ti;
             this.pictureBox2.Location = new System.Drawing.Point(1158, 725);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(46, 40);

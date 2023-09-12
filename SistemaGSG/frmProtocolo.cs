@@ -25,6 +25,7 @@ using SistemaGSG.NotasFiscais;
 using javax.lang.model.util;
 using org.w3c.dom.html;
 using SistemaGSG.Log;
+using sun.misc;
 
 namespace SistemaGSG
 {
@@ -42,6 +43,7 @@ namespace SistemaGSG
             txtNotasRegistradas.Text = consultaNotas.RegistradasNotasFiscais().ToString();
             txtTotalNotas.Text = consultaNotas.TotalNotasFiscais().ToString();
             txtNotasCanceladas.Text = consultaNotas.CanceladaNotasFiscais().ToString();
+            txtNotasEntrada.Text = consultaNotas.EntradaNotasFiscais().ToString();
             DateTime dataConsulta = consultaNotas.DataConsulta().Date;
             DateTime dataHoje = DateTime.Today;
 
@@ -55,7 +57,7 @@ namespace SistemaGSG
             InitializeComponent();
             VerifyVersion(webBrowser);
             webBrowser.Navigate("https://www.nfe.fazenda.gov.br/portal/manifestacaoDestinatario.aspx?tipoConteudo=o9MkXc+hmKs=");
-            //webBrowser.Navigate("http://127.0.0.1/teste/");
+            //webBrowser.Navigate("http://127.0.0.1/teste/index_sefaz.php");
             webBrowser.ScriptErrorsSuppressed = true;
             ConsultaNotasFiscaisBD();
         }
@@ -107,13 +109,13 @@ namespace SistemaGSG
         {
             //webBrowser.Document.GetElementById("ctl00_ContentPlaceHolder1_rbtSemChave").InvokeMember("click");
         }
-        private void UpdateNotaFiscalCancelada()
+        private void UpdateNotaFiscalCancelada(string chaveCancelada)
         {
             try
             {
                 MySqlCommand cmd = new MySqlCommand("UPDATE `tb_chave` SET `status` = @canceladaNotaFiscal WHERE `col_chave` = @chaveNotaFiscal;", ConexaoDados.GetConnectionXML());
                 cmd.Parameters.AddWithValue("@canceladaNotaFiscal", "CANCELADA");
-                cmd.Parameters.AddWithValue("@chaveNotaFiscal", txtChave.Text.Trim());
+                cmd.Parameters.AddWithValue("@chaveNotaFiscal", chaveCancelada);
                 cmd.ExecuteNonQuery();
                 cmd.Connection.Close();
             }
@@ -166,34 +168,8 @@ namespace SistemaGSG
                                         tipoOperacao = ExtrairValorCampo(divInnerHtml);
                                         valorNotaFiscal = ExtrairValorNotaFiscal(divInnerHtml);
                                         valorNotaFiscalDec = decimal.Parse(valorNotaFiscal.Replace(".", ","));
-
-
-/*NOTASFISCAL CANCELADA AJUSTAR O <TD>
- * A LOGICA ESTÁ EXECUTANDO PARA TODAS
- * ÁS CHAVES INDEPENDENTE DE ESTAR
- * CACELADA
- */
-                                        //HtmlElementCollection trElements = this.webBrowser.Document.GetElementsByTagName("tr");
-                                        //
-                                        //foreach (HtmlElement trElement in trElements)
-                                        //{
-                                        //    // Verifica se é uma linha de dados
-                                        //    if (trElement.GetAttribute("className") == "linhaImparCentralizada" || trElement.GetAttribute("className") == "linhaParCentralizada")
-                                        //    {
-                                        //        // Obtém as células da linha
-                                        //        HtmlElementCollection tdElements = trElement.GetElementsByTagName("td");
-                                        //
-                                        //        // Verifica se a célula da coluna "Situação NFe" contém o valor "Cancelada"
-                                        //        if (tdElements.Count > 3 && tdElements[3].InnerText.Trim() == "Cancelada")
-                                        //        {
-                                        //            // Realize o update para a linha correspondente aqui
-                                        //            UpdateNotaFiscalCancelada();
-                                        //        }
-                                        //    }
-                                        //}
-
                                     }
-                                    txtNFE.Text = txtChave.Text.Substring(26, 9);
+                                    txtNFE.Text = txtChave.Text.Substring(25, 9);
                                     try
                                     {
                                         onclickValue = link.GetAttribute("atualizarChaveSelecionada");
@@ -260,6 +236,59 @@ namespace SistemaGSG
                         }
                     }
                 }
+                List<string> chavesCanceladas = new List<string>();
+
+                HtmlElementCollection trElements = this.webBrowser.Document.GetElementsByTagName("tr");
+                int checkChave = 0;
+                foreach (HtmlElement trElement in trElements)
+                {
+                    if (trElement.GetAttribute("className") == "linhaImparCentralizada" || trElement.GetAttribute("className") == "linhaParCentralizada")
+                    {
+                        HtmlElementCollection tdElements = trElement.GetElementsByTagName("td");
+
+                        if (tdElements.Count > 3 && tdElements[3].InnerText.Trim() == "Cancelada")
+                        {
+                            // Obtém a chave de acesso e adiciona à lista
+                            if (tdElements.Count > 2)
+                            {
+                                string chaveAcesso = tdElements[2].InnerText.Trim();
+                                chavesCanceladas.Add(chaveAcesso.Substring(0,44));
+                                UpdateNotaFiscalCancelada(chavesCanceladas[checkChave]);
+                                checkChave++;
+                            }
+                        }
+                    }
+                }
+
+
+                HtmlElementCollection manifestacaoElements = this.webBrowser.Document.GetElementsByTagName("tr");
+                int checkmaniChave = 0;
+                foreach (HtmlElement manifestElement in manifestacaoElements)
+                {
+                    if (manifestElement.GetAttribute("className") == "linhaImparCentralizada" || manifestElement.GetAttribute("className") == "linhaParCentralizada")
+                    {
+                        HtmlElementCollection tdElements = manifestElement.GetElementsByTagName("td");
+
+                        if (tdElements.Count > 3 && tdElements[4].InnerText.Trim() == "Operação não Realizada")
+                        {
+                            // Obtém a chave de acesso e adiciona à lista
+                            if (tdElements.Count > 2)
+                            {
+                                string chaveAcesso = tdElements[2].InnerText.Trim();
+                                chavesCanceladas.Add(chaveAcesso.Substring(0, 44));
+                                UpdateNotaFiscalCancelada(chavesCanceladas[checkmaniChave]);
+                                checkmaniChave++;
+                            }
+                        }
+                    }
+                }
+
+
+
+
+
+
+
                 HtmlElementCollection elc = this.webBrowser.Document.GetElementsByTagName("a");
                 foreach (HtmlElement el in elc)
                 {
@@ -269,6 +298,7 @@ namespace SistemaGSG
                         el.InvokeMember("Click");
                     }
                 }
+                chavesCanceladas.Clear();
             }
             catch (Exception Err)
             {
@@ -420,7 +450,7 @@ namespace SistemaGSG
                         }
                         try
                         {
-                            MySqlCommand prompt_cmd = new MySqlCommand("INSERT INTO tb_chave (col_chave,empresa,status,col_Downl,col_dataHoraCriacao,emisao,tpNF,vNF,n_nfe) VALUES (@chaveAcesso, @razaoSocialEmpresa, @statusNF, @downloadXML, @dataHoraData, @dataData, @tipoOperador, @valorNF, @numeroNF)", ConexaoDados.GetConnectionXML());
+                            MySqlCommand prompt_cmd = new MySqlCommand("INSERT INTO tb_chave (col_chave,empresa,status,col_Downl,col_dataHoraCriacao,emisao,tpNF,vNF,n_nfe,col_envioEmail) VALUES (@chaveAcesso, @razaoSocialEmpresa, @statusNF, @downloadXML, @dataHoraData, @dataData, @tipoOperador, @valorNF, @numeroNF, @envioEmail)", ConexaoDados.GetConnectionXML());
                             prompt_cmd.Parameters.AddWithValue("@chaveAcesso", txtChave.Text.Trim());
                             prompt_cmd.Parameters.AddWithValue("@razaoSocialEmpresa", razaoSocial);
                             prompt_cmd.Parameters.AddWithValue("@statusNF", ".");
@@ -428,11 +458,12 @@ namespace SistemaGSG
                             prompt_cmd.Parameters.AddWithValue("@dataHoraData", dataHora.Data.ToString("yyyy-MM-dd") +" "+ dataHora.Hora.ToString("HH:mm:ss"));
                             prompt_cmd.Parameters.AddWithValue("@dataData", dataHora.Data.ToString("yyyy-MM-dd"));
                             prompt_cmd.Parameters.AddWithValue("@tipoOperador", operadorTipo);
-                            prompt_cmd.Parameters.AddWithValue("@valorNF", valorNotaFiscalDec.ToString("C"));
+                            prompt_cmd.Parameters.AddWithValue("@valorNF", valorNotaFiscalDec);
                             prompt_cmd.Parameters.AddWithValue("@numeroNF", txtNFE.Text);
+                            prompt_cmd.Parameters.AddWithValue("@envioEmail", "4");
                             prompt_cmd.ExecuteNonQuery();
                             ConexaoDados.GetConnectionXML().Close();
-                            SenderEmail_();
+                            //SenderEmail_();
                         }
                         catch (Exception Err)
                         {
@@ -476,13 +507,22 @@ namespace SistemaGSG
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            SenderEmailReg();
-           //if (MessageBox.Show("Deseja Baixar XML's?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-           //{
-           //    FormDownloadXML frm_Main = new FormDownloadXML();
-           //    frm_Main.Show();
-           //    Close();
-           //}
+            //SenderEmailReg();
+           if (MessageBox.Show("Deseja Baixar XML's?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+           {
+               FormDownloadXML frm_Main = new FormDownloadXML();
+               frm_Main.Show();
+               //Close();
+           }
+        }
+        private void LoadTudo()
+        {
+            LoadDataGrid();
+            LoadDataGridPress();
+            txtUrl.Text = @"C:\ArquivosSAP\xmlDownload\";
+            label7.Text = @"C:\ArquivosSAP\xmlDownload\";
+            lblChaveDuplicidade.Visible = false;
+            ConsultaNotasFiscaisBD();
         }
         private void frmProtocolo_Load(object sender, EventArgs e)
         {
@@ -493,22 +533,20 @@ namespace SistemaGSG
             if (duracaoAvaliacaolbl.TotalDays > 0)
             {
                 lblperiodoAvaliacao.Text = duracaoAvaliacaolbl.Days + " dias restantes";
-                LoadDataGrid();
-                LoadDataGridPress();
-                txtUrl.Text = @"C:\ArquivosSAP\xmlDownload\";
-                label7.Text = @"C:\ArquivosSAP\xmlDownload\";
-                lblChaveDuplicidade.Visible = false;
-                ConsultaNotasFiscaisBD();
+                LoadTudo();
             }
             else
             {
-                MessageBox.Show("Período Expirado!");
-                Application.Exit();
+               // checkBox.Enabled = false;
+                lblperiodoAvaliacao.Text = "Período Expirado!";
+                LoadTudo();
+                //MessageBox.Show("Período Expirado!");
+                //Application.Exit();
             }
         }
         private void LoadDataGrid()
         {
-            MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status!='LANÇADA' AND status NOT IN('CANCELADA') ORDER BY col_dataHoraCriacao DESC", ConexaoDados.GetConnectionXML());
+            MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status NOT IN('CANCELADA','LANÇADA') AND tpNF NOT IN('0') ORDER BY col_dataHoraCriacao DESC", ConexaoDados.GetConnectionXML());
             DataTable SS = new DataTable();
             ADAP.Fill(SS);
             dataGridViewSefaz.DataSource = SS;
@@ -775,7 +813,14 @@ namespace SistemaGSG
                             ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).SelectedRows = "0";
                             ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).CurrentCellColumn = "NFNUM9";
                             ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).ClickCurrentCell();
-                            EMPRESA = ((GuiTextField)Session.FindById("wnd[0]/usr/subMAIN_PARTNER:SAPLJ1BB2:5250/txtJ_1BDYMPA-MAINNAME1")).Text;
+                            try
+                            {
+                                EMPRESA = ((GuiTextField)Session.FindById("wnd[0]/usr/subMAIN_PARTNER:SAPLJ1BB2:5250/txtJ_1BDYMPA-MAINNAME1")).Text;
+                            }
+                            catch (Exception ErroEmpresa)
+                            {
+                                EMPRESA = ((GuiTextField)Session.FindById("wnd[0]/usr/subMAIN_PARTNER:SAPLJ1BB2:5200/txtJ_1BDYMPA-MAINNAME1")).Text;
+                            }
                             NOTAFISCAL = ((GuiTextField)Session.FindById("wnd[0]/usr/subNF_NUMBER:SAPLJ1BB2:2002/txtJ_1BDYDOC-NFENUM")).Text;
                             Lancamento = ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtJ_1BDYDOC-PSTDAT")).Text;
                             ((GuiTab)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB8")).Select();
@@ -790,19 +835,19 @@ namespace SistemaGSG
                             {
                                 AcaoEtapa = "2";
                             }
-                            if (string.IsNullOrEmpty(AcaoEtapa))
+                            else if (string.IsNullOrEmpty(AcaoEtapa))
                             {
                                 AcaoEtapa = "1";
                             }
-                            if (AcaoEtapa == "A")
+                            else if (AcaoEtapa == "A")
                             {
                                 AcaoEtapa = "13";
                             }
-                            if (AcaoEtapa == "B")
+                            else if (AcaoEtapa == "B")
                             {
                                 AcaoEtapa = "14";
                             }
-                            if (AcaoEtapa == "D")
+                            else if (AcaoEtapa == "D")
                             {
                                 AcaoEtapa = "15";
                             }
@@ -906,22 +951,26 @@ namespace SistemaGSG
         {
             if (e.KeyCode == Keys.Enter)
             {
-                string MES;
-                string ANO;
-                MES = maskFiltro.Text.Substring(0, 2);
-                ANO = maskFiltro.Text.Substring(3, 4);
+                if(maskFiltro.Text == "00/0000")
+                {
+                    LoadDataGrid();
+                }
+                else
+                {
+                    string MES;
+                    string ANO;
+                    MES = maskFiltro.Text.Substring(0, 2).Trim();
+                    ANO = maskFiltro.Text.Substring(3, 4).Trim();
 
-                MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status!='LANÇADA' AND MONTH(emisao)='" + MES + "' AND  YEAR(emisao)='" + ANO + "' ORDER BY col_nsu DESC", ConexaoDados.GetConnectionXML());
-                DataTable SS = new DataTable();
-                ADAP.Fill(SS);
-                dataGridViewSefaz.DataSource = SS;
-                ConexaoDados.GetConnectionXML().Close();
-                int countg = dataGridViewSefaz.RowCount;
-                label6.Text = countg.ToString();
-            }
-            if (string.IsNullOrEmpty(maskFiltro.Text))
-            {
-                LoadDataGrid();
+                    MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status NOT IN ('LANÇADA','CANCELADA') AND tpNf!=0 AND MONTH(emisao)='" + MES + "' AND  YEAR(emisao)='" + ANO + "' ORDER BY `emisao` ASC", ConexaoDados.GetConnectionXML());
+                    //MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT * FROM `tb_chave`  WHERE `emisao` BETWEEN '2023-06-01' AND '2023-06-30' AND status NOT IN('LANÇADA','CANCELADA')", ConexaoDados.GetConnectionXML());
+                    DataTable SS = new DataTable();
+                    ADAP.Fill(SS);
+                    dataGridViewSefaz.DataSource = SS;
+                    ConexaoDados.GetConnectionXML().Close();
+                    int countg = dataGridViewSefaz.RowCount;
+                    label6.Text = countg.ToString();
+                }
             }
         }
         private void button5_Click(object sender, EventArgs e)
@@ -930,7 +979,7 @@ namespace SistemaGSG
             {
                 FormRelacao frm_Main = new FormRelacao();
                 frm_Main.Show();
-                Close();
+                //Close();
             }
         }
     }
