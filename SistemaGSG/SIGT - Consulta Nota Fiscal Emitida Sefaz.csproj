@@ -25,7 +25,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>\\10.2.1.6\Departamentos\PLfinan\entradaenergia\</UpdateUrl>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>320</ApplicationRevision>
+    <ApplicationRevision>330</ApplicationRevision>
     <ApplicationVersion>2.0.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -310,6 +310,7 @@
     <Compile Include="Configurações\ConfigConexao.Designer.cs">
       <DependentUpon>ConfigConexao.cs</DependentUpon>
     </Compile>
+    <Compile Include="Configurações\SAPClasse.cs" />
     <Compile Include="dados.cs" />
     <Compile Include="DataSet1.cs">
       <DependentUpon>DataSet1.xsd</DependentUpon>
@@ -454,6 +455,10 @@
       <DependentUpon>FormChaveLicenca.cs</DependentUpon>
     </Compile>
     <Compile Include="Log\log.cs" />
+    <Compile Include="Mensagem\MensagemClasse.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mensagem\MensagemClasseDiag.cs" />
     <Compile Include="mshtml\HTMLDocument.cs" />
     <Compile Include="Navegador.cs">
       <SubType>Form</SubType>
@@ -612,6 +617,9 @@
     <EmbeddedResource Include="Licença\FormChaveLicenca.resx">
       <DependentUpon>FormChaveLicenca.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Mensagem\MensagemClasse.resx">
+      <DependentUpon>MensagemClasse.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Navegador.resx">
       <DependentUpon>Navegador.cs</DependentUpon>
     </EmbeddedResource>
@@ -730,6 +738,7 @@
     <Content Include="logo_ti.ico" />
     <None Include="Resources\SIGT_LOGO_OFC.png" />
     <None Include="Resources\document__6_-removebg-preview.png" />
+    <None Include="Resources\document.jpeg" />
     <Content Include="SIGT_LOGO_ICO.ico" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

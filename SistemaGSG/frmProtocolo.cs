@@ -26,6 +26,7 @@ using javax.lang.model.util;
 using org.w3c.dom.html;
 using SistemaGSG.Log;
 using sun.misc;
+using SIGT.Mensagem;
 
 namespace SistemaGSG
 {
@@ -113,8 +114,9 @@ namespace SistemaGSG
         {
             try
             {
-                MySqlCommand cmd = new MySqlCommand("UPDATE `tb_chave` SET `status` = @canceladaNotaFiscal WHERE `col_chave` = @chaveNotaFiscal;", ConexaoDados.GetConnectionXML());
+                MySqlCommand cmd = new MySqlCommand("UPDATE `tb_chave` SET `status` = @canceladaNotaFiscal, `col_Downl` = @concluidoDown WHERE `col_chave` = @chaveNotaFiscal;", ConexaoDados.GetConnectionXML());
                 cmd.Parameters.AddWithValue("@canceladaNotaFiscal", "CANCELADA");
+                cmd.Parameters.AddWithValue("@concluidoDown", "2");
                 cmd.Parameters.AddWithValue("@chaveNotaFiscal", chaveCancelada);
                 cmd.ExecuteNonQuery();
                 cmd.Connection.Close();
@@ -140,7 +142,7 @@ namespace SistemaGSG
                     }
                 }
                 int countg = dataGridViewSefaz.RowCount;
-                label6.Text = countg.ToString();
+                lblNFeQtdDataGridView.Text = countg.ToString();
                 HtmlElementCollection Pesquisa = this.webBrowser.Document.GetElementsByTagName("table");
                 foreach (HtmlElement Funcao in Pesquisa)
                 {
@@ -425,6 +427,7 @@ namespace SistemaGSG
             }
         }
         int operadorTipo;
+        string envioEmail;
         private void InserirChave()
         {
             try
@@ -450,19 +453,26 @@ namespace SistemaGSG
                         }
                         try
                         {
-                            MySqlCommand prompt_cmd = new MySqlCommand("INSERT INTO tb_chave (col_chave,empresa,status,col_Downl,col_dataHoraCriacao,emisao,tpNF,vNF,n_nfe,col_envioEmail) VALUES (@chaveAcesso, @razaoSocialEmpresa, @statusNF, @downloadXML, @dataHoraData, @dataData, @tipoOperador, @valorNF, @numeroNF, @envioEmail)", ConexaoDados.GetConnectionXML());
-                            prompt_cmd.Parameters.AddWithValue("@chaveAcesso", txtChave.Text.Trim());
-                            prompt_cmd.Parameters.AddWithValue("@razaoSocialEmpresa", razaoSocial);
-                            prompt_cmd.Parameters.AddWithValue("@statusNF", ".");
-                            prompt_cmd.Parameters.AddWithValue("@downloadXML", "1");
-                            prompt_cmd.Parameters.AddWithValue("@dataHoraData", dataHora.Data.ToString("yyyy-MM-dd") +" "+ dataHora.Hora.ToString("HH:mm:ss"));
-                            prompt_cmd.Parameters.AddWithValue("@dataData", dataHora.Data.ToString("yyyy-MM-dd"));
-                            prompt_cmd.Parameters.AddWithValue("@tipoOperador", operadorTipo);
-                            prompt_cmd.Parameters.AddWithValue("@valorNF", valorNotaFiscalDec);
-                            prompt_cmd.Parameters.AddWithValue("@numeroNF", txtNFE.Text);
-                            prompt_cmd.Parameters.AddWithValue("@envioEmail", "4");
-                            prompt_cmd.ExecuteNonQuery();
-                            ConexaoDados.GetConnectionXML().Close();
+                            if (txtChave.Text.Contains("12706289000148"))
+                            {
+
+                            }
+                            else
+                            {
+                                MySqlCommand prompt_cmd = new MySqlCommand("INSERT INTO tb_chave (col_chave,empresa,status,col_Downl,col_dataHoraCriacao,emisao,tpNF,vNF,n_nfe,col_envioEmail) VALUES (@chaveAcesso, @razaoSocialEmpresa, @statusNF, @downloadXML, @dataHoraData, @dataData, @tipoOperador, @valorNF, @numeroNF, @envioEmail)", ConexaoDados.GetConnectionXML());
+                                prompt_cmd.Parameters.AddWithValue("@chaveAcesso", txtChave.Text.Trim());
+                                prompt_cmd.Parameters.AddWithValue("@razaoSocialEmpresa", razaoSocial);
+                                prompt_cmd.Parameters.AddWithValue("@statusNF", ".");
+                                prompt_cmd.Parameters.AddWithValue("@downloadXML", "1");
+                                prompt_cmd.Parameters.AddWithValue("@dataHoraData", dataHora.Data.ToString("yyyy-MM-dd") + " " + dataHora.Hora.ToString("HH:mm:ss"));
+                                prompt_cmd.Parameters.AddWithValue("@dataData", dataHora.Data.ToString("yyyy-MM-dd"));
+                                prompt_cmd.Parameters.AddWithValue("@tipoOperador", operadorTipo);
+                                prompt_cmd.Parameters.AddWithValue("@valorNF", valorNotaFiscalDec.ToString("C").Replace("R$ ", ""));
+                                prompt_cmd.Parameters.AddWithValue("@numeroNF", txtNFE.Text);
+                                prompt_cmd.Parameters.AddWithValue("@envioEmail", "4");
+                                prompt_cmd.ExecuteNonQuery();
+                                ConexaoDados.GetConnectionXML().Close();
+                            }
                             //SenderEmail_();
                         }
                         catch (Exception Err)
@@ -552,7 +562,7 @@ namespace SistemaGSG
             dataGridViewSefaz.DataSource = SS;
             ConexaoDados.GetConnectionXML().Close();
             int countg = dataGridViewSefaz.RowCount;
-            label6.Text = countg.ToString();
+            lblNFeQtdDataGridView.Text = countg.ToString();
             ProgBar.Maximum = countg;
         }
         private void LoadDataGridPress()
@@ -574,7 +584,7 @@ namespace SistemaGSG
         private void carregarDataXML()
         {
             int countg = dataGridViewSefaz.RowCount;
-            label6.Text = countg.ToString();
+            lblNFeQtdDataGridView.Text = countg.ToString();
             int XMLCont = 0;
             int XMLContResult = 1;
             double TotaldeLinhas = countg;
@@ -671,8 +681,8 @@ namespace SistemaGSG
                             try
                             {
                                 //MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET empresa='" + txtEmpresa.Text.Trim() + "' ,n_nfe='" + txtNFE.Text.Trim() + "',emisao='" + txtdate.Text.Trim() + "', tpNF='" + tpNF.Text.Trim() + "', vNF='" + vNF.Text.Trim() + "' WHERE col_chave='" + txtURLxml.Text.Replace(".xml", "") + "'", ConexaoDados.GetConnectionXML());
-                                MySqlCommand prompt_cmd = new MySqlCommand("INSERT INTO `tb_chave` (`col_chave`, `col_nsu`, `empresa`, `n_nfe`, `emisao`, `lancamento_sap`, `protocolo`, `user_sap`, `status`, `col_Downl`, `col_link`, `tpNF`, `vNF`, `ACTION_REQU`) VALUES " +
-                                    "('" + str[l].Replace("-procNfe.xml", "") + "', NULL, '" + txtEmpresa.Text.Trim() + "', '" + txtNFE.Text.Trim() + "', '" + txtdate.Text.Trim() + "', NULL, NULL, NULL, '.', NULL, NULL, NULL, '" + vNF.Text + "', NULL)", ConexaoDados.GetConnectionXML());
+                                MySqlCommand prompt_cmd = new MySqlCommand("INSERT INTO `tb_chave` (`col_chave`, `col_nsu`, `empresa`, `n_nfe`, `emisao`, `lancamento_sap`, `protocolo`, `user_sap`, `status`, `col_Downl`, `col_link`, `tpNF`, `vNF`) VALUES " +
+                                    "('" + str[l].Replace("-procNfe.xml", "") + "', NULL, '" + txtEmpresa.Text.Trim() + "', '" + txtNFE.Text.Trim() + "', '" + txtdate.Text.Trim() + "', NULL, NULL, NULL, '.', NULL, NULL, NULL, '" + vNF.Text + "')", ConexaoDados.GetConnectionXML());
 
                                 prompt_cmd.ExecuteNonQuery();
                                 ConexaoDados.GetConnectionXML().Close();
@@ -699,7 +709,7 @@ namespace SistemaGSG
                             {
                                 //MessageBox.Show("Porcentagem Error: " + ErrorR.Message);
                             }
-                            label10.Text = XMLCont.ToString();
+                            lblNFeConsultadas.Text = XMLCont.ToString();
                         }
                     }
                     catch (FileNotFoundException)
@@ -759,23 +769,14 @@ namespace SistemaGSG
             lblTempo.Text = sw.Elapsed.ToString(@"hh\:mm\:ss");
             if (MessageBox.Show("Deseja Iniciar a consulta no SAP? \nO SistemaGSG ficará indisponivel por alguns minutos", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                //Pega a tela de execução do Windows
                 CSapROTWrapper sapROTWrapper = new CSapROTWrapper();
-                //Pega a entrada ROT para o SAP Gui para conectar-se
                 object SapGuilRot = sapROTWrapper.GetROTEntry("SAPGUI");
-                //Pega a referência de Scripting Engine do SAP
                 object engine = SapGuilRot.GetType().InvokeMember("GetScriptingEngine", System.Reflection.BindingFlags.InvokeMethod, null, SapGuilRot, null);
-                //Pega a referência da janela de aplicativos em execução no SAP
                 GuiApplication GuiApp = (GuiApplication)engine;
-                //Pega a primeira conexão aberta do SAP
                 GuiConnection connection = (GuiConnection)GuiApp.Connections.ElementAt(0);
-                //Pega a primeira sessão aberta
                 GuiSession Session = (GuiSession)connection.Children.ElementAt(0);
-                //Pega a referência ao "FRAME" principal para enviar comandos de chaves virtuais o SAP
                 GuiFrameWindow guiWindow = Session.ActiveWindow;
-                //Maximisa Janela
                 guiWindow.Maximize();
-                //Abre Transação
                 Session.SendCommand("/NJ1BNFE");
                 int countg = dataGridViewSefaz.RowCount;
 
@@ -789,9 +790,9 @@ namespace SistemaGSG
                 string Lancamento;
                 string Protocolo;
                 string User;
-                string AcaoEtapa;
                 string ValorNFe;
                 int Chave = 0;
+                int LancadasCh = 1;
                 int ProgressBarra = 1;
                 while (Chave < countg)
                 {
@@ -808,7 +809,6 @@ namespace SistemaGSG
                             ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtBUKRS-LOW")).Text = "USGA";
                             ((GuiTextField)Session.FindById("wnd[0]/usr/txtR_ACCKEY-LOW")).Text = dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString();
                             ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
-                            AcaoEtapa = ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).GetCellValue(0, "ACTION_REQU");
                             ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).CurrentCellColumn = "";
                             ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).SelectedRows = "0";
                             ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).CurrentCellColumn = "NFNUM9";
@@ -831,32 +831,12 @@ namespace SistemaGSG
                             ValorNFe = ((GuiTextField)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB2/ssubHEADER_TAB:SAPLJ1BB2:2200/txtJ_1BDYDOC-NFTOT")).Text;
                             ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
                             ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
-                            if (AcaoEtapa == "C")
-                            {
-                                AcaoEtapa = "2";
-                            }
-                            else if (string.IsNullOrEmpty(AcaoEtapa))
-                            {
-                                AcaoEtapa = "1";
-                            }
-                            else if (AcaoEtapa == "A")
-                            {
-                                AcaoEtapa = "13";
-                            }
-                            else if (AcaoEtapa == "B")
-                            {
-                                AcaoEtapa = "14";
-                            }
-                            else if (AcaoEtapa == "D")
-                            {
-                                AcaoEtapa = "15";
-                            }
                             dateTimePicker2.Text = Lancamento;
                             dateTimePicker2.Format = DateTimePickerFormat.Custom;
                             dateTimePicker2.CustomFormat = "yyyy-MM-dd";
                             try
                             {
-                                MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET empresa='" + EMPRESA + "' , n_nfe='" + NOTAFISCAL + "', lancamento_sap='" + this.dateTimePicker2.Text + "', protocolo='" + Protocolo + "',  user_sap='" + User + "', status='LANÇADA', vNF='R$: " + ValorNFe + "', col_Downl='2' ,  ACTION_REQU='" + AcaoEtapa + "' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
+                                MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET empresa='" + EMPRESA + "' , n_nfe='" + NOTAFISCAL + "', lancamento_sap='" + this.dateTimePicker2.Text + "', protocolo='" + Protocolo + "',  user_sap='" + User + "', status='LANÇADA', vNF='R$: " + ValorNFe + "', col_Downl='2' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
                                 prompt_cmd.ExecuteNonQuery();
                                 ConexaoDados.GetConnectionXML().Close();
                             }
@@ -884,9 +864,10 @@ namespace SistemaGSG
                             ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
                         }
                     }
-                    label10.Text = Chave.ToString();
+                    lblNFeConsultadas.Text = LancadasCh.ToString();
                     Chave++;
                     ProgressBarra++;
+                    LancadasCh++;
                     LoadDataGridPress();
                     try
                     {
@@ -909,7 +890,9 @@ namespace SistemaGSG
             {
                 SenderEmailReg();
             }
-            MessageBox.Show("Processo, Finalizado com Sucesso!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.None);
+            MensagemClasseDiag mensagem = new MensagemClasseDiag();
+            mensagem.MensagemConclusão(lblNFeConsultadas.Text, lblNFeQtdDataGridView.Text);
+            //MessageBox.Show("Processo, Finalizado com Sucesso!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
         private void TempoEspera_Tick(object sender, EventArgs e)
         {
@@ -969,7 +952,7 @@ namespace SistemaGSG
                     dataGridViewSefaz.DataSource = SS;
                     ConexaoDados.GetConnectionXML().Close();
                     int countg = dataGridViewSefaz.RowCount;
-                    label6.Text = countg.ToString();
+                    lblNFeQtdDataGridView.Text = countg.ToString();
                 }
             }
         }
@@ -981,6 +964,11 @@ namespace SistemaGSG
                 frm_Main.Show();
                 //Close();
             }
+        }
+
+        private void dataGridViewSefaz_CellStateChanged(object sender, DataGridViewCellStateChangedEventArgs e)
+        {
+
         }
     }
 }
