@@ -25,7 +25,7 @@ namespace SistemaGSG.Email
             _username = "carlosjunyoor@gmail.com";
             _password = "bcnkjvyotwfkrdlm";
         }
-        public void SendEmail(string destinatario, DateTime date, DateTime hora, string chaveAcesso, string razaoSocial, decimal valorNotaFiscalDec, string tipoOperacao)
+        public void SendEmail(string destinatario, DateTime date, DateTime hora, string chaveAcesso, string razaoSocial, decimal valorNotaFiscalDec, Int16 tipoOperacao)
         {
             MailMessage mensagem = new MailMessage();
             mensagem.From = new MailAddress(_email, _emailNome);
@@ -155,7 +155,7 @@ namespace SistemaGSG.Email
                                                 ";
             mensagem.Body = corpo;
             mensagem.IsBodyHtml = true;
-            string anexo = "C:/ArquivosSAP/xmlDownload/"+ chaveAcesso +".pdf";
+            string anexo = "C:/ArquivosSAP/xml/pdf/"+ chaveAcesso +".pdf";
             if (!String.IsNullOrEmpty(anexo))
             {
                 Attachment anexar = new Attachment(anexo);

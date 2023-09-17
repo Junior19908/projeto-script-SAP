@@ -27,6 +27,7 @@ using org.w3c.dom.html;
 using SistemaGSG.Log;
 using sun.misc;
 using SIGT.Mensagem;
+using java.sql;
 
 namespace SistemaGSG
 {
@@ -473,7 +474,6 @@ namespace SistemaGSG
                                 prompt_cmd.ExecuteNonQuery();
                                 ConexaoDados.GetConnectionXML().Close();
                             }
-                            //SenderEmail_();
                         }
                         catch (Exception Err)
                         {
@@ -491,13 +491,49 @@ namespace SistemaGSG
                 MessageBox.Show("Erro: " + err.Message);
             }
         }
+
+        /*
+         *Consulta o Banco de Dados quais notas fiscais
+         *não foram enviadas por email
+         */
+        List<string> empresaNFe = new List<string>();
+        List<DateTime> emissaoNFe = new List<DateTime>();
+        List<DateTime> dataEmissaoNFe = new List<DateTime>();
+        List<TimeSpan> horaEmissaoNFe = new List<TimeSpan>();
+        List<string> chaveNFe = new List<string>();
+        List<decimal> valorNFe = new List<decimal>();
+        List<Int16> tpOperacaoNFe = new List<Int16>();
+        private void BancoVerifica()
+        {
+            try
+            {
+                MySqlCommand conn = new MySqlCommand("SELECT *  FROM `tb_chave` WHERE `col_Downl` = 2 AND `col_envioEmail` = 4", ConexaoDados.GetConnectionXML());
+                conn.ExecuteNonQuery();
+                MySqlDataReader leituraBanco = conn.ExecuteReader();
+                while (leituraBanco.Read())
+                {
+                    empresaNFe.Add(leituraBanco.GetString("empresa"));
+                    emissaoNFe.Add(leituraBanco.GetDateTime("col_dataHoraCriacao"));
+                    chaveNFe.Add(leituraBanco.GetString("col_chave"));
+                    valorNFe.Add(leituraBanco.GetDecimal("vNF"));
+                    tpOperacaoNFe.Add(leituraBanco.GetInt16("tpNF"));
+                }
+                leituraBanco.Close();
+                ConexaoDados.GetConnectionXML().Close();
+                SenderEmail_();
+            }
+            catch (Exception Err)
+            {
+                MessageBox.Show("Erro: " + Err.Message);
+            }
+        }
         private void SenderEmail_()
         {
             lblEmailEnviado.Visible = false;
             EmailSender emailSender = new EmailSender();
             foreach (string destinatario in destinatarios)
             {
-                emailSender.SendEmail(destinatario, dataHora.Data, dataHora.Hora, txtChave.Text, razaoSocial, valorNotaFiscalDec, tipoOperacao);
+                emailSender.SendEmail(destinatario, emissaoNFe[0], emissaoNFe[0], chaveNFe[0], empresaNFe[0], valorNFe[0], tpOperacaoNFe[0]);
             }
             lblEmailEnviado.Visible = true;
         }
@@ -742,12 +778,13 @@ namespace SistemaGSG
         //richTextBox1.AppendText(el.GetAttribute("type").Equals("span") + Environment.NewLine);
         private void button3_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Deseja Voltar?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            /*if (MessageBox.Show("Deseja Voltar?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 frm_Main frm_Main = new frm_Main();
                 frm_Main.Show();
                 this.Visible = false;
-            }
+            }*/
+            BancoVerifica();
         }
         private void checkBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -760,6 +797,7 @@ namespace SistemaGSG
             {
                 TempoPesquisa.Enabled = false;
                 ConsultaNotasFiscaisBD();
+                BancoVerifica();
             }
         }
         private void button4_Click(object sender, EventArgs e)

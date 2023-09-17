@@ -123,6 +123,7 @@
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -179,7 +180,8 @@
             this.Column12,
             this.Column15,
             this.Column1,
-            this.Column17});
+            this.Column17,
+            this.Column3});
             this.dataGridViewSefaz.Location = new System.Drawing.Point(15, 124);
             this.dataGridViewSefaz.Name = "dataGridViewSefaz";
             this.dataGridViewSefaz.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -267,7 +269,7 @@
             this.txtNotasEntrada.Name = "txtNotasEntrada";
             this.txtNotasEntrada.Size = new System.Drawing.Size(100, 20);
             this.txtNotasEntrada.TabIndex = 25;
-            this.txtNotasEntrada.Text = "1";
+            this.txtNotasEntrada.Text = "-";
             this.txtNotasEntrada.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label19
@@ -288,7 +290,7 @@
             this.txtTotalNotas.Name = "txtTotalNotas";
             this.txtTotalNotas.Size = new System.Drawing.Size(100, 20);
             this.txtTotalNotas.TabIndex = 19;
-            this.txtTotalNotas.Text = "1";
+            this.txtTotalNotas.Text = "-";
             this.txtTotalNotas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label18
@@ -321,7 +323,7 @@
             this.txtNotasOmissas.Name = "txtNotasOmissas";
             this.txtNotasOmissas.Size = new System.Drawing.Size(100, 20);
             this.txtNotasOmissas.TabIndex = 17;
-            this.txtNotasOmissas.Text = "1";
+            this.txtNotasOmissas.Text = "-";
             this.txtNotasOmissas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // txtNotasRegistradas
@@ -333,7 +335,7 @@
             this.txtNotasRegistradas.Name = "txtNotasRegistradas";
             this.txtNotasRegistradas.Size = new System.Drawing.Size(100, 20);
             this.txtNotasRegistradas.TabIndex = 18;
-            this.txtNotasRegistradas.Text = "1";
+            this.txtNotasRegistradas.Text = "-";
             this.txtNotasRegistradas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label17
@@ -502,7 +504,6 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Enabled = false;
             this.button3.Location = new System.Drawing.Point(1164, 699);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
@@ -1008,6 +1009,14 @@
             this.Column17.Name = "Column17";
             this.Column17.Visible = false;
             // 
+            // Column3
+            // 
+            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column3.DataPropertyName = "natOp";
+            this.Column3.HeaderText = "OPERAÇÃO";
+            this.Column3.Name = "Column3";
+            this.Column3.Width = 91;
+            // 
             // frmProtocolo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1185,5 +1194,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
     }
 }
