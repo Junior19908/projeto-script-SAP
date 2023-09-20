@@ -28,16 +28,33 @@ using SistemaGSG.Log;
 using sun.misc;
 using SIGT.Mensagem;
 using java.sql;
+using System.Data.OleDb;
 
 namespace SistemaGSG
 {
     public partial class frmProtocolo : MetroFramework.Forms.MetroForm
     {
+        private void emailsConsulta()
+        {
+            string tb_user = "SELECT * FROM tb_email WHERE col_status = @statusEmail";
+            MySqlCommand cmd;
+            MySqlDataReader dr;
+            cmd = new MySqlCommand(tb_user, ConexaoDados.GetConnectionXML());
+            cmd.Parameters.Add(new MySqlParameter("@statusEmail", "5"));
+            dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                string email = dr["col_email"].ToString();
+                destinatarios.Add(email);
+            }
+        }
         private const string Texto = "Duplicidade!, Esta Chave já existe no Banco de Dados.";
         string usuarioLogado = dados.Usuario;
-        //string[] destinatarios = { "junior@usga.com.br", "evaristo@usga.com.br", "jackson@usga.com.br" , "luciano.eduardo@usga.com.br" };
+        List<string> destinatarios = new List<string>();
+        //string[] destinatarios = { "junior@usga.com.br", "evaristo@usga.com.br", "jackson@usga.com.br" , "luciano.eduardo@usga.com.br", "rodolfo@usga.com.br" };
         //string[] destinatarios = { "junior@usga.com.br", "sigtisistemasintegrados@gmail.com", "luanabritosilva8@gmail.com" , "luanacaetano346@gmail.com" };
-        string[] destinatarios = { "sigtisistemasintegrados@gmail.com" };
+        //string[] destinatarios = { "sigtisistemasintegrados@gmail.com" };
         private void ConsultaNotasFiscaisBD()
         {
             ConsultaNotasFiscais consultaNotas = new ConsultaNotasFiscais();
@@ -62,6 +79,7 @@ namespace SistemaGSG
             //webBrowser.Navigate("http://127.0.0.1/teste/index_sefaz.php");
             webBrowser.ScriptErrorsSuppressed = true;
             ConsultaNotasFiscaisBD();
+            emailsConsulta();
         }
         public void VerifyVersion(System.Windows.Forms.WebBrowser webbrowser)
         {
@@ -125,6 +143,21 @@ namespace SistemaGSG
             catch (Exception ex)
             {
                 log.WriteLog("Erro Update Chave : "+ex.Message);
+            }
+        }
+        private void UpdateNotaFiscalEnviada(string emailEnviadoChave)
+        {
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand("UPDATE `tb_chave` SET `col_envioEmail` = @emailEnviado WHERE `col_chave` = @chaveNotaFiscal;", ConexaoDados.GetConnectionXML());
+                cmd.Parameters.AddWithValue("@emailEnviado", "3");
+                cmd.Parameters.AddWithValue("@chaveNotaFiscal", emailEnviadoChave);
+                cmd.ExecuteNonQuery();
+                cmd.Connection.Close();
+            }
+            catch (Exception ex)
+            {
+                log.WriteLog("Erro Update Chave : " + ex.Message);
             }
         }
 
@@ -507,7 +540,7 @@ namespace SistemaGSG
         {
             try
             {
-                MySqlCommand conn = new MySqlCommand("SELECT *  FROM `tb_chave` WHERE `col_Downl` = 2 AND `col_envioEmail` = 4", ConexaoDados.GetConnectionXML());
+                MySqlCommand conn = new MySqlCommand("SELECT *  FROM `tb_chave` WHERE `col_Downl` = 2 AND `col_envioEmail` = 4 ORDER BY col_dataHoraCriacao ASC", ConexaoDados.GetConnectionXML());
                 conn.ExecuteNonQuery();
                 MySqlDataReader leituraBanco = conn.ExecuteReader();
                 while (leituraBanco.Read())
@@ -531,9 +564,16 @@ namespace SistemaGSG
         {
             lblEmailEnviado.Visible = false;
             EmailSender emailSender = new EmailSender();
+            int s = empresaNFe.Count;
             foreach (string destinatario in destinatarios)
             {
-                emailSender.SendEmail(destinatario, emissaoNFe[0], emissaoNFe[0], chaveNFe[0], empresaNFe[0], valorNFe[0], tpOperacaoNFe[0]);
+                for (int i = 0; i < s; i++)
+                {
+                    emailSender.SendEmail(destinatario, emissaoNFe[i], emissaoNFe[i], chaveNFe[i], empresaNFe[i], valorNFe[i], tpOperacaoNFe[i]);
+                    Log.log.WriteLog("Info : Chave de Acesso " + chaveNFe[i] + " enviada!");
+                    //File.Delete("C:/ArquivosSAP/xml/pdf/" + chaveNFe[i] + ".pdf");
+                    UpdateNotaFiscalEnviada(chaveNFe[i]);
+                }
             }
             lblEmailEnviado.Visible = true;
         }
@@ -764,14 +804,9 @@ namespace SistemaGSG
         {
             if (MessageBox.Show("Deseja Iniciar?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                try
-                {
-                    carregarDataXML();
-                }
-                catch
-                {
-                    //MessageBox.Show("Geral 3: " + Err.Message);
-                }
+                frmXML xML = new frmXML();
+                xML.Show();
+
                 LoadDataGrid();
             }
         }

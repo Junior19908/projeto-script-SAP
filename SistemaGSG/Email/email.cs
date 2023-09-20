@@ -2,8 +2,10 @@
 using org.junit.@internal.runners.statements;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Windows;
 using static sun.awt.geom.AreaOp;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
@@ -27,6 +29,15 @@ namespace SistemaGSG.Email
         }
         public void SendEmail(string destinatario, DateTime date, DateTime hora, string chaveAcesso, string razaoSocial, decimal valorNotaFiscalDec, Int16 tipoOperacao)
         {
+            string opEmail;
+            if(tipoOperacao == 0)
+            {
+                opEmail = "Entrada";
+            }
+            else
+            {
+                opEmail = "Saída";
+            }
             MailMessage mensagem = new MailMessage();
             mensagem.From = new MailAddress(_email, _emailNome);
             mensagem.To.Add(new MailAddress(destinatario));
@@ -140,7 +151,7 @@ namespace SistemaGSG.Email
                                                                 <li><strong>Emissor:</strong> {razaoSocial}</li>
                                                                 <li><strong>Valor:</strong> {valorNotaFiscalDec.ToString("C")}</li>
                                                                 <li><strong>Data de Emissão:</strong> {date.ToString("dd/MM/yyyy")}</li>
-                                                                <li><strong>Tipo de Operação:</strong> {tipoOperacao}</li>
+                                                                <li><strong>Tipo de Operação:</strong> {opEmail}</li>
                                                             </ul>
                                                             <p>Estamos à sua disposição para fornecer qualquer informação adicional que você necessitar ou auxiliá-lo(a) com todas as providências necessárias.</p>
                                                             <p>Atenciosamente,</p>
@@ -159,6 +170,7 @@ namespace SistemaGSG.Email
             if (!String.IsNullOrEmpty(anexo))
             {
                 Attachment anexar = new Attachment(anexo);
+                anexar.Name = razaoSocial + ".pdf";
                 mensagem.Attachments.Add(anexar);
             }
             SmtpClient clienteSmtp = new SmtpClient(_host, _port);
@@ -168,7 +180,8 @@ namespace SistemaGSG.Email
             {
                 clienteSmtp.Send(mensagem);
                 Log.log.WriteLog("Info : E-mail enviado! " + destinatario);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Log.log.WriteLog("Warning :"+ ex.Message);
             }

@@ -1359,7 +1359,7 @@
             this.MinimumSize = new System.Drawing.Size(1263, 536);
             this.Name = "frmXML";
             this.Padding = new System.Windows.Forms.Padding(15, 60, 15, 16);
-            this.Style = MetroFramework.MetroColorStyle.Orange;
+            this.Style = MetroFramework.MetroColorStyle.Green;
             this.Text = "Importar XML no SAP";
             this.Load += new System.EventHandler(this.frmXML_Load);
             this.tabPage2.ResumeLayout(false);

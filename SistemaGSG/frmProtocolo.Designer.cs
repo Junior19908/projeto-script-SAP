@@ -34,6 +34,23 @@
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.txtNSU = new System.Windows.Forms.TextBox();
             this.dataGridViewSefaz = new System.Windows.Forms.DataGridView();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_envioEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -107,23 +124,6 @@
             this.lblEmailEnviado = new System.Windows.Forms.Label();
             this.textValor1 = new SistemaGSG.textValor();
             this.vNF = new SistemaGSG.textValor();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_envioEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -190,6 +190,129 @@
             this.dataGridViewSefaz.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewSefaz_CellClick);
             this.dataGridViewSefaz.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridViewSefaz_CellFormatting);
             this.dataGridViewSefaz.CellStateChanged += new System.Windows.Forms.DataGridViewCellStateChangedEventHandler(this.dataGridViewSefaz_CellStateChanged);
+            // 
+            // Column2
+            // 
+            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column2.DataPropertyName = "col_chave";
+            this.Column2.HeaderText = "CHAVE";
+            this.Column2.Name = "Column2";
+            this.Column2.Width = 68;
+            // 
+            // Column4
+            // 
+            this.Column4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column4.DataPropertyName = "empresa";
+            this.Column4.HeaderText = "EMPRESA";
+            this.Column4.Name = "Column4";
+            this.Column4.Width = 84;
+            // 
+            // Column5
+            // 
+            this.Column5.DataPropertyName = "n_nfe";
+            this.Column5.HeaderText = "NFE";
+            this.Column5.Name = "Column5";
+            // 
+            // Column6
+            // 
+            this.Column6.DataPropertyName = "emisao";
+            this.Column6.HeaderText = "EMISSAO";
+            this.Column6.Name = "Column6";
+            // 
+            // Column13
+            // 
+            this.Column13.DataPropertyName = "col_desc_NFe";
+            this.Column13.HeaderText = "TIPO";
+            this.Column13.Name = "Column13";
+            // 
+            // Column14
+            // 
+            this.Column14.DataPropertyName = "vNF";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.Format = "C2";
+            dataGridViewCellStyle1.NullValue = null;
+            this.Column14.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Column14.HeaderText = "VALOR";
+            this.Column14.Name = "Column14";
+            // 
+            // Column7
+            // 
+            this.Column7.DataPropertyName = "lancamento_sap";
+            this.Column7.HeaderText = "LANÇAMENTO";
+            this.Column7.Name = "Column7";
+            this.Column7.Visible = false;
+            // 
+            // Column8
+            // 
+            this.Column8.DataPropertyName = "protocolo";
+            this.Column8.HeaderText = "PROTOCOLO";
+            this.Column8.Name = "Column8";
+            this.Column8.Visible = false;
+            // 
+            // Column9
+            // 
+            this.Column9.DataPropertyName = "user_sap";
+            this.Column9.HeaderText = "USER SAP";
+            this.Column9.Name = "Column9";
+            this.Column9.Visible = false;
+            // 
+            // Column10
+            // 
+            this.Column10.DataPropertyName = "status";
+            this.Column10.HeaderText = "STATUS";
+            this.Column10.Name = "Column10";
+            // 
+            // Column11
+            // 
+            this.Column11.DataPropertyName = "col_Downl";
+            this.Column11.HeaderText = "Column11";
+            this.Column11.Name = "Column11";
+            this.Column11.Visible = false;
+            // 
+            // col_envioEmail
+            // 
+            this.col_envioEmail.DataPropertyName = "col_envioEmail";
+            this.col_envioEmail.HeaderText = "E-Mail Enviado?";
+            this.col_envioEmail.Name = "col_envioEmail";
+            this.col_envioEmail.Visible = false;
+            this.col_envioEmail.Width = 150;
+            // 
+            // Column12
+            // 
+            this.Column12.DataPropertyName = "col_link";
+            this.Column12.HeaderText = "Column12";
+            this.Column12.Name = "Column12";
+            this.Column12.Visible = false;
+            // 
+            // Column15
+            // 
+            this.Column15.DataPropertyName = "tpNF";
+            this.Column15.HeaderText = "Column15";
+            this.Column15.Name = "Column15";
+            this.Column15.Visible = false;
+            // 
+            // Column1
+            // 
+            this.Column1.DataPropertyName = "ID";
+            this.Column1.HeaderText = "Column1";
+            this.Column1.Name = "Column1";
+            this.Column1.Visible = false;
+            // 
+            // Column17
+            // 
+            this.Column17.DataPropertyName = "col_dataHoraCriacao";
+            this.Column17.HeaderText = "col_dataHoraCriacao";
+            this.Column17.Name = "Column17";
+            this.Column17.Visible = false;
+            // 
+            // Column3
+            // 
+            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Column3.DataPropertyName = "natOp";
+            this.Column3.HeaderText = "OPERAÇÃO";
+            this.Column3.Name = "Column3";
+            this.Column3.Width = 91;
             // 
             // groupBox1
             // 
@@ -492,7 +615,6 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(1424, 699);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(91, 23);
@@ -504,11 +626,11 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(1164, 699);
+            this.button3.Location = new System.Drawing.Point(1151, 699);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.Size = new System.Drawing.Size(88, 23);
             this.button3.TabIndex = 10;
-            this.button3.Text = "&Voltar";
+            this.button3.Text = "&Enviar Email\'s";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -831,7 +953,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(1161, 680);
+            this.label14.Location = new System.Drawing.Point(1154, 680);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(74, 13);
             this.label14.TabIndex = 49;
@@ -840,7 +962,7 @@
             // lblTempo
             // 
             this.lblTempo.AutoSize = true;
-            this.lblTempo.Location = new System.Drawing.Point(1241, 680);
+            this.lblTempo.Location = new System.Drawing.Point(1228, 680);
             this.lblTempo.Name = "lblTempo";
             this.lblTempo.Size = new System.Drawing.Size(0, 13);
             this.lblTempo.TabIndex = 50;
@@ -893,129 +1015,6 @@
             this.vNF.Size = new System.Drawing.Size(100, 20);
             this.vNF.TabIndex = 44;
             this.vNF.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // Column2
-            // 
-            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Column2.DataPropertyName = "col_chave";
-            this.Column2.HeaderText = "CHAVE";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 68;
-            // 
-            // Column4
-            // 
-            this.Column4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Column4.DataPropertyName = "empresa";
-            this.Column4.HeaderText = "EMPRESA";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 84;
-            // 
-            // Column5
-            // 
-            this.Column5.DataPropertyName = "n_nfe";
-            this.Column5.HeaderText = "NFE";
-            this.Column5.Name = "Column5";
-            // 
-            // Column6
-            // 
-            this.Column6.DataPropertyName = "emisao";
-            this.Column6.HeaderText = "EMISSAO";
-            this.Column6.Name = "Column6";
-            // 
-            // Column13
-            // 
-            this.Column13.DataPropertyName = "col_desc_NFe";
-            this.Column13.HeaderText = "TIPO";
-            this.Column13.Name = "Column13";
-            // 
-            // Column14
-            // 
-            this.Column14.DataPropertyName = "vNF";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.Format = "C2";
-            dataGridViewCellStyle1.NullValue = null;
-            this.Column14.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Column14.HeaderText = "VALOR";
-            this.Column14.Name = "Column14";
-            // 
-            // Column7
-            // 
-            this.Column7.DataPropertyName = "lancamento_sap";
-            this.Column7.HeaderText = "LANÇAMENTO";
-            this.Column7.Name = "Column7";
-            this.Column7.Visible = false;
-            // 
-            // Column8
-            // 
-            this.Column8.DataPropertyName = "protocolo";
-            this.Column8.HeaderText = "PROTOCOLO";
-            this.Column8.Name = "Column8";
-            this.Column8.Visible = false;
-            // 
-            // Column9
-            // 
-            this.Column9.DataPropertyName = "user_sap";
-            this.Column9.HeaderText = "USER SAP";
-            this.Column9.Name = "Column9";
-            this.Column9.Visible = false;
-            // 
-            // Column10
-            // 
-            this.Column10.DataPropertyName = "status";
-            this.Column10.HeaderText = "STATUS";
-            this.Column10.Name = "Column10";
-            // 
-            // Column11
-            // 
-            this.Column11.DataPropertyName = "col_Downl";
-            this.Column11.HeaderText = "Column11";
-            this.Column11.Name = "Column11";
-            this.Column11.Visible = false;
-            // 
-            // col_envioEmail
-            // 
-            this.col_envioEmail.DataPropertyName = "col_envioEmail";
-            this.col_envioEmail.HeaderText = "E-Mail Enviado?";
-            this.col_envioEmail.Name = "col_envioEmail";
-            this.col_envioEmail.Visible = false;
-            this.col_envioEmail.Width = 150;
-            // 
-            // Column12
-            // 
-            this.Column12.DataPropertyName = "col_link";
-            this.Column12.HeaderText = "Column12";
-            this.Column12.Name = "Column12";
-            this.Column12.Visible = false;
-            // 
-            // Column15
-            // 
-            this.Column15.DataPropertyName = "tpNF";
-            this.Column15.HeaderText = "Column15";
-            this.Column15.Name = "Column15";
-            this.Column15.Visible = false;
-            // 
-            // Column1
-            // 
-            this.Column1.DataPropertyName = "ID";
-            this.Column1.HeaderText = "Column1";
-            this.Column1.Name = "Column1";
-            this.Column1.Visible = false;
-            // 
-            // Column17
-            // 
-            this.Column17.DataPropertyName = "col_dataHoraCriacao";
-            this.Column17.HeaderText = "col_dataHoraCriacao";
-            this.Column17.Name = "Column17";
-            this.Column17.Visible = false;
-            // 
-            // Column3
-            // 
-            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Column3.DataPropertyName = "natOp";
-            this.Column3.HeaderText = "OPERAÇÃO";
-            this.Column3.Name = "Column3";
-            this.Column3.Width = 91;
             // 
             // frmProtocolo
             // 

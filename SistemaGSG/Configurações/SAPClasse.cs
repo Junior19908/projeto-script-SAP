@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SIGT.Configurações
 {
-    internal class SAPClasse
+    public class SAPClasse
     {
         public class SAP
         {

@@ -10,5 +10,6 @@ namespace SistemaGSG
         static public string senha { get; set; }
         static public Int32 nivel { get; set; }
         static public Int32 IdUser { get; set; }
+        static public string[] destinatarios { get; set; }
     }
 }
