@@ -5,7 +5,7 @@ namespace SistemaGSG
 {
     public class ConexaoDados
     {
-        private static readonly string server = "10.2.1.4";
+        private static readonly string server = "localhost";
         private static readonly string username = "remoto";
         private static readonly string password = "XTKfAFKPHNhWpSqW";
         private static readonly string sslMode = "None";

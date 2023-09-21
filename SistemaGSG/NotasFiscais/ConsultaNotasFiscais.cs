@@ -17,7 +17,7 @@ namespace SistemaGSG.NotasFiscais
         public int OmissasNotasFiscais()
         {
             int omissas = 0;
-            string query = "SELECT COUNT(*) FROM tb_chave WHERE status NOT IN('CANCELADA','LANÇADA') AND tpNF NOT IN('0')";
+            string query = "SELECT COUNT(*) FROM tb_chave WHERE status NOT IN('CANCELADA','REGISTRADA') AND tpNF NOT IN('0')";
             MySqlCommand command = new MySqlCommand(query, ConexaoDados.GetConnectionXML());
             omissas = Convert.ToInt32(command.ExecuteScalar());
             return omissas;
@@ -41,7 +41,7 @@ namespace SistemaGSG.NotasFiscais
         public int RegistradasNotasFiscais()
         {
             int registradas = 0;
-            string query = "SELECT COUNT(*) FROM tb_chave WHERE status NOT IN('CANCELADA','NÃO LANÇADA') AND tpNF = 1";
+            string query = "SELECT COUNT(*) FROM tb_chave WHERE status NOT IN('CANCELADA','NÃO REGISTRADA') AND tpNF = 1";
             MySqlCommand command = new MySqlCommand(query, ConexaoDados.GetConnectionXML());
             registradas = Convert.ToInt32(command.ExecuteScalar());
             return registradas;

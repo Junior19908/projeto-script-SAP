@@ -979,7 +979,7 @@
             // lblperiodoAvaliacao
             // 
             this.lblperiodoAvaliacao.AutoSize = true;
-            this.lblperiodoAvaliacao.BackColor = System.Drawing.Color.Red;
+            this.lblperiodoAvaliacao.BackColor = System.Drawing.Color.Green;
             this.lblperiodoAvaliacao.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblperiodoAvaliacao.ForeColor = System.Drawing.Color.White;
             this.lblperiodoAvaliacao.Location = new System.Drawing.Point(1443, 680);

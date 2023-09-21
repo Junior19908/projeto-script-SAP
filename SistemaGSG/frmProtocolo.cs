@@ -52,9 +52,7 @@ namespace SistemaGSG
         private const string Texto = "Duplicidade!, Esta Chave já existe no Banco de Dados.";
         string usuarioLogado = dados.Usuario;
         List<string> destinatarios = new List<string>();
-        //string[] destinatarios = { "junior@usga.com.br", "evaristo@usga.com.br", "jackson@usga.com.br" , "luciano.eduardo@usga.com.br", "rodolfo@usga.com.br" };
-        //string[] destinatarios = { "junior@usga.com.br", "sigtisistemasintegrados@gmail.com", "luanabritosilva8@gmail.com" , "luanacaetano346@gmail.com" };
-        //string[] destinatarios = { "sigtisistemasintegrados@gmail.com" };
+
         private void ConsultaNotasFiscaisBD()
         {
             ConsultaNotasFiscais consultaNotas = new ConsultaNotasFiscais();
@@ -127,7 +125,6 @@ namespace SistemaGSG
         string statusNotaFiscal;
         private void webBrowser_DocumentCompleted_1(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            //webBrowser.Document.GetElementById("ctl00_ContentPlaceHolder1_rbtSemChave").InvokeMember("click");
         }
         private void UpdateNotaFiscalCancelada(string chaveCancelada)
         {
@@ -406,7 +403,6 @@ namespace SistemaGSG
                         Data = data,
                         Hora = hora
                     };
-                    //string dataHora = match.Value;
                     return dataHora;
                 }
             }
@@ -592,12 +588,10 @@ namespace SistemaGSG
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            //SenderEmailReg();
            if (MessageBox.Show("Deseja Baixar XML's?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
            {
                FormDownloadXML frm_Main = new FormDownloadXML();
                frm_Main.Show();
-               //Close();
            }
         }
         private void LoadTudo()
@@ -611,7 +605,7 @@ namespace SistemaGSG
         }
         private void frmProtocolo_Load(object sender, EventArgs e)
         {
-            DateTime dataInicioAvaliacao = DateTime.ParseExact("02/09/2023", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime dataInicioAvaliacao = DateTime.ParseExact("02/09/2024", "dd/MM/yyyy", CultureInfo.InvariantCulture);
             DateTime dataAtual = DateTime.Now;
             TimeSpan duracaoAvaliacao = dataAtual - dataInicioAvaliacao;
             TimeSpan duracaoAvaliacaolbl = dataInicioAvaliacao.AddDays(1) - DateTime.Now;
@@ -622,16 +616,13 @@ namespace SistemaGSG
             }
             else
             {
-               // checkBox.Enabled = false;
-                lblperiodoAvaliacao.Text = "Período Expirado!";
+                lblperiodoAvaliacao.Text = "Ativo!";
                 LoadTudo();
-                //MessageBox.Show("Período Expirado!");
-                //Application.Exit();
             }
         }
         private void LoadDataGrid()
         {
-            MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status NOT IN('CANCELADA','LANÇADA') AND tpNF NOT IN('0') ORDER BY col_dataHoraCriacao DESC", ConexaoDados.GetConnectionXML());
+            MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status NOT IN('CANCELADA','REGISTRADA') AND tpNF NOT IN('0') ORDER BY col_dataHoraCriacao DESC", ConexaoDados.GetConnectionXML());
             DataTable SS = new DataTable();
             ADAP.Fill(SS);
             dataGridViewSefaz.DataSource = SS;
@@ -831,7 +822,6 @@ namespace SistemaGSG
             {
                 TempoPesquisa.Enabled = false;
                 ConsultaNotasFiscaisBD();
-                BancoVerifica();
             }
         }
         private void button4_Click(object sender, EventArgs e)
@@ -872,7 +862,7 @@ namespace SistemaGSG
                 while (Chave < countg)
                 {
                     int countgXML = dataGridViewRestante.RowCount;
-                    if (dataGridViewSefaz.Rows[Chave].Cells["Column10"].Value.ToString() == "LANÇADA")
+                    if (dataGridViewSefaz.Rows[Chave].Cells["Column10"].Value.ToString() == "REGISTRADA")
                     {
 
                     }
@@ -911,7 +901,7 @@ namespace SistemaGSG
                             dateTimePicker2.CustomFormat = "yyyy-MM-dd";
                             try
                             {
-                                MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET empresa='" + EMPRESA + "' , n_nfe='" + NOTAFISCAL + "', lancamento_sap='" + this.dateTimePicker2.Text + "', protocolo='" + Protocolo + "',  user_sap='" + User + "', status='LANÇADA', vNF='R$: " + ValorNFe + "', col_Downl='2' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
+                                MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET empresa='" + EMPRESA + "' , n_nfe='" + NOTAFISCAL + "', lancamento_sap='" + this.dateTimePicker2.Text + "', protocolo='" + Protocolo + "',  user_sap='" + User + "', status='REGISTRADA', vNF='R$: " + ValorNFe + "', col_Downl='2' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
                                 prompt_cmd.ExecuteNonQuery();
                                 ConexaoDados.GetConnectionXML().Close();
                             }
@@ -928,7 +918,7 @@ namespace SistemaGSG
                         {
                             try
                             {
-                                MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET status='NÃO LANÇADA' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
+                                MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET status='NÃO REGISTRADA' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
                                 prompt_cmd.ExecuteNonQuery();
                                 ConexaoDados.GetConnectionXML().Close();
                             }
@@ -961,13 +951,9 @@ namespace SistemaGSG
             }
             sw.Stop();
             lblTempo.Text = sw.Elapsed.ToString(@"hh\:mm\:ss");
-            if(MessageBox.Show("Enviar E-mail's ?","Atenção", MessageBoxButtons.YesNo, MessageBoxIcon.Hand) == DialogResult.Yes)
-            {
-                SenderEmailReg();
-            }
+            
             MensagemClasseDiag mensagem = new MensagemClasseDiag();
             mensagem.MensagemConclusão(lblNFeConsultadas.Text, lblNFeQtdDataGridView.Text);
-            //MessageBox.Show("Processo, Finalizado com Sucesso!", "Conclusão", MessageBoxButtons.OK, MessageBoxIcon.None);
         }
         private void TempoEspera_Tick(object sender, EventArgs e)
         {
@@ -1020,8 +1006,8 @@ namespace SistemaGSG
                     MES = maskFiltro.Text.Substring(0, 2).Trim();
                     ANO = maskFiltro.Text.Substring(3, 4).Trim();
 
-                    MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status NOT IN ('LANÇADA','CANCELADA') AND tpNf!=0 AND MONTH(emisao)='" + MES + "' AND  YEAR(emisao)='" + ANO + "' ORDER BY `emisao` ASC", ConexaoDados.GetConnectionXML());
-                    //MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT * FROM `tb_chave`  WHERE `emisao` BETWEEN '2023-06-01' AND '2023-06-30' AND status NOT IN('LANÇADA','CANCELADA')", ConexaoDados.GetConnectionXML());
+                    MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT TipoDoc.col_desc_NFe, TbChave.* FROM `tb_chave` AS TbChave LEFT JOIN tb_tipo_nfe AS TipoDoc ON TbChave.tpNF=TipoDoc.col_id WHERE status NOT IN ('REGISTRADA','CANCELADA') AND tpNf!=0 AND MONTH(emisao)='" + MES + "' AND  YEAR(emisao)='" + ANO + "' ORDER BY `emisao` ASC", ConexaoDados.GetConnectionXML());
+                    //MySqlDataAdapter ADAP = new MySqlDataAdapter("SELECT * FROM `tb_chave`  WHERE `emisao` BETWEEN '2023-06-01' AND '2023-06-30' AND status NOT IN('REGISTRADA','CANCELADA')", ConexaoDados.GetConnectionXML());
                     DataTable SS = new DataTable();
                     ADAP.Fill(SS);
                     dataGridViewSefaz.DataSource = SS;
