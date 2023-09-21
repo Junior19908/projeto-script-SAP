@@ -20,6 +20,7 @@ namespace SistemaGSG.Email
         private readonly string _password;
         private readonly string _emailNome = "SIGTI - SISTEMAS INTEGRADOS TI";
         private readonly string _email = "sigtisistemasintegrados@gmail.com";
+        string anexo;
         public EmailSender()
         {
             _host = "smtp.gmail.com";
@@ -27,7 +28,7 @@ namespace SistemaGSG.Email
             _username = "carlosjunyoor@gmail.com";
             _password = "bcnkjvyotwfkrdlm";
         }
-        public void SendEmail(string destinatario, DateTime date, DateTime hora, string chaveAcesso, string razaoSocial, decimal valorNotaFiscalDec, Int16 tipoOperacao)
+        public void SendEmail(string destinatario, DateTime date, DateTime hora, string chaveAcesso, string razaoSocial, decimal valorNotaFiscalDec, Int16 tipoOperacao, string cancelada)
         {
             string opEmail;
             if(tipoOperacao == 0)
@@ -41,8 +42,147 @@ namespace SistemaGSG.Email
             MailMessage mensagem = new MailMessage();
             mensagem.From = new MailAddress(_email, _emailNome);
             mensagem.To.Add(new MailAddress(destinatario));
-            mensagem.Subject = "Nova Emissão de Nota Fiscal contra seu CNPJ";
-            string corpo = $@"
+            if (cancelada == "CANCELADA")
+            {
+                mensagem.Subject = "Nova Emissão de Nota Fiscal contra seu CNPJ - Cancelada";
+                string NotaCancelada = $@"
+                                                <html lang=""pt-br"">
+                                                <head>
+                                                    <meta charset=""UTF-8"">
+                                                    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+                                                    <title>Nota Fiscal - Apresentação ao Cliente</title>
+                                                    <style>
+                                                        /* Estilos CSS */
+                                                        body {{
+                                                            font-family: Arial, sans-serif;
+                                                            color: #333;
+                                                            margin: 0;
+                                                            padding: 0;
+                                                            background-color: #f9f9f9;
+                                                        }}
+                                                        .container {{
+                                                            max-width: 600px;
+                                                            margin: 0 auto;
+                                                            padding: 20px;
+                                                            background-color: #f6f6f6;
+                                                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                                                            position: relative;
+                                                        }}
+                                                        header {{
+                                                            text-align: center;
+                                                            margin-bottom: 20px;
+                                                        }}
+                                                        .logo {{
+                                                            max-width: 200px;
+                                                            margin: 0 auto;
+                                                        }}
+                                                        h1 {{
+                                                            color: #333;
+                                                            font-size: 24px;
+                                                            margin: 0;
+                                                            padding: 10px 0;
+                                                        }}
+                                                        table {{
+                                                            width: 100%;
+                                                            border-collapse: collapse;
+                                                            margin-bottom: 20px;
+                                                        }}
+                                                        td {{
+                                                            padding: 10px;
+                                                            border-bottom: 1px solid #ccc;
+                                                        }}
+                                                        td:first-child {{
+                                                            font-weight: bold;
+                                                            width: 30%;
+                                                        }}
+                                                        .note {{
+                                                            margin-bottom: 20px;
+                                                            background-color: #fff;
+                                                            padding: 20px;
+                                                            border-radius: 5px;
+                                                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                                                        }}
+                                                        .note p {{
+                                                            margin: 0;
+                                                            line-height: 1.5;
+                                                        }}
+                                                        .signature {{
+                                                            text-align: right;
+                                                            font-style: italic;
+                                                        }}
+                                                        .footer-note {{
+                                                            font-size: 12px;
+                                                            color: #888;
+                                                            text-align: center;
+                                                            margin-top: 40px;
+                                                        }}
+                                                        .sap-yes {{
+                                                            background-color: #ccffcc;
+                                                            color: #006600;
+                                                        }}
+                                                        .sap-no {{
+                                                            background-color: #ffcccc;
+                                                            color: #990000;
+                                                        }}
+                                                        .cancelada {{
+                                                            background-color: red;
+                                                            color: white;
+                                                            padding: 5px 10px;
+                                                            border-radius: 5px;
+                                                        }}
+                                                    </style>
+                                                </head>
+                                                <body>
+                                                    <div class=""container"">
+                                                        <header>
+                                                            <img src=""https://i.ibb.co/rsTy1xZ/USGA-01.png"" alt=""Logo da Empresa"" class=""logo"">
+                                                            <h1 style=""color: #0066cc;"">Nova Emissão de Nota Fiscal contra seu CNPJ</h1>
+                                                        </header>
+                                                        <table>
+                                                            <tr>
+                                                                <td style=""background-color: #f6f6f6; color: #999;"">Data:</td>
+                                                                <td style=""background-color: #fff; color: #333;"">{date.ToString("dd/MM/yyyy")}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style=""background-color: #f6f6f6; color: #999;"">Hora:</td>
+                                                                <td style=""background-color: #fff; color: #333;"">{hora.ToString("HH:mm:ss")}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style=""background-color: #f6f6f6; color: #999;"">Chave de Acesso:</td>
+                                                                <td style=""background-color: #fff; color: #333;"">{chaveAcesso}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan=""2"" class=""cancelada""><center>NOTA FISCAL CANCELADA PELO EMITENTE</center></td>
+                                                            </tr>
+                                                        </table>
+                                                        <div class=""note"">
+                                                            <h2 style=""color: #0066cc;"">Detalhes da Nota Fiscal</h2>
+                                                            <p>Prezado(a) USINA SERRA GRANDE S/A,</p>
+                                                            <p>É com imenso prazer que compartilhamos com você os detalhes completos da mais recente nota fiscal registrada em nosso sistema.</p>
+                                                            <p>Acompanhe abaixo todas as informações relevantes:</p>
+                                                            <ul>
+                                                                <li><strong>Emissor:</strong> {razaoSocial}</li>
+                                                                <li><strong>Valor:</strong> {valorNotaFiscalDec.ToString("C")}</li>
+                                                                <li><strong>Data de Emissão:</strong> {date.ToString("dd/MM/yyyy")}</li>
+                                                                <li><strong>Tipo de Operação:</strong> {opEmail}</li>
+                                                            </ul>
+                                                            <p>Estamos à sua disposição para fornecer qualquer informação adicional que você necessitar ou auxiliá-lo(a) com todas as providências necessárias.</p>
+                                                            <p>Atenciosamente,</p>
+                                                        </div>
+                                                        <footer>
+                                                            <p class=""signature"">SIGTI</p>
+                                                        </footer>
+                                                        <p class=""footer-note"">Este e-mail é apenas para fins informativos. Favor não responder.</p>
+                                                    </div>
+                                                </body>
+                                                </html>
+                                                ";
+                mensagem.Body = NotaCancelada;
+            }
+            else
+            {
+                mensagem.Subject = "Nova Emissão de Nota Fiscal contra seu CNPJ";
+                string corpo = $@"
                                                 <html lang=""pt-br"">
                                                 <head>
                                                     <meta charset=""UTF-8"">
@@ -164,15 +304,22 @@ namespace SistemaGSG.Email
                                                 </body>
                                                 </html>
                                                 ";
-            mensagem.Body = corpo;
-            mensagem.IsBodyHtml = true;
-            string anexo = "C:/ArquivosSAP/xml/pdf/"+ chaveAcesso +".pdf";
-            if (!String.IsNullOrEmpty(anexo))
-            {
-                Attachment anexar = new Attachment(anexo);
-                anexar.Name = razaoSocial + ".pdf";
-                mensagem.Attachments.Add(anexar);
+                mensagem.Body = corpo;
             }
+            mensagem.IsBodyHtml = true;
+            
+            try
+            {
+                anexo = "C:/ArquivosSAP/xml/pdf/" + chaveAcesso + ".pdf";
+                if (!String.IsNullOrEmpty(anexo))
+                {
+                    Attachment anexar = new Attachment(anexo);
+                    anexar.Name = razaoSocial + ".pdf";
+                    mensagem.Attachments.Add(anexar);
+                }
+            }
+            catch(Exception ex) { }
+            
             SmtpClient clienteSmtp = new SmtpClient(_host, _port);
             clienteSmtp.EnableSsl = true;
             clienteSmtp.Credentials = new NetworkCredential(_username, _password);

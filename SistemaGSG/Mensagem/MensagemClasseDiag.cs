@@ -35,24 +35,18 @@ namespace SIGT.Mensagem
             MensagemClasse customMessageBox = new MensagemClasse(mensagem, titulo, suaLogo, seuIcone);
             customMessageBox.ShowDialog();
         }
-        public void MensagemEnvioEmail(string lancadas, string nlancadas)
+        public void MensagemEnvioEmail()
         {
-            int valor;
-            valor = Convert.ToInt32(lancadas) - Convert.ToInt32(nlancadas);
-
             Icon seuIcone = Icon.FromHandle(iconeLogo.GetHicon());
             Bitmap marcaLogo = Properties.Resources.document;
             Image suaLogo = marcaLogo;
             string mensagem = "Prezado Usuário,\n\n"
-                             + "Concluímos o processo de envio dos email's.\n"
-                             + "Durante a verificação, identificamos as seguintes situações:\n\n"
-                             + "Notas fiscais devidamente lançadas no SAP S/4 Hana: " + valor + "\n"
-                             + "Notas fiscais não lançadas no SAP S/4 Hana: " + nlancadas + "\n\n"
-                             + "Solicitamos que tome as devidas providências com os departamentos responsáveis para garantir a integração adequada das notas fiscais não lançadas.\n\n"
-                             + "Caso necessite de assistência, esclarecimentos adicionais ou precise reportar qualquer problema, nossa equipe está à disposição para prestar suporte.\n\n"
-                             + "Agradecemos pela colaboração e pela sua atenção a este processo.\n\n"
+                             + "Ficamos satisfeitos em informar que o envio de e-mail foi concluído com sucesso.\n"
+                             + "Todos os destinatários receberam seus e-mails conforme o planejado.\n\n"
+                             + "Caso surjam novas necessidades de comunicação ou se você tiver alguma pergunta adicional, nossa equipe está sempre à disposição para ajudar.\n\n"
+                             + "Agradecemos pela colaboração e pelo seu apoio contínuo em nossos processos.\n\n"
                              + "Atenciosamente,\n"
-                             + "[SIGT - Sistemas Integrados TI]";
+                             + "[SIGT - Sistemas Integrados de TI]";
             string titulo = "SIGT - Processo, Finalizado com Sucesso";
             MensagemClasse customMessageBox = new MensagemClasse(mensagem, titulo, suaLogo, seuIcone);
             customMessageBox.ShowDialog();

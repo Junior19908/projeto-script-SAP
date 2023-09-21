@@ -319,12 +319,6 @@ namespace SistemaGSG
                     }
                 }
 
-
-
-
-
-
-
                 HtmlElementCollection elc = this.webBrowser.Document.GetElementsByTagName("a");
                 foreach (HtmlElement el in elc)
                 {
@@ -536,6 +530,7 @@ namespace SistemaGSG
         List<string> chaveNFe = new List<string>();
         List<decimal> valorNFe = new List<decimal>();
         List<Int16> tpOperacaoNFe = new List<Int16>();
+        List<string> canceladaNFe = new List<string>();
         private void BancoVerifica()
         {
             try
@@ -550,6 +545,7 @@ namespace SistemaGSG
                     chaveNFe.Add(leituraBanco.GetString("col_chave"));
                     valorNFe.Add(leituraBanco.GetDecimal("vNF"));
                     tpOperacaoNFe.Add(leituraBanco.GetInt16("tpNF"));
+                    canceladaNFe.Add(leituraBanco.GetString("status"));
                 }
                 leituraBanco.Close();
                 ConexaoDados.GetConnectionXML().Close();
@@ -560,22 +556,25 @@ namespace SistemaGSG
                 MessageBox.Show("Erro: " + Err.Message);
             }
         }
+        int delete;
         private void SenderEmail_()
         {
             lblEmailEnviado.Visible = false;
             EmailSender emailSender = new EmailSender();
             int s = empresaNFe.Count;
+            
             foreach (string destinatario in destinatarios)
             {
                 for (int i = 0; i < s; i++)
                 {
-                    emailSender.SendEmail(destinatario, emissaoNFe[i], emissaoNFe[i], chaveNFe[i], empresaNFe[i], valorNFe[i], tpOperacaoNFe[i]);
+                    emailSender.SendEmail(destinatario, emissaoNFe[i], emissaoNFe[i], chaveNFe[i], empresaNFe[i], valorNFe[i], tpOperacaoNFe[i], canceladaNFe[i]);
                     Log.log.WriteLog("Info : Chave de Acesso " + chaveNFe[i] + " enviada!");
-                    //File.Delete("C:/ArquivosSAP/xml/pdf/" + chaveNFe[i] + ".pdf");
                     UpdateNotaFiscalEnviada(chaveNFe[i]);
+                    delete = i;
                 }
             }
-            lblEmailEnviado.Visible = true;
+            MensagemClasseDiag mensagem = new MensagemClasseDiag();
+            mensagem.MensagemEnvioEmail();
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -842,6 +841,9 @@ namespace SistemaGSG
             lblTempo.Text = sw.Elapsed.ToString(@"hh\:mm\:ss");
             if (MessageBox.Show("Deseja Iniciar a consulta no SAP? \nO SistemaGSG ficará indisponivel por alguns minutos", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO `tb_dataverificacao` (`col_dataUltVerif`) VALUES (@NOW)", ConexaoDados.GetConnectionXML());
+                mySqlCommand.Parameters.AddWithValue("@NOW", DateTime.Now);
+                mySqlCommand.ExecuteNonQuery();
                 CSapROTWrapper sapROTWrapper = new CSapROTWrapper();
                 object SapGuilRot = sapROTWrapper.GetROTEntry("SAPGUI");
                 object engine = SapGuilRot.GetType().InvokeMember("GetScriptingEngine", System.Reflection.BindingFlags.InvokeMethod, null, SapGuilRot, null);
