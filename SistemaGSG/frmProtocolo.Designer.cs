@@ -124,6 +124,7 @@
             this.lblEmailEnviado = new System.Windows.Forms.Label();
             this.textValor1 = new SistemaGSG.textValor();
             this.vNF = new SistemaGSG.textValor();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSefaz)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -1194,5 +1195,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.Timer timer;
     }
 }

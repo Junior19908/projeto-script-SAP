@@ -16,6 +16,10 @@ namespace SIGT.Mensagem
         public void MensagemConclusão(string lancadas, string nlancadas)
         {
             int valor;
+            if (string.IsNullOrEmpty(lancadas))
+            {
+                lancadas = "0";
+            }
             valor = Convert.ToInt32(lancadas) - Convert.ToInt32(nlancadas);
 
             Icon seuIcone = Icon.FromHandle(iconeLogo.GetHicon());

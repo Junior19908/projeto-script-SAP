@@ -29,6 +29,8 @@ using sun.misc;
 using SIGT.Mensagem;
 using java.sql;
 using System.Data.OleDb;
+using System.Timers;
+using System.Threading;
 
 namespace SistemaGSG
 {
@@ -52,7 +54,7 @@ namespace SistemaGSG
         private const string Texto = "Duplicidade!, Esta Chave já existe no Banco de Dados.";
         string usuarioLogado = dados.Usuario;
         List<string> destinatarios = new List<string>();
-
+        //System.Threading.Thread thread = new System.Threading.Thread(ConsultaNotasFiscaisBD());
         private void ConsultaNotasFiscaisBD()
         {
             ConsultaNotasFiscais consultaNotas = new ConsultaNotasFiscais();
@@ -65,12 +67,13 @@ namespace SistemaGSG
             DateTime dataHoje = DateTime.Today;
 
             TimeSpan diff = dataConsulta.Subtract(dataHoje);
-            int dias = Math.Abs(diff.Days);
+            int dias = System.Math.Abs(diff.Days);
 
             lblDias.Text = dias.ToString("0");
         }
         public frmProtocolo()
         {
+            //thread.Start();
             InitializeComponent();
             VerifyVersion(webBrowser);
             webBrowser.Navigate("https://www.nfe.fazenda.gov.br/portal/manifestacaoDestinatario.aspx?tipoConteudo=o9MkXc+hmKs=");
@@ -133,6 +136,7 @@ namespace SistemaGSG
                 MySqlCommand cmd = new MySqlCommand("UPDATE `tb_chave` SET `status` = @canceladaNotaFiscal, `col_Downl` = @concluidoDown WHERE `col_chave` = @chaveNotaFiscal;", ConexaoDados.GetConnectionXML());
                 cmd.Parameters.AddWithValue("@canceladaNotaFiscal", "CANCELADA");
                 cmd.Parameters.AddWithValue("@concluidoDown", "2");
+                //cmd.Parameters.AddWithValue("@envioEmail", "4");
                 cmd.Parameters.AddWithValue("@chaveNotaFiscal", chaveCancelada);
                 cmd.ExecuteNonQuery();
                 cmd.Connection.Close();
@@ -421,35 +425,35 @@ namespace SistemaGSG
         }
         private void VerificarChaveNoBanco()
         {
-            try
-            {
-                MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM tb_chave WHERE col_chave =@chaveAcesso ", ConexaoDados.GetConnectionXML());
-                prompt.Parameters.AddWithValue("@chaveAcesso", txtChave.Text.Trim());
-                prompt.ExecuteNonQuery();
-                int consultDB = Convert.ToInt32(prompt.ExecuteScalar());
-                ConexaoDados.GetConnectionXML().Close();
-                if (consultDB > 0)
+                try
                 {
-                    lblChaveDuplicidade.Text = txtChave.Text + ".xml";
-                    LimparTexts();
+                    MySqlCommand prompt = new MySqlCommand("SELECT COUNT(*) FROM tb_chave WHERE col_chave =@chaveAcesso ", ConexaoDados.GetConnectionXML());
+                    prompt.Parameters.AddWithValue("@chaveAcesso", txtChave.Text.Trim());
+                    prompt.ExecuteNonQuery();
+                    int consultDB = Convert.ToInt32(prompt.ExecuteScalar());
+                    ConexaoDados.GetConnectionXML().Close();
+                    if (consultDB > 0)
+                    {
+                        lblChaveDuplicidade.Text = txtChave.Text + ".xml";
+                        LimparTexts();
+                    }
+                    else
+                    {
+                        try
+                        {
+                            InserirChave();
+                        }
+                        catch (Exception Err)
+                        {
+                            MessageBox.Show(Err.Message);
+                        }
+                    }
                 }
-                else
+                catch (Exception Err)
                 {
-                    try
-                    {
-                        InserirChave();
-                    }
-                    catch (Exception Err)
-                    {
-                        MessageBox.Show(Err.Message);
-                    }
+                    MessageBox.Show("Erro: " + Err.Message);
                 }
-            }
-            catch (Exception Err)
-            {
-                MessageBox.Show("Erro: " + Err.Message);
-            }
-        }
+         }
         int operadorTipo;
         string envioEmail;
         private void InserirChave()
@@ -598,8 +602,8 @@ namespace SistemaGSG
         {
             LoadDataGrid();
             LoadDataGridPress();
-            txtUrl.Text = @"C:\ArquivosSAP\xmlDownload\";
-            label7.Text = @"C:\ArquivosSAP\xmlDownload\";
+            txtUrl.Text = @"C:\ArquivosSAP\xml\";
+            label7.Text = @"C:\ArquivosSAP\xml\";
             lblChaveDuplicidade.Visible = false;
             ConsultaNotasFiscaisBD();
         }
@@ -762,7 +766,7 @@ namespace SistemaGSG
                                 MessageBox.Show("Geral: " + Err.Message);
                             }
                             l++;
-                            File.Delete(@"C:\ArquivosSAP\xmlDownload\" + str[l]);
+                            File.Delete(@"C:\ArquivosSAP\xml\" + str[l]);
                             XMLCont++;
                             XMLContResult++;
                             try
@@ -829,126 +833,126 @@ namespace SistemaGSG
             var sw = new Stopwatch();
             sw.Start();
             lblTempo.Text = sw.Elapsed.ToString(@"hh\:mm\:ss");
-            if (MessageBox.Show("Deseja Iniciar a consulta no SAP? \nO SistemaGSG ficará indisponivel por alguns minutos", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO `tb_dataverificacao` (`col_dataUltVerif`) VALUES (@NOW)", ConexaoDados.GetConnectionXML());
-                mySqlCommand.Parameters.AddWithValue("@NOW", DateTime.Now);
-                mySqlCommand.ExecuteNonQuery();
-                CSapROTWrapper sapROTWrapper = new CSapROTWrapper();
-                object SapGuilRot = sapROTWrapper.GetROTEntry("SAPGUI");
-                object engine = SapGuilRot.GetType().InvokeMember("GetScriptingEngine", System.Reflection.BindingFlags.InvokeMethod, null, SapGuilRot, null);
-                GuiApplication GuiApp = (GuiApplication)engine;
-                GuiConnection connection = (GuiConnection)GuiApp.Connections.ElementAt(0);
-                GuiSession Session = (GuiSession)connection.Children.ElementAt(0);
-                GuiFrameWindow guiWindow = Session.ActiveWindow;
-                guiWindow.Maximize();
-                Session.SendCommand("/NJ1BNFE");
-                int countg = dataGridViewSefaz.RowCount;
-
-                //Tecla Enter
-                guiWindow.SendVKey(0);
-
-
-                ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtDATE0-LOW")).Text = "";
-                string EMPRESA;
-                string NOTAFISCAL;
-                string Lancamento;
-                string Protocolo;
-                string User;
-                string ValorNFe;
-                int Chave = 0;
-                int LancadasCh = 1;
-                int ProgressBarra = 1;
-                while (Chave < countg)
+                if (MessageBox.Show("Deseja Iniciar a consulta no SAP? \nO SistemaGSG ficará indisponivel por alguns minutos", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    int countgXML = dataGridViewRestante.RowCount;
-                    if (dataGridViewSefaz.Rows[Chave].Cells["Column10"].Value.ToString() == "REGISTRADA")
-                    {
+                    MySqlCommand mySqlCommand = new MySqlCommand("INSERT INTO `tb_dataverificacao` (`col_dataUltVerif`) VALUES (@NOW)", ConexaoDados.GetConnectionXML());
+                    mySqlCommand.Parameters.AddWithValue("@NOW", DateTime.Now);
+                    mySqlCommand.ExecuteNonQuery();
+                    CSapROTWrapper sapROTWrapper = new CSapROTWrapper();
+                    object SapGuilRot = sapROTWrapper.GetROTEntry("SAPGUI");
+                    object engine = SapGuilRot.GetType().InvokeMember("GetScriptingEngine", System.Reflection.BindingFlags.InvokeMethod, null, SapGuilRot, null);
+                    GuiApplication GuiApp = (GuiApplication)engine;
+                    GuiConnection connection = (GuiConnection)GuiApp.Connections.ElementAt(0);
+                    GuiSession Session = (GuiSession)connection.Children.ElementAt(0);
+                    GuiFrameWindow guiWindow = Session.ActiveWindow;
+                    guiWindow.Maximize();
+                    Session.SendCommand("/NJ1BNFE");
+                    int countg = dataGridViewSefaz.RowCount;
 
-                    }
-                    else
+                    //Tecla Enter
+                    guiWindow.SendVKey(0);
+
+
+                    ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtDATE0-LOW")).Text = "";
+                    string EMPRESA;
+                    string NOTAFISCAL;
+                    string Lancamento;
+                    string Protocolo;
+                    string User;
+                    string ValorNFe;
+                    int Chave = 0;
+                    int LancadasCh = 1;
+                    int ProgressBarra = 1;
+                    while (Chave < countg)
                     {
+                        int countgXML = dataGridViewRestante.RowCount;
+                        if (dataGridViewSefaz.Rows[Chave].Cells["Column10"].Value.ToString() == "REGISTRADA")
+                        {
+
+                        }
+                        else
+                        {
+                            try
+                            {
+                                //ProgBar.Value = ProgressBarra;
+                                ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtBUKRS-LOW")).Text = "USGA";
+                                ((GuiTextField)Session.FindById("wnd[0]/usr/txtR_ACCKEY-LOW")).Text = dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString();
+                                ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
+                                ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).CurrentCellColumn = "";
+                                ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).SelectedRows = "0";
+                                ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).CurrentCellColumn = "NFNUM9";
+                                ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).ClickCurrentCell();
+                                try
+                                {
+                                    EMPRESA = ((GuiTextField)Session.FindById("wnd[0]/usr/subMAIN_PARTNER:SAPLJ1BB2:5250/txtJ_1BDYMPA-MAINNAME1")).Text;
+                                }
+                                catch (Exception ErroEmpresa)
+                                {
+                                    EMPRESA = ((GuiTextField)Session.FindById("wnd[0]/usr/subMAIN_PARTNER:SAPLJ1BB2:5200/txtJ_1BDYMPA-MAINNAME1")).Text;
+                                }
+                                NOTAFISCAL = ((GuiTextField)Session.FindById("wnd[0]/usr/subNF_NUMBER:SAPLJ1BB2:2002/txtJ_1BDYDOC-NFENUM")).Text;
+                                Lancamento = ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtJ_1BDYDOC-PSTDAT")).Text;
+                                ((GuiTab)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB8")).Select();
+                                Protocolo = ((GuiTextField)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB8/ssubHEADER_TAB:SAPLJ1BB2:2800/subTIMESTAMP:SAPLJ1BB2:2803/txtJ_1BDYDOC-AUTHCOD")).Text;
+                                ((GuiTab)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB7")).Select();
+                                User = ((GuiTextField)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB7/ssubHEADER_TAB:SAPLJ1BB2:2700/txtJ_1BDYDOC-CRENAM")).Text;
+                                ((GuiTab)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB2")).Select();
+                                ValorNFe = ((GuiTextField)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB2/ssubHEADER_TAB:SAPLJ1BB2:2200/txtJ_1BDYDOC-NFTOT")).Text;
+                                ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
+                                ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
+                                dateTimePicker2.Text = Lancamento;
+                                dateTimePicker2.Format = DateTimePickerFormat.Custom;
+                                dateTimePicker2.CustomFormat = "yyyy-MM-dd";
+                                try
+                                {
+                                    MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET empresa='" + EMPRESA + "' , n_nfe='" + NOTAFISCAL + "', lancamento_sap='" + this.dateTimePicker2.Text + "', protocolo='" + Protocolo + "',  user_sap='" + User + "', status='REGISTRADA', vNF='R$: " + ValorNFe + "', col_Downl='2' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
+                                    prompt_cmd.ExecuteNonQuery();
+                                    ConexaoDados.GetConnectionXML().Close();
+                                }
+                                catch (MySqlException ErrMy)
+                                {
+                                    MessageBox.Show("Erro no Banco de Dados! - \n" + ErrMy.Message);
+                                }
+                                catch (Exception Err)
+                                {
+                                    MessageBox.Show(Err.Message);
+                                }
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET status='NÃO REGISTRADA' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
+                                    prompt_cmd.ExecuteNonQuery();
+                                    ConexaoDados.GetConnectionXML().Close();
+                                }
+                                catch (Exception er)
+                                {
+                                    MessageBox.Show(er.Message);
+                                }
+                                ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
+                            }
+                        }
+                        lblNFeConsultadas.Text = LancadasCh.ToString();
+                        Chave++;
+                        ProgressBarra++;
+                        LancadasCh++;
+                        LoadDataGridPress();
                         try
                         {
-                            ProgBar.Value = ProgressBarra;
-                            ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtBUKRS-LOW")).Text = "USGA";
-                            ((GuiTextField)Session.FindById("wnd[0]/usr/txtR_ACCKEY-LOW")).Text = dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString();
-                            ((GuiButton)Session.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
-                            ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).CurrentCellColumn = "";
-                            ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).SelectedRows = "0";
-                            ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).CurrentCellColumn = "NFNUM9";
-                            ((GuiGridView)Session.FindById("wnd[0]/usr/cntlNFE_CONTAINER/shellcont/shell")).ClickCurrentCell();
-                            try
-                            {
-                                EMPRESA = ((GuiTextField)Session.FindById("wnd[0]/usr/subMAIN_PARTNER:SAPLJ1BB2:5250/txtJ_1BDYMPA-MAINNAME1")).Text;
-                            }
-                            catch (Exception ErroEmpresa)
-                            {
-                                EMPRESA = ((GuiTextField)Session.FindById("wnd[0]/usr/subMAIN_PARTNER:SAPLJ1BB2:5200/txtJ_1BDYMPA-MAINNAME1")).Text;
-                            }
-                            NOTAFISCAL = ((GuiTextField)Session.FindById("wnd[0]/usr/subNF_NUMBER:SAPLJ1BB2:2002/txtJ_1BDYDOC-NFENUM")).Text;
-                            Lancamento = ((GuiTextField)Session.FindById("wnd[0]/usr/ctxtJ_1BDYDOC-PSTDAT")).Text;
-                            ((GuiTab)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB8")).Select();
-                            Protocolo = ((GuiTextField)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB8/ssubHEADER_TAB:SAPLJ1BB2:2800/subTIMESTAMP:SAPLJ1BB2:2803/txtJ_1BDYDOC-AUTHCOD")).Text;
-                            ((GuiTab)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB7")).Select();
-                            User = ((GuiTextField)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB7/ssubHEADER_TAB:SAPLJ1BB2:2700/txtJ_1BDYDOC-CRENAM")).Text;
-                            ((GuiTab)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB2")).Select();
-                            ValorNFe = ((GuiTextField)Session.FindById("wnd[0]/usr/tabsTABSTRIP1/tabpTAB2/ssubHEADER_TAB:SAPLJ1BB2:2200/txtJ_1BDYDOC-NFTOT")).Text;
-                            ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
-                            ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
-                            dateTimePicker2.Text = Lancamento;
-                            dateTimePicker2.Format = DateTimePickerFormat.Custom;
-                            dateTimePicker2.CustomFormat = "yyyy-MM-dd";
-                            try
-                            {
-                                MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET empresa='" + EMPRESA + "' , n_nfe='" + NOTAFISCAL + "', lancamento_sap='" + this.dateTimePicker2.Text + "', protocolo='" + Protocolo + "',  user_sap='" + User + "', status='REGISTRADA', vNF='R$: " + ValorNFe + "', col_Downl='2' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
-                                prompt_cmd.ExecuteNonQuery();
-                                ConexaoDados.GetConnectionXML().Close();
-                            }
-                            catch (MySqlException ErrMy)
-                            {
-                                MessageBox.Show("Erro no Banco de Dados! - \n" + ErrMy.Message);
-                            }
-                            catch (Exception Err)
-                            {
-                                MessageBox.Show(Err.Message);
-                            }
+                            double TotaldeLinhas = countg;
+                            double percentual = (Chave / TotaldeLinhas) * 100.0;
+                            double percent = 100.0 - percentual;
+                            string percentualFormatado = percentual.ToString("0.00") + " %";
+                            lblPorcentagem.Text = percentualFormatado;
                         }
                         catch
                         {
-                            try
-                            {
-                                MySqlCommand prompt_cmd = new MySqlCommand("UPDATE `tb_chave` SET status='NÃO REGISTRADA' WHERE col_chave='" + dataGridViewSefaz.Rows[Chave].Cells["Column2"].Value.ToString() + "'", ConexaoDados.GetConnectionXML());
-                                prompt_cmd.ExecuteNonQuery();
-                                ConexaoDados.GetConnectionXML().Close();
-                            }
-                            catch (Exception er)
-                            {
-                                MessageBox.Show(er.Message);
-                            }
-                            ((GuiButton)Session.FindById("wnd[0]/tbar[0]/btn[3]")).Press();
+                            // MessageBox.Show("Erro com a porcentagem!" +Error.Message);
                         }
                     }
-                    lblNFeConsultadas.Text = LancadasCh.ToString();
-                    Chave++;
-                    ProgressBarra++;
-                    LancadasCh++;
-                    LoadDataGridPress();
-                    try
-                    {
-                        double TotaldeLinhas = countg;
-                        double percentual = (Chave / TotaldeLinhas) * 100.0;
-                        double percent = 100.0 - percentual;
-                        string percentualFormatado = percentual.ToString("0.00") + " %";
-                        lblPorcentagem.Text = percentualFormatado;
-                    }
-                    catch
-                    {
-                        // MessageBox.Show("Erro com a porcentagem!" +Error.Message);
-                    }
+                    LoadDataGrid();
                 }
-                LoadDataGrid();
-            }
             sw.Stop();
             lblTempo.Text = sw.Elapsed.ToString(@"hh\:mm\:ss");
             
@@ -966,7 +970,7 @@ namespace SistemaGSG
                 }
             }
             checkBox.Checked = true;
-            TempoEspera.Enabled = false;
+            //TempoEspera.Enabled = false;
         }
         private void dataGridViewSefaz_CellClick(object sender, DataGridViewCellEventArgs e)
         {
